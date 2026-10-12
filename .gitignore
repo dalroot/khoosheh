@@ -1,0 +1,20 @@
+# Security & Credentials
+config.json
+config.json.tmp*
+.env
+ssl/*.key
+ssl/*.crt
+
+# Backups & Temporary files
+backups/
+uploads/
+*.tar.gz
+*.7z
+*.zip
+*.bak*
+*.new
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class

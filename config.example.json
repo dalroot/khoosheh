@@ -1,0 +1,19 @@
+{
+  "bot_token": "YOUR_TELEGRAM_BOT_TOKEN",
+  "admin_chat_id": 123456789,
+  "web_port": 2099,
+  "ssl_port": 2098,
+  "admin_username": "admin",
+  "admin_password_hash": "",
+  "auth_tokens": [],
+  "backup_password": "",
+  "interval_hours": 6,
+  "auto_schedule": true,
+  "backup_type": "full",
+  "keep_local_count": 15,
+  "custom_panels": [],
+  "servers": [],
+  "last_backup_at": "",
+  "last_status": "آماده به کار",
+  "last_error": ""
+}
