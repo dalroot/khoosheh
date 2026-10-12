@@ -2097,7 +2097,7 @@ HTML_PAGE = """<!DOCTYPE html>
                     bordered={false}
                     extra={
                       <Space size={8}>
-                        <Tag color="green">ربات: @backuprooobot</Tag>
+                        {data?.config?.bot_token ? <Tag color="green">🤖 ربات تلگرام متصل</Tag> : <Tag color="default">ربات غیرفعال</Tag>}
                         {cfg.backup_password ? <Tag color="gold">🔐 AES-256 فعال</Tag> : <Tag color="default">🔓 بدون رمز</Tag>}
                       </Space>
                     }
@@ -2251,13 +2251,13 @@ HTML_PAGE = """<!DOCTYPE html>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
                               <Statistic
                                 title="اینباندها و درگاه‌ها"
-                                value={inspectResult.analysis['3x-ui']?.inbounds_count || inspectResult.analysis['marzban']?.inbounds_count || 0}
+                                value={inspectResult.analysis['pasarguard']?.inbounds_count ?? (inspectResult.analysis['3x-ui']?.inbounds_count || inspectResult.analysis['marzban']?.inbounds_count || 0)}
                                 valueStyle={{ color: '#1677ff', fontWeight: 'bold' }}
                                 prefix={<ClusterOutlined />}
                                 suffix="پورت"
                               />
                               <div style={{ marginTop: 8 }}>
-                                {(inspectResult.analysis['3x-ui']?.protocols || []).map((p) => (
+                                {(inspectResult.analysis['pasarguard']?.groups || inspectResult.analysis['3x-ui']?.protocols || []).map((p) => (
                                   <Tag color="blue" key={p}>{p}</Tag>
                                 ))}
                               </div>
@@ -2268,7 +2268,7 @@ HTML_PAGE = """<!DOCTYPE html>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
                               <Statistic
                                 title="مجموع ترافیک ثبت‌شده"
-                                value={inspectResult.analysis['3x-ui']?.total_traffic_human || inspectResult.analysis['marzban']?.total_traffic_human || '0 MB'}
+                                value={inspectResult.analysis['pasarguard']?.total_traffic_human || inspectResult.analysis['3x-ui']?.total_traffic_human || inspectResult.analysis['marzban']?.total_traffic_human || '0 MB'}
                                 valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
                                 prefix={<CloudDownloadOutlined />}
                               />
