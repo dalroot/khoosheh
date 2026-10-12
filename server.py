@@ -129,6 +129,44 @@ def get_public_ip():
     except Exception:
         return "127.0.0.1"
 
+# ==================== JALALI & TEHRAN TIME HELPERS ====================
+def gregorian_to_jalali(gy, gm, gd):
+    g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
+    if gy > 1600:
+        jy = 979
+        gy -= 1600
+    else:
+        jy = 0
+        gy -= 621
+    gy2 = gy + 1 if gm > 2 else gy
+    days = 365 * gy + (gy2 + 3) // 4 - (gy2 + 99) // 100 + (gy2 + 399) // 400 - 80 + gd + g_d_m[gm - 1]
+    jy += 33 * (days // 12053)
+    days %= 12053
+    jy += 4 * (days // 1461)
+    days %= 1461
+    if days > 365:
+        jy += (days - 1) // 365
+        days = (days - 1) % 365
+    if days < 186:
+        jm = 1 + days // 31
+        jd = 1 + days % 31
+    else:
+        jm = 7 + (days - 186) // 30
+        jd = 1 + (days - 186) % 30
+    return jy, jm, jd
+
+def get_tehran_now():
+    tehran_tz = timezone(timedelta(hours=3, minutes=30))
+    now = datetime.now(tehran_tz)
+    jy, jm, jd = gregorian_to_jalali(now.year, now.month, now.day)
+    shamsi_str = f"{jy:04d}/{jm:02d}/{jd:02d} {now.strftime('%H:%M:%S')}"
+    miladi_str = now.strftime('%Y-%m-%d %H:%M:%S')
+    return {
+        "shamsi": shamsi_str,
+        "miladi": miladi_str,
+        "combined": f"{shamsi_str} شمسی | {miladi_str} میلادی (تهران)"
+    }
+
 # ==================== SYSTEM METRICS ====================
 def get_system_stats():
     stats = {
@@ -407,10 +445,14 @@ def create_archive(cfg):
 
     try:
         collected = PanelRegistry.collect(staging_dir, btype)
+        t_now = get_tehran_now()
         manifest = {
             "version": VERSION,
-            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_at_utc": datetime.now(timezone.utc).isoformat(),
+            "created_at_tehran": t_now["combined"],
+            "created_at_shamsi": t_now["shamsi"],
             "hostname": hostname,
+            "public_ip": get_public_ip(),
             "backup_type": btype,
             "panels": collected,
             "has_encryption": bool(password)
@@ -459,7 +501,10 @@ def create_archive(cfg):
                 except Exception:
                     pass
 
-        cfg["last_backup_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        t_now = get_tehran_now()
+        cfg["last_backup_at"] = t_now["miladi"]
+        cfg["last_backup_at_tehran"] = t_now["combined"]
+        cfg["last_backup_at_shamsi"] = t_now["shamsi"]
         cfg["last_status"] = "موفق"
         save_config(cfg)
 
@@ -1026,18 +1071,20 @@ def get_main_menu_data():
     cfg = load_config()
     stats = get_system_stats()
     metrics = get_snapshot_metrics()
+    t_info = get_tehran_now()
+    last_bk = cfg.get("last_backup_at_tehran") or cfg.get("last_backup_at") or "ثبت‌نشده"
     text = (
         '🌾 <b>سامانه مدیریت و پشتیبان‌گیری خوشه</b>\n'
         '────────────────────\n'
-        f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "Server")}</code>\n'
-        f'🌐 <b>آی‌پی:</b> <code>{stats.get("public_ip", "-")}</code>\n'
+        f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "Server")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
         f'🧠 <b>مصرف رم:</b> <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
         f'💾 <b>دیسک:</b> <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
         '────────────────────\n'
         f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
         f'📊 <b>مجموع مصرف ترافیک:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
         f'⏰ <b>بازه بکاپ خودکار:</b> هر <b>{cfg.get("interval_hours", 6)}</b> ساعت\n'
-        f'📅 <b>آخرین پشتیبان:</b> <code>{cfg.get("last_backup_at") or "ثبت‌نشده"}</code>\n'
+        f'📅 <b>آخرین پشتیبان:</b> <code>{last_bk}</code>\n'
+        f'🕐 <b>زمان فعلی (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         '────────────────────\n'
         'یکی از عملیات زیر را انتخاب کنید:'
     )
@@ -1062,13 +1109,20 @@ def get_main_menu_data():
 
 def get_snapshot_text():
     metrics = get_snapshot_metrics()
+    stats = get_system_stats()
+    t_info = get_tehran_now()
     text = (
         '📊 <b>اسنپ‌شات وضعیت کاربران و مصرف ترافیک</b>\n'
         '────────────────────\n'
-        f'👥 <b>کل کاربران دارای رکورد:</b> <b>{metrics["users_count"]} کاربر</b>\n'
-        f'⬇️ <b>مجموع دانلود:</b> <b>{metrics["down_gb"]} GB</b>\n'
-        f'⬆️ <b>مجموع آپلود:</b> <b>{metrics["up_gb"]} GB</b>\n'
+        f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
+        f'👥 <b>تعداد کل کاربران:</b> <b>{metrics["users_count"]} کاربر</b>\n'
         f'📈 <b>مجموع کل ترافیک:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
+    )
+    if metrics["up_gb"] > 0 or metrics["down_gb"] > 0:
+        text += f'⬇️ <b>مجموع دانلود:</b> {metrics["down_gb"]} GB\n'
+        text += f'⬆️ <b>مجموع آپلود:</b> {metrics["up_gb"]} GB\n'
+    text += (
+        f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         '────────────────────\n'
         '🏆 <b>۵ کاربر پرمصرف:</b>\n'
     )
@@ -1081,6 +1135,7 @@ def get_snapshot_text():
 
 def get_system_status_text():
     stats = get_system_stats()
+    t_info = get_tehran_now()
     text = (
         '🖥 <b>وضعیت منابع سرور</b>\n'
         '────────────────────\n'
@@ -1089,6 +1144,9 @@ def get_system_status_text():
         f'⏱ <b>مدت روشن بودن:</b> <code>{stats.get("uptime", "-")}</code>\n'
         f'🧠 <b>حافظه رم:</b> <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
         f'💾 <b>فضای هارد:</b> <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
+        '────────────────────\n'
+        f'📅 <b>زمان سرور (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
+        f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
     )
     return text
 
@@ -1121,12 +1179,24 @@ def run_telegram_bot():
                         res_b = create_archive(cfg)
                         if res_b.get('success'):
                             metrics = get_snapshot_metrics()
+                            t_info = get_tehran_now()
+                            hostname = os.uname().nodename
+                            pub_ip = get_public_ip()
+                            panels_str = " | ".join(res_b.get("panels", []))
+                            enc_str = "🔐 با رمز عبور (AES-256)" if res_b.get("is_encrypted") else "🔓 بدون پسورد (.tar.gz)"
                             cap = (
-                                '🌾 <b>پشتیبان‌گیری با موفقیت انجام شد</b>\n'
+                                '🌾 <b>پشتیبان جدید از سامانه خوشه</b>\n'
                                 '────────────────────\n'
+                                f'🖥 <b>سرور:</b> <code>{hostname}</code> (<code>{pub_ip}</code>)\n'
+                                f'🎯 <b>ماژول‌ها:</b> {panels_str}\n'
                                 f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
-                                f'📊 <b>ترافیک کل:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
-                                f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>'
+                                f'📊 <b>ترافیک مصرفی:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
+                                f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>\n'
+                                f'🛡 <b>حفاظت:</b> {enc_str}\n'
+                                '────────────────────\n'
+                                f'📅 <b>زمان شمسی:</b> <code>{t_info["shamsi"]}</code>\n'
+                                f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]} (تهران)</code>\n'
+                                f'🔑 <b>هش SHA-256:</b>\n<code>{res_b.get("sha256", "")}</code>'
                             )
                             send_document_to_telegram(admin_id, res_b['file_path'], caption=cap, token=token)
                         else:
@@ -1164,12 +1234,24 @@ def run_telegram_bot():
                         res_b = create_archive(cfg)
                         if res_b.get('success'):
                             metrics = get_snapshot_metrics()
+                            t_info = get_tehran_now()
+                            hostname = os.uname().nodename
+                            pub_ip = get_public_ip()
+                            panels_str = " | ".join(res_b.get("panels", []))
+                            enc_str = "🔐 با رمز عبور (AES-256)" if res_b.get("is_encrypted") else "🔓 بدون پسورد (.tar.gz)"
                             cap = (
-                                '🌾 <b>پشتیبان‌گیری با موفقیت انجام شد</b>\n'
+                                '🌾 <b>پشتیبان جدید از سامانه خوشه</b>\n'
                                 '────────────────────\n'
+                                f'🖥 <b>سرور:</b> <code>{hostname}</code> (<code>{pub_ip}</code>)\n'
+                                f'🎯 <b>ماژول‌ها:</b> {panels_str}\n'
                                 f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
-                                f'📊 <b>ترافیک کل:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
-                                f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>'
+                                f'📊 <b>ترافیک مصرفی:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
+                                f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>\n'
+                                f'🛡 <b>حفاظت:</b> {enc_str}\n'
+                                '────────────────────\n'
+                                f'📅 <b>زمان شمسی:</b> <code>{t_info["shamsi"]}</code>\n'
+                                f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]} (تهران)</code>\n'
+                                f'🔑 <b>هش SHA-256:</b>\n<code>{res_b.get("sha256", "")}</code>'
                             )
                             send_document_to_telegram(admin_id, res_b['file_path'], caption=cap, token=token)
                         else:
