@@ -1743,40 +1743,42 @@ HTML_PAGE = """<!DOCTYPE html>
       margin: 0;
       padding: 0;
       min-height: 100%;
-      background-color: #090d16;
-      background-image: radial-gradient(circle at 50% 0%, #151e32 0%, #090d16 65%, #05070c 100%) !important;
+      background-color: #080b11;
+      background-image: radial-gradient(circle at 50% 0%, #131c2e 0%, #080b11 65%, #04060a 100%) !important;
       background-attachment: fixed !important;
       -webkit-font-smoothing: antialiased;
       color: #f1f5f9;
     }
     /* Sleek Custom Scrollbars */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.25);
     }
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 10px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(16, 185, 129, 0.45);
+      background: rgba(16, 185, 129, 0.5);
     }
     .code-text {
       direction: ltr !important;
       font-family: Consolas, Monaco, "Courier New", monospace !important;
       display: inline-block;
       font-size: 12px;
-      background: rgba(0, 0, 0, 0.3) !important;
+      background: rgba(0, 0, 0, 0.35) !important;
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      padding: 2px 6px !important;
+      padding: 2px 7px !important;
       border-radius: 6px !important;
+      color: #cbd5e1;
     }
-    /* Modern Glassmorphism Cards */
+
+    /* Core Ant Design Overrides */
     .ant-card {
-      background: rgba(17, 24, 39, 0.72) !important;
+      background: rgba(15, 22, 36, 0.75) !important;
       backdrop-filter: blur(16px) !important;
       -webkit-backdrop-filter: blur(16px) !important;
       border: 1px solid rgba(255, 255, 255, 0.07) !important;
@@ -1784,58 +1786,181 @@ HTML_PAGE = """<!DOCTYPE html>
       box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35) !important;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
-    .kpi-card {
-      height: 100%;
+    .ant-card-head {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      padding: 0 20px !important;
+      min-height: 50px !important;
+    }
+    .ant-card-head-title {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #f8fafc !important;
+    }
+
+    /* Hero KPI Cards (Tier 1) */
+    .hero-kpi-card {
+      background: linear-gradient(135deg, rgba(17, 26, 44, 0.85) 0%, rgba(13, 20, 34, 0.75) 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 16px !important;
+      padding: 20px 22px !important;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
-      overflow: hidden;
+      height: 100%;
+      min-height: 155px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
-    .kpi-card::before {
+    .hero-kpi-card::after {
       content: '';
       position: absolute;
       top: 0;
       right: 0;
       left: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.4), transparent);
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), transparent);
+      opacity: 0.7;
     }
-    .kpi-card:hover::before {
-      opacity: 1;
-    }
-    .kpi-card:hover {
-      border-color: rgba(16, 185, 129, 0.25) !important;
+    .hero-kpi-card:hover {
+      border-color: rgba(16, 185, 129, 0.35) !important;
       transform: translateY(-2px);
-      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.08) !important;
+      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.6), 0 0 24px rgba(16, 185, 129, 0.1) !important;
     }
+    .hero-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .hero-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.65);
+    }
+    .hero-val {
+      font-size: 30px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+    .hero-sub {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    /* System Vitals Strip (Tier 2) */
+    .vitals-strip {
+      background: rgba(15, 22, 36, 0.65) !important;
+      backdrop-filter: blur(14px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-radius: 14px !important;
+      padding: 14px 20px !important;
+    }
+    .vital-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .vital-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    .vital-num {
+      font-size: 13px;
+      font-weight: 600;
+      font-family: monospace;
+      color: #f1f5f9;
+      direction: ltr;
+      text-align: left;
+    }
+
+    /* Status Badges Design System */
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.12) !important;
+      color: #10b981 !important;
+      border: 1px solid rgba(16, 185, 129, 0.28) !important;
+      border-radius: 6px !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    .badge-slate {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: #94a3b8 !important;
+      border: 1px solid rgba(255, 255, 255, 0.09) !important;
+      border-radius: 6px !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.12) !important;
+      color: #f59e0b !important;
+      border: 1px solid rgba(245, 158, 11, 0.28) !important;
+      border-radius: 6px !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+    .badge-rose {
+      background: rgba(239, 68, 68, 0.12) !important;
+      color: #ef4444 !important;
+      border: 1px solid rgba(239, 68, 68, 0.28) !important;
+      border-radius: 6px !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+    }
+
     /* Radar Pulsing Indicator */
     @keyframes radar-pulse {
       0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
     .status-radar {
       display: inline-block;
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #10b981;
       animation: radar-pulse 2s infinite;
       margin-left: 6px;
       vertical-align: middle;
     }
+
     /* Modern Glassmorphism Sider & Header */
     .ant-layout-sider {
-      background: rgba(11, 15, 25, 0.88) !important;
+      background: rgba(10, 14, 23, 0.92) !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
       border-left: 1px solid rgba(255, 255, 255, 0.07) !important;
     }
     .ant-layout-header {
-      background: rgba(11, 15, 25, 0.75) !important;
+      background: rgba(10, 14, 23, 0.8) !important;
       backdrop-filter: blur(20px) !important;
       -webkit-backdrop-filter: blur(20px) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
@@ -1849,14 +1974,14 @@ HTML_PAGE = """<!DOCTYPE html>
       width: calc(100% - 20px) !important;
       transition: all 0.2s ease !important;
       font-weight: 500 !important;
+      color: rgba(255, 255, 255, 0.7) !important;
     }
     .ant-menu-item-selected {
-      background: rgba(16, 185, 129, 0.15) !important;
+      background: rgba(16, 185, 129, 0.12) !important;
       color: #10b981 !important;
       font-weight: 600 !important;
       border-right: 3px solid #10b981 !important;
     }
-    /* Button enhancements */
     .ant-btn {
       border-radius: 8px !important;
       font-weight: 500 !important;
@@ -1865,26 +1990,27 @@ HTML_PAGE = """<!DOCTYPE html>
     .ant-btn-primary {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
       border: none !important;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
     }
     .ant-btn-primary:hover {
       background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
       transform: translateY(-1px);
     }
-    /* Clean Modern Tables */
     .ant-table-wrapper .ant-table {
       background: transparent !important;
     }
     .ant-table-wrapper .ant-table-thead > tr > th {
       background: rgba(255, 255, 255, 0.03) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      color: rgba(255, 255, 255, 0.65) !important;
-      font-size: 13px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+      font-size: 12px !important;
       font-weight: 600 !important;
+      padding: 10px 14px !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr > td {
       border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+      padding: 10px 14px !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr:hover > td {
       background: rgba(255, 255, 255, 0.04) !important;
@@ -1893,9 +2019,20 @@ HTML_PAGE = """<!DOCTYPE html>
       border-radius: 6px !important;
       font-weight: 500 !important;
     }
-    .ant-steps-item-title {
-      font-weight: 600 !important;
+    .rank-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
     }
+    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .rank-2 { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
+    .rank-3 { background: rgba(180, 83, 9, 0.2); color: #f97316; border: 1px solid rgba(180, 83, 9, 0.4); }
+    .rank-other { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
   </style>
 
   <script>
@@ -2364,7 +2501,7 @@ HTML_PAGE = """<!DOCTYPE html>
         message.success('دستور یک‌خطی نصب در حافظه کپی شد: ' + cmd);
       };
 
-      // Table Columns
+      // Table Columns with Standard Design Tokens
       const backupColumns = [
         {
           title: 'نام فایل آرشیو',
@@ -2372,7 +2509,7 @@ HTML_PAGE = """<!DOCTYPE html>
           key: 'filename',
           render: (text) => (
             <Space size={8}>
-              {text.endsWith('.7z') ? <Tag color="gold">🔐 AES-256</Tag> : <Tag color="blue">📦 tar.gz</Tag>}
+              {text.endsWith('.7z') ? <span className="badge-amber">🔐 AES-256</span> : <span className="badge-slate">📦 tar.gz</span>}
               <Text code className="code-text">{text}</Text>
             </Space>
           )
@@ -2382,14 +2519,14 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'date_str',
           key: 'date_str',
           width: 170,
-          render: (text) => <Text type="secondary">{text}</Text>
+          render: (text) => <Text type="secondary" style={{ fontSize: 12 }}>{text}</Text>
         },
         {
           title: 'حجم',
           dataIndex: 'size_mb',
           key: 'size_mb',
           width: 100,
-          render: (val) => <Text strong>{val} MB</Text>
+          render: (val) => <Text strong style={{ fontVariantNumeric: 'tabular-nums' }}>{val} MB</Text>
         },
         {
           title: 'هش SHA-256',
@@ -2440,7 +2577,7 @@ HTML_PAGE = """<!DOCTYPE html>
           render: (text, record) => (
             <Space size={8}>
               <Text strong>{text}</Text>
-              {record.is_custom && <Tag color="purple">سفارشی</Tag>}
+              {record.is_custom && <span className="badge-slate">سفارشی</span>}
             </Space>
           )
         },
@@ -2449,7 +2586,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 110,
-          render: (s) => (s === 'active' || s === 'custom') ? <Tag color="success">🟢 متصل</Tag> : <Tag color="default">آماده</Tag>
+          render: (s) => (s === 'active' || s === 'custom') ? <span className="badge-emerald">🟢 متصل</span> : <span className="badge-slate">آماده</span>
         },
         {
           title: 'نوع دیتابیس',
@@ -2483,7 +2620,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'country',
           key: 'country',
           width: 140,
-          render: (c) => <Tag color="geekblue">{c}</Tag>
+          render: (c) => <span className="badge-slate">{c}</span>
         },
         {
           title: 'نام نود سرور',
@@ -2496,7 +2633,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'ip',
           key: 'ip',
           width: 160,
-          render: (ip) => <Text code className="code-text" style={{ color: '#1677ff' }}>{ip}</Text>
+          render: (ip) => <Text code className="code-text" style={{ color: '#10b981' }}>{ip}</Text>
         },
         {
           title: 'نقش در زیرساخت',
@@ -2508,7 +2645,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 110,
-          render: () => <Tag color="success">🟢 آنلاین</Tag>
+          render: () => <span className="badge-emerald">🟢 آنلاین</span>
         },
         {
           title: 'سرویس‌ها و پورت‌ها',
@@ -2525,7 +2662,7 @@ HTML_PAGE = """<!DOCTYPE html>
           key: 'flag',
           width: 80,
           align: 'center',
-          render: (f) => <span style={{ fontSize: 20 }}>{f || '🌐'}</span>
+          render: (f) => <span style={{ fontSize: 18 }}>{f || '🌐'}</span>
         },
         {
           title: 'نام نود',
@@ -2536,38 +2673,38 @@ HTML_PAGE = """<!DOCTYPE html>
         {
           title: 'آدرس و پورت اتصال',
           key: 'address',
-          render: (_, r) => <Text code className="code-text" style={{ color: '#1677ff' }}>{r.address}:{r.port}</Text>
+          render: (_, r) => <Text code className="code-text" style={{ color: '#38bdf8' }}>{r.address}:{r.port}</Text>
         },
         {
           title: 'وضعیت اتصال',
           dataIndex: 'status',
           key: 'status',
           width: 120,
-          render: (st) => st === 'online' ? <Tag color="success">🟢 متصل</Tag> : <Tag color="error">🔴 {st || 'قطع'}</Tag>
+          render: (st) => st === 'online' ? <span className="badge-emerald">🟢 متصل</span> : <span className="badge-rose">🔴 {st || 'قطع'}</span>
         },
         {
           title: 'هسته (Core)',
           dataIndex: 'xray_version',
           key: 'xray_version',
-          render: (v) => <Tag color="purple">Xray {v}</Tag>
+          render: (v) => <span className="badge-slate">Xray {v}</span>
         },
         {
           title: 'دریافت (دانلود)',
           dataIndex: 'downlink_gb',
           key: 'downlink_gb',
-          render: (d) => <Text style={{ color: '#52c41a' }}>⬇️ {d} GB</Text>
+          render: (d) => <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>⬇️ {d} GB</span>
         },
         {
           title: 'ارسال (آپلود)',
           dataIndex: 'uplink_gb',
           key: 'uplink_gb',
-          render: (u) => <Text style={{ color: '#faad14' }}>⬆️ {u} GB</Text>
+          render: (u) => <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>⬆️ {u} GB</span>
         },
         {
           title: 'ترافیک کل نود',
           dataIndex: 'total_gb',
           key: 'total_gb',
-          render: (t) => <Text strong>{t} GB</Text>
+          render: (t) => <Text strong style={{ fontVariantNumeric: 'tabular-nums' }}>{t} GB</Text>
         }
       ];
 
@@ -2659,9 +2796,9 @@ HTML_PAGE = """<!DOCTYPE html>
           <Layout>
             <Header style={{
               padding: '0 24px',
-              background: themeMode === 'dark' ? 'rgba(20, 20, 20, 0.85)' : '#ffffff',
-              backdropFilter: 'blur(8px)',
-              borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0',
+              background: themeMode === 'dark' ? 'rgba(10, 14, 23, 0.85)' : '#ffffff',
+              backdropFilter: 'blur(16px)',
+              borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.07)' : '1px solid #f0f0f0',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -2670,37 +2807,35 @@ HTML_PAGE = """<!DOCTYPE html>
               top: 0,
               zIndex: 10
             }}>
-              <Space size={8}>
-                <Text type="secondary">سامانه خوشه /</Text>
-                <Text strong style={{ fontSize: 15 }}>
-                  {currentTab === 'overview' && 'داشبورد جامع و وضعیت لحظه‌ای سرور'}
-                  {currentTab === 'restore' && 'جادوگر هوشمند بازگردانی و مهاجرت دیتابیس (Smart Restore Wizard)'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span className="badge-emerald" style={{ padding: '4px 10px', fontSize: 12 }}>
+                  <span className="status-radar" style={{ margin: 0, marginLeft: 6 }}></span>
+                  خوشه • پایدار و ایمن
+                </span>
+                <Text type="secondary" style={{ fontSize: 13 }}>
+                  {currentTab === 'overview' && 'داشبورد جامع و وضعیت لحظه‌ای'}
+                  {currentTab === 'restore' && 'جادوگر هوشمند بازگردانی و مهاجرت دیتابیس'}
                   {currentTab === 'panels' && 'مدیریت و اتصال پنل‌های تحت پوشش'}
                   {currentTab === 'servers' && 'نودهای متصل به زیرساخت'}
                   {currentTab === 'settings' && 'تنظیمات ربات تلگرام و حفاظت امنیتی'}
-                  {currentTab === 'backups' && 'لیست آرشیوهای پشتیبان و دانلود'}
+                  {currentTab === 'backups' && 'لیست آرشیوهای پشتیبان'}
                 </Text>
-              </Space>
+              </div>
 
-              <Space size={16}>
-                {/* SSL IP & HTTP Badges */}
-                <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
-                  <Button
-                    size="small"
-                    icon={<SafetyCertificateOutlined />}
-                    href={`https://${hostIp}:2098/`}
-                    target="_blank"
-                    style={{ borderColor: '#52c41a', color: '#52c41a' }}
-                  >
-                    🔒 HTTPS :2098
-                  </Button>
-                </Tooltip>
+              <Space size={10} wrap>
+                <Button
+                  size="small"
+                  icon={<SafetyCertificateOutlined />}
+                  href={`https://${hostIp}:2098/`}
+                  target="_blank"
+                  style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
+                >
+                  🔒 HTTPS :2098
+                </Button>
 
-                <Tooltip title="کپی دستور نصب یک‌خطی خوشه روی سرورهای دیگر">
-                  <Button size="small" icon={<CopyOutlined />} onClick={handleCopyInstaller}>
-                    اسکریپت نصب سرور
-                  </Button>
-                </Tooltip>
+                <Button size="small" icon={<CopyOutlined />} onClick={handleCopyInstaller}>
+                  اسکریپت نصب سرور
+                </Button>
 
                 <Tooltip title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
                   <Switch
@@ -2708,10 +2843,12 @@ HTML_PAGE = """<!DOCTYPE html>
                     unCheckedChildren="☀️"
                     checked={themeMode === 'dark'}
                     onChange={toggleTheme}
+                    size="small"
                   />
                 </Tooltip>
 
                 <Button
+                  size="small"
                   icon={<ReloadOutlined />}
                   onClick={() => fetchData()}
                   loading={loading}
@@ -2730,142 +2867,148 @@ HTML_PAGE = """<!DOCTYPE html>
               {/* 1. OVERVIEW */}
               {currentTab === 'overview' && (
                 <Space direction="vertical" size={20} style={{ width: '100%' }}>
-                  {/* 4 BALANCED, SYMMETRICAL METRIC CARDS */}
+
+                  {/* TIER 1: 3 HERO KPI CARDS */}
                   <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="سرور میزبان (Host)"
-                          value={stats.hostname || '--'}
-                          valueStyle={{ fontFamily: 'monospace', fontSize: 16 }}
-                        />
-                        <div style={{ marginTop: 12 }}>
-                          <Tag color="blue">IPv4: {stats.public_ip || hostIp}</Tag>
+                    {/* HERO 1: USERS & ACTIVE CLIENTS */}
+                    <Col xs={24} md={8}>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">👥 کاربران و اتصالات فعال</span>
+                            <span className="badge-emerald">🟢 آنلاین لحظه‌ای</span>
+                          </div>
+                          <div className="hero-val" style={{ color: '#10b981' }}>
+                            {data?.metrics?.online_now ?? 0}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نفر</span>
+                          </div>
                         </div>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="مدت زمان آپ‌تایم"
-                          value={stats.uptime || '--'}
-                          valueStyle={{ color: '#52c41a', fontSize: 15 }}
-                        />
-                        <div style={{ marginTop: 12 }}>
-                          <Tag color="success">وضعیت سرور پایدار</Tag>
+                        <div className="hero-sub">
+                          <span className="badge-slate">کل کاربران: {data?.metrics?.users_count ?? '--'}</span>
+                          <span className="badge-slate">فعال ۲۴ ساعت: {data?.metrics?.online_24h ?? '--'}</span>
                         </div>
-                      </Card>
+                      </div>
                     </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="حافظه موقت (RAM)"
-                          value={stats.ram_str || stats.ram || '--'}
-                          valueStyle={{ color: '#1677ff', fontSize: 15, fontFamily: 'monospace' }}
-                        />
-                        <div style={{ marginTop: 8 }}>
+
+                    {/* HERO 2: BANDWIDTH & TRAFFIC */}
+                    <Col xs={24} md={8}>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">⚡ ترافیک مصرفی و پهنای باند</span>
+                            <span className="badge-slate">۲۴ ساعت اخیر</span>
+                          </div>
+                          <div className="hero-val" style={{ color: '#38bdf8' }}>
+                            {data?.metrics?.traffic_24h_gb ?? 0}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
+                          </div>
+                        </div>
+                        <div className="hero-sub">
+                          <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>⬇️ دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</span>
+                          <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>⬆️ آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</span>
+                          <span className="badge-slate">۷ روز اخیر: {data?.metrics?.traffic_7d_gb ?? 0} GB</span>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* HERO 3: BACKUP CYCLE & PROTECTION */}
+                    <Col xs={24} md={8}>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">🛡️ وضعیت حفاظت و پشتیبان‌گیری</span>
+                            {cfg.backup_password ? <span className="badge-amber">🔐 AES-256 فعال</span> : <span className="badge-slate">🔓 بدون رمز</span>}
+                          </div>
+                          <div className="hero-val" style={{ color: '#f59e0b' }}>
+                            {data?.bk_stats?.count_24h ?? 0}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نسخه ۲۴h</span>
+                          </div>
+                        </div>
+                        <div className="hero-sub">
+                          <span className="badge-slate">⚖️ آخرین حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
+                          <span className="badge-slate">⏱️ هر {cfg.interval_hours || 6} ساعت</span>
+                          {data?.config?.bot_token ? <span className="badge-emerald">🤖 تلگرام متصل</span> : <span className="badge-slate">ربات غیرفعال</span>}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  {/* TIER 2: SYSTEM VITALS STRIP (HARDWARE & HOST HEALTH) */}
+                  <div className="vitals-strip">
+                    <Row gutter={[20, 16]} align="middle">
+                      <Col xs={24} sm={12} md={6}>
+                        <div className="vital-col">
+                          <div className="vital-title-row">
+                            <span>🖥 پردازنده (CPU Load)</span>
+                            <span className="vital-num">{stats.load || '0.00'}</span>
+                          </div>
+                          <Progress
+                            percent={stats.cpu_pct || 15}
+                            size="small"
+                            showInfo={false}
+                            strokeColor="#38bdf8"
+                            trailColor="rgba(255, 255, 255, 0.08)"
+                          />
+                        </div>
+                      </Col>
+
+                      <Col xs={24} sm={12} md={6}>
+                        <div className="vital-col">
+                          <div className="vital-title-row">
+                            <span>🧠 حافظه رم (RAM)</span>
+                            <span className="vital-num">{stats.ram_str || '--'}</span>
+                          </div>
                           <Progress
                             percent={stats.ram_pct || 30}
                             size="small"
-                            status="active"
-                            strokeColor="#1677ff"
+                            showInfo={false}
+                            strokeColor="#10b981"
+                            trailColor="rgba(255, 255, 255, 0.08)"
                           />
                         </div>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="فضای دیسک اصلی"
-                          value={stats.disk_str || stats.disk || '--'}
-                          valueStyle={{ color: '#faad14', fontSize: 15, fontFamily: 'monospace' }}
-                        />
-                        <div style={{ marginTop: 8 }}>
-                          <Progress
-                            percent={stats.disk_pct || 15}
-                            size="small"
-                            strokeColor="#faad14"
-                          />
-                        </div>
-                      </Card>
-                    </Col>
-                  </Row>
+                      </Col>
 
-                  {/* LIVE USERS & TRAFFIC ANALYTICS */}
-                  <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="کاربران ثبت‌شده (کل)"
-                          value={data?.metrics?.users_count ?? '--'}
-                          suffix="کاربر"
-                          valueStyle={{ color: '#1677ff' }}
-                        />
-                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          <Tag color="green">🟢 آنلاین لحظه‌ای: {data?.metrics?.online_now ?? 0}</Tag>
-                          <Tag color="cyan">فعال ۲۴ ساعت: {data?.metrics?.online_24h ?? 0}</Tag>
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="مصرف ۲۴ ساعت گذشته"
-                          value={data?.metrics?.traffic_24h_gb ?? 0}
-                          suffix="GB"
-                          valueStyle={{ color: '#52c41a' }}
-                        />
-                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          <Tag color="blue">⬇️ دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</Tag>
-                          <Tag color="orange">⬆️ آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</Tag>
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="مصرف ۷ روز اخیر (هفته)"
-                          value={data?.metrics?.traffic_7d_gb ?? 0}
-                          suffix="GB"
-                          valueStyle={{ color: '#722ed1' }}
-                        />
-                        <div style={{ marginTop: 10 }}>
-                          <Tag color="purple">کل تاریخچه: {data?.metrics?.total_traffic_gb ?? 0} GB</Tag>
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={6}>
-                      <Card bordered={false} className="kpi-card">
-                        <Statistic
-                          title="پشتیبان‌های ۲۴ ساعت اخیر"
-                          value={data?.bk_stats?.count_24h ?? 0}
-                          suffix="نسخه موفق"
-                          valueStyle={{ color: '#fa8c16' }}
-                        />
-                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                          <Tag color="gold">⚖️ آخرین حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</Tag>
-                          <Tag color="geekblue">دوره: هر {cfg.interval_hours || 6}ساعت</Tag>
-                        </div>
-                      </Card>
-                    </Col>
-                  </Row>
-
-                  {/* QUICK ACTIONS & LINKS BANNER */}
-                  <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#f9f9f9' }}>
-                    <Row gutter={[16, 16]} align="middle">
-                      <Col xs={24} md={14}>
-                        <Space direction="vertical" size={4}>
-                          <Text strong style={{ fontSize: 16 }}>🚀 نصب سریع روی سرور جدید و راه‌اندازی خوشه</Text>
-                          <Text type="secondary">
-                            برای افزودن نود جدید به خوشه یا مهاجرت به سرور تازه، دستور زیر را در ترمینال سرور جدید اجرا کنید:
-                          </Text>
-                          <div style={{ marginTop: 6 }}>
-                            <Text code className="code-text" style={{ padding: '6px 12px', fontSize: 13, background: themeMode === 'dark' ? '#141414' : '#fff' }}>
-                              curl -sSL http://{hostIp}:2099/install.sh | bash
-                            </Text>
-                            <Button size="small" type="link" icon={<CopyOutlined />} onClick={handleCopyInstaller}>کپی دستور</Button>
+                      <Col xs={24} sm={12} md={6}>
+                        <div className="vital-col">
+                          <div className="vital-title-row">
+                            <span>💾 فضای دیسک (Disk)</span>
+                            <span className="vital-num">{stats.disk_str || '--'}</span>
                           </div>
-                        </Space>
+                          <Progress
+                            percent={stats.disk_pct || 20}
+                            size="small"
+                            showInfo={false}
+                            strokeColor="#f59e0b"
+                            trailColor="rgba(255, 255, 255, 0.08)"
+                          />
+                        </div>
+                      </Col>
+
+                      <Col xs={24} sm={12} md={6}>
+                        <div className="vital-col">
+                          <div className="vital-title-row">
+                            <span>⏱ آپ‌تایم و هاست</span>
+                            <span className="badge-slate" style={{ direction: 'ltr' }}>{stats.public_ip || hostIp}</span>
+                          </div>
+                          <div style={{ fontSize: 13, fontWeight: 500, color: '#10b981', marginTop: 3 }}>
+                            {stats.uptime || 'پایدار'}
+                          </div>
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+
+                  {/* TIER 3: QUICK ACTIONS BAR */}
+                  <Card bordered={false} style={{ padding: '4px 8px' }}>
+                    <Row gutter={[16, 12]} align="middle" justify="space-between">
+                      <Col xs={24} md={14}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: 13, fontWeight: 600 }}>🚀 اتصال سرور جدید:</span>
+                          <Text code className="code-text" style={{ padding: '4px 10px', fontSize: 12 }}>
+                            curl -sSL http://{hostIp}:2099/install.sh | bash
+                          </Text>
+                          <Button size="small" type="link" icon={<CopyOutlined />} onClick={handleCopyInstaller}>کپی دستور</Button>
+                        </div>
                       </Col>
                       <Col xs={24} md={10} style={{ textAlign: 'left' }}>
                         <Space size={8} wrap>
@@ -2895,13 +3038,14 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Row>
                   </Card>
 
-                  {/* TOP 5 CONSUMING USERS & LIVE HEALTH DIGEST PREVIEW */}
+                  {/* TIER 4: OPERATIONAL 2-COLUMN GRID (LEADERBOARD & DIGEST) */}
                   <Row gutter={[16, 16]}>
+                    {/* LEADERBOARD */}
                     <Col xs={24} md={11}>
                       <Card
                         title="🏆 ۵ کاربر پرمصرف ۲۴ ساعت گذشته"
                         bordered={false}
-                        extra={<Tag color="blue">{data?.metrics?.panel_type || 'پنل'}</Tag>}
+                        extra={<span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>}
                       >
                         <Table
                           dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
@@ -2909,9 +3053,12 @@ HTML_PAGE = """<!DOCTYPE html>
                             {
                               title: 'رتبه',
                               key: 'rank',
-                              width: 60,
+                              width: 55,
                               align: 'center',
-                              render: (_, __, idx) => ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][idx] || (idx + 1)
+                              render: (_, __, idx) => {
+                                const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-other';
+                                return <span className={`rank-circle ${rankClass}`}>{idx + 1}</span>;
+                              }
                             },
                             {
                               title: 'نام کاربری / شناسه',
@@ -2925,7 +3072,7 @@ HTML_PAGE = """<!DOCTYPE html>
                               key: 'traffic_gb',
                               width: 120,
                               align: 'left',
-                              render: (t) => <Tag color="blue">{t} GB</Tag>
+                              render: (t) => <span className="badge-slate" style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
                             }
                           ]}
                           rowKey="id"
@@ -2936,6 +3083,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       </Card>
                     </Col>
 
+                    {/* LIVE DIGEST PREVIEW */}
                     <Col xs={24} md={13}>
                       <Card
                         title="📋 پیش‌نمایش زنده کارنامه سلامت و گزارش روزانه"
@@ -2969,10 +3117,10 @@ HTML_PAGE = """<!DOCTYPE html>
                       >
                         <div
                           style={{
-                            background: themeMode === 'dark' ? '#141414' : '#fafafa',
-                            padding: '12px 16px',
-                            borderRadius: 6,
-                            border: themeMode === 'dark' ? '1px solid #303030' : '1px solid #f0f0f0',
+                            background: 'rgba(0, 0, 0, 0.3)',
+                            padding: '14px 16px',
+                            borderRadius: 10,
+                            border: '1px solid rgba(255, 255, 255, 0.06)',
                             maxHeight: 250,
                             overflowY: 'auto'
                           }}
@@ -2981,9 +3129,10 @@ HTML_PAGE = """<!DOCTYPE html>
                             style={{
                               fontFamily: 'monospace',
                               fontSize: 12,
-                              lineHeight: '1.8',
+                              lineHeight: '1.85',
                               whiteSpace: 'pre-wrap',
-                              direction: 'rtl'
+                              direction: 'rtl',
+                              color: 'rgba(255, 255, 255, 0.85)'
                             }}
                             dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
                           />
@@ -2992,14 +3141,14 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Col>
                   </Row>
 
-                  {/* SUMMARY TABLE */}
+                  {/* TIER 5: SUMMARY TABLE */}
                   <Card
                     title="آخرین آرشیوهای پشتیبان سرور"
                     bordered={false}
                     extra={
                       <Space size={8}>
-                        {data?.config?.bot_token ? <Tag color="green">🤖 ربات تلگرام متصل</Tag> : <Tag color="default">ربات غیرفعال</Tag>}
-                        {cfg.backup_password ? <Tag color="gold">🔐 AES-256 فعال</Tag> : <Tag color="default">🔓 بدون رمز</Tag>}
+                        {data?.config?.bot_token ? <span className="badge-emerald">🤖 تلگرام فعال</span> : <span className="badge-slate">ربات غیرفعال</span>}
+                        {cfg.backup_password ? <span className="badge-amber">🔐 رمزدار AES</span> : <span className="badge-slate">بدون رمز</span>}
                       </Space>
                     }
                   >
@@ -3415,34 +3564,55 @@ HTML_PAGE = """<!DOCTYPE html>
                 <Space direction="vertical" size={20} style={{ width: '100%' }}>
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={8}>
-                      <Card bordered={false}>
-                        <Statistic
-                          title="کل نودهای ثبت‌شده در پنل"
-                          value={data?.live_nodes?.length || data?.servers?.length || 0}
-                          suffix="نود"
-                          valueStyle={{ color: '#1677ff' }}
-                        />
-                      </Card>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">🌐 نودهای زیرساخت</span>
+                            <span className="badge-slate">ثبت‌شده</span>
+                          </div>
+                          <div className="hero-val" style={{ color: '#38bdf8' }}>
+                            {data?.live_nodes?.length || data?.servers?.length || 0}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود</span>
+                          </div>
+                        </div>
+                        <div className="hero-sub">
+                          <span className="badge-slate">سامانه متصل: {data?.metrics?.panel_type || 'پاسارگارد'}</span>
+                        </div>
+                      </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <Card bordered={false}>
-                        <Statistic
-                          title="نودهای متصل و پایدار"
-                          value={(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
-                          suffix="نود فعال 🟢"
-                          valueStyle={{ color: '#52c41a' }}
-                        />
-                      </Card>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">🟢 وضعیت اتصال شبکه</span>
+                            <span className="badge-emerald">پایدار</span>
+                          </div>
+                          <div className="hero-val" style={{ color: '#10b981' }}>
+                            {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود فعال</span>
+                          </div>
+                        </div>
+                        <div className="hero-sub">
+                          <span className="badge-emerald">اتصال سرورهای لبه آنلاین</span>
+                        </div>
+                      </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <Card bordered={false}>
-                        <Statistic
-                          title="مجموع ترافیک عبوری نودها"
-                          value={((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
-                          suffix="GB"
-                          valueStyle={{ color: '#faad14' }}
-                        />
-                      </Card>
+                      <div className="hero-kpi-card">
+                        <div>
+                          <div className="hero-header">
+                            <span className="hero-title">⚡ ترافیک عبوری نودها</span>
+                            <span className="badge-slate">مجموع</span>
+                          </div>
+                          <div className="hero-val" style={{ color: '#f59e0b' }}>
+                            {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
+                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
+                          </div>
+                        </div>
+                        <div className="hero-sub">
+                          <span className="badge-amber">ترافیک کلیه نودهای فعال</span>
+                        </div>
+                      </div>
                     </Col>
                   </Row>
 
@@ -3451,7 +3621,7 @@ HTML_PAGE = """<!DOCTYPE html>
                     bordered={false}
                     extra={
                       <Space size={8}>
-                        <Tag color="blue">{data?.metrics?.panel_type || 'پنل'}</Tag>
+                        <span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>
                         <Button icon={<ReloadOutlined />} size="small" onClick={() => fetchData()}>بروزرسانی</Button>
                       </Space>
                     }
@@ -3750,11 +3920,11 @@ HTML_PAGE = """<!DOCTYPE html>
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorError: '#ef4444',
-              colorBgBase: themeMode === 'dark' ? '#090d16' : '#f8fafc',
-              colorBgContainer: themeMode === 'dark' ? '#111827' : '#ffffff',
-              colorBgElevated: themeMode === 'dark' ? '#1a2234' : '#ffffff',
-              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0',
-              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9',
+              colorBgBase: themeMode === 'dark' ? '#080b11' : '#f8fafc',
+              colorBgContainer: themeMode === 'dark' ? '#0f1624' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#162032' : '#ffffff',
+              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.07)' : '#e2e8f0',
+              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f1f5f9',
               borderRadius: 10,
               borderRadiusLG: 14,
               fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
