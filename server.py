@@ -1010,32 +1010,107 @@ def send_document_to_telegram(chat_id, file_path, caption="", token=None):
 
 def get_snapshot_metrics():
     metrics = {
+        'panel_type': 'سرور خام / نامشخص',
+        'panel_status': 'نامشخص',
         'users_count': 0,
+        'online_now': 0,
+        'online_24h': 0,
         'total_traffic_gb': 0.0,
-        'up_gb': 0.0,
-        'down_gb': 0.0,
+        'traffic_24h_gb': 0.0,
+        'up_24h_gb': 0.0,
+        'down_24h_gb': 0.0,
+        'traffic_7d_gb': 0.0,
+        'top_users_24h': [],
+        'nodes_usage_24h': [],
         'top_users': []
     }
     # 1. Check PasarGuard
     pg_db = '/var/lib/pasarguard/db.sqlite3'
     if os.path.exists(pg_db):
         try:
+            metrics['panel_type'] = 'PasarGuard'
+            d_res = subprocess.run(["docker", "ps", "-f", "name=pasarguard", "--format", "{{.Status}}"], capture_output=True, text=True)
+            metrics['panel_status'] = d_res.stdout.strip() or "فعال (کانتینر Docker)"
+
             con = sqlite3.connect(pg_db)
             cur = con.cursor()
-            metrics['users_count'] = cur.execute('SELECT count(*) FROM users;').fetchone()[0] or 0
+            
+            # Cumulative total
+            cur.execute('SELECT count(*) FROM users;')
+            metrics['users_count'] = cur.fetchone()[0] or 0
             tot = cur.execute('SELECT sum(used_traffic) FROM users;').fetchone()[0] or 0
             metrics['total_traffic_gb'] = round(tot / (1024**3), 2)
+
+            now_utc = datetime.now(timezone.utc)
+            h24 = (now_utc - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
+            m15 = (now_utc - timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')
+            d7 = (now_utc - timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')
+
+            # Online stats
+            try:
+                metrics['online_now'] = cur.execute('SELECT COUNT(*) FROM users WHERE online_at >= ?', (m15,)).fetchone()[0] or 0
+                metrics['online_24h'] = cur.execute('SELECT COUNT(*) FROM users WHERE online_at >= ?', (h24,)).fetchone()[0] or 0
+            except Exception:
+                pass
+
+            # 24h & 7d usage from node_usages
+            try:
+                row_24h = cur.execute('SELECT SUM(uplink), SUM(downlink) FROM node_usages WHERE created_at >= ?', (h24,)).fetchone()
+                up_24 = (row_24h[0] or 0) / (1024**3)
+                down_24 = (row_24h[1] or 0) / (1024**3)
+                metrics['up_24h_gb'] = round(up_24, 2)
+                metrics['down_24h_gb'] = round(down_24, 2)
+                metrics['traffic_24h_gb'] = round(up_24 + down_24, 2)
+
+                row_7d = cur.execute('SELECT SUM(uplink), SUM(downlink) FROM node_usages WHERE created_at >= ?', (d7,)).fetchone()
+                metrics['traffic_7d_gb'] = round(((row_7d[0] or 0) + (row_7d[1] or 0)) / (1024**3), 2)
+            except Exception:
+                pass
+
+            # Top 5 users in last 24h
+            try:
+                top_24 = cur.execute("""
+                    SELECT u.username, SUM(nu.used_traffic) as tot
+                    FROM node_user_usages nu
+                    JOIN users u ON u.id = nu.user_id
+                    WHERE nu.created_at >= ?
+                    GROUP BY u.id
+                    ORDER BY tot DESC
+                    LIMIT 5
+                """, (h24,)).fetchall()
+                for u, t in top_24:
+                    metrics['top_users_24h'].append((u, round((t or 0) / (1024**3), 2)))
+            except Exception:
+                pass
+
+            # Nodes usage in last 24h
+            try:
+                n_rows = cur.execute("""
+                    SELECT n.name, SUM(nu.uplink), SUM(nu.downlink)
+                    FROM node_usages nu
+                    JOIN nodes n ON n.id = nu.node_id
+                    WHERE nu.created_at >= ?
+                    GROUP BY n.id
+                """, (h24,)).fetchall()
+                for name, u_up, u_down in n_rows:
+                    metrics['nodes_usage_24h'].append((name, round(((u_up or 0) + (u_down or 0)) / (1024**3), 2)))
+            except Exception:
+                pass
+
             for u, traf in cur.execute('SELECT username, used_traffic FROM users ORDER BY used_traffic DESC LIMIT 5;').fetchall():
                 metrics['top_users'].append((u, round((traf or 0) / (1024**3), 2)))
             con.close()
             return metrics
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[PasarGuard Metrics Error] {e}", file=sys.stderr)
 
     # 2. Check 3X-UI
     db_path = '/etc/x-ui/x-ui.db'
     if os.path.exists(db_path):
         try:
+            metrics['panel_type'] = '3X-UI'
+            chk = subprocess.run(["systemctl", "is-active", "x-ui"], capture_output=True, text=True)
+            metrics['panel_status'] = f"سرویس {chk.stdout.strip()}"
             con = sqlite3.connect(db_path)
             cur = con.cursor()
             cur.execute('SELECT count(distinct email) FROM client_traffics;')
@@ -1112,25 +1187,52 @@ def get_snapshot_text():
     stats = get_system_stats()
     t_info = get_tehran_now()
     text = (
-        '📊 <b>اسنپ‌شات وضعیت کاربران و مصرف ترافیک</b>\n'
+        '📊 <b>گزارش جامع و تحلیل زنده ترافیک سرور</b>\n'
         '────────────────────\n'
         f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
-        f'👥 <b>تعداد کل کاربران:</b> <b>{metrics["users_count"]} کاربر</b>\n'
-        f'📈 <b>مجموع کل ترافیک:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
-    )
-    if metrics["up_gb"] > 0 or metrics["down_gb"] > 0:
-        text += f'⬇️ <b>مجموع دانلود:</b> {metrics["down_gb"]} GB\n'
-        text += f'⬆️ <b>مجموع آپلود:</b> {metrics["up_gb"]} GB\n'
-    text += (
-        f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
+        f'⏱ <b>آپ‌تایم سرور:</b> <code>{stats.get("uptime", "-")}</code>\n'
+        f'⚡️ <b>وضعیت پنل ({metrics["panel_type"]}):</b> <code>{metrics["panel_status"]}</code>\n'
         '────────────────────\n'
-        '🏆 <b>۵ کاربر پرمصرف:</b>\n'
+        '👥 <b>وضعیت کاربران:</b>\n'
+        f'• کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
     )
-    if metrics['top_users']:
+    if metrics.get('online_24h'):
+        text += f'• متصل در ۲۴ ساعت گذشته: <b>{metrics["online_24h"]} کاربر</b>\n'
+    if metrics.get('online_now'):
+        text += f'• آنلاین در لحظه (۱۵ دقیقه اخیر): <b>{metrics["online_now"]} کاربر 🟢</b>\n'
+    
+    text += (
+        '────────────────────\n'
+        '📈 <b>آمار ترافیک مصرفی:</b>\n'
+    )
+    if metrics.get('traffic_24h_gb') > 0:
+        text += f'• <b>مصرف ۲۴ ساعت گذشته:</b> <b>{metrics["traffic_24h_gb"]} GB</b>'
+        if metrics.get('down_24h_gb') or metrics.get('up_24h_gb'):
+            text += f' (⬇️ {metrics["down_24h_gb"]} GB | ⬆️ {metrics["up_24h_gb"]} GB)\n'
+        else:
+            text += '\n'
+    if metrics.get('traffic_7d_gb') > 0:
+        text += f'• <b>مصرف ۷ روز گذشته (هفته):</b> <b>{metrics["traffic_7d_gb"]} GB</b>\n'
+    text += f'• <b>مجموع کل ترافیک تاریخچه:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
+
+    if metrics.get('nodes_usage_24h'):
+        text += '────────────────────\n🌐 <b>ترافیک نودها در ۲۴ ساعت اخیر:</b>\n'
+        for n_name, n_tot in metrics['nodes_usage_24h']:
+            text += f'• {n_name}: <b>{n_tot} GB</b>\n'
+
+    if metrics.get('top_users_24h'):
+        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف ۲۴ ساعت گذشته:</b>\n'
+        for i, (em, tot) in enumerate(metrics['top_users_24h'], 1):
+            text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
+    elif metrics.get('top_users'):
+        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف تاریخچه:</b>\n'
         for i, (em, tot) in enumerate(metrics['top_users'], 1):
-            text += f'{i}. <code>{em}</code> : <b>{tot} GB</b>\n'
-    else:
-        text += 'اطلاعات مصرفی ثبت نشده است.\n'
+            text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
+
+    text += (
+        '────────────────────\n'
+        f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
+    )
     return text
 
 def get_system_status_text():
