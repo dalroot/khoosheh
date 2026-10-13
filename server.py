@@ -1182,6 +1182,17 @@ def get_main_menu_data():
     keyboard = {'inline_keyboard': inline_keyboard}
     return text, keyboard
 
+def get_node_flag(name, addr):
+    n = (name + " " + addr).lower()
+    if any(k in n for k in ["uk", "london", "england"]): return "🇬🇧"
+    if any(k in n for k in ["nl", "amsterdam", "netherlands"]): return "🇳🇱"
+    if any(k in n for k in ["de", "germany", "frankfurt"]): return "🇩🇪"
+    if any(k in n for k in ["ir", "iran", "tehran"]): return "🇮🇷"
+    if any(k in n for k in ["tr", "turkey", "istanbul"]): return "🇹🇷"
+    if any(k in n for k in ["fr", "france", "paris"]): return "🇫🇷"
+    if any(k in n for k in ["us", "usa", "america"]): return "🇺🇸"
+    return "🌐"
+
 def get_snapshot_text():
     metrics = get_snapshot_metrics()
     stats = get_system_stats()
@@ -1203,29 +1214,29 @@ def get_snapshot_text():
     
     text += (
         '────────────────────\n'
-        '📈 <b>آمار ترافیک مصرفی:</b>\n'
+        '📈 <b>آمار ترافیک مصرفی:</b>\n\n'
     )
     if metrics.get('traffic_24h_gb') > 0:
-        text += f'• <b>مصرف ۲۴ ساعت گذشته:</b> <b>{metrics["traffic_24h_gb"]} GB</b>'
+        text += f'• <b>مصرف ۲۴ ساعت گذشته:</b> <b>{metrics["traffic_24h_gb"]} GB</b>\n'
         if metrics.get('down_24h_gb') or metrics.get('up_24h_gb'):
-            text += f' (⬇️ {metrics["down_24h_gb"]} GB | ⬆️ {metrics["up_24h_gb"]} GB)\n'
+            text += f'  └─ ⬇️ دانلود: <b>{metrics["down_24h_gb"]} GB</b> | ⬆️ آپلود: <b>{metrics["up_24h_gb"]} GB</b>\n\n'
         else:
             text += '\n'
     if metrics.get('traffic_7d_gb') > 0:
-        text += f'• <b>مصرف ۷ روز گذشته (هفته):</b> <b>{metrics["traffic_7d_gb"]} GB</b>\n'
+        text += f'• <b>مصرف ۷ روز گذشته (هفته):</b> <b>{metrics["traffic_7d_gb"]} GB</b>\n\n'
     text += f'• <b>مجموع کل ترافیک تاریخچه:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
 
     if metrics.get('nodes_usage_24h'):
-        text += '────────────────────\n🌐 <b>ترافیک نودها در ۲۴ ساعت اخیر:</b>\n'
+        text += '────────────────────\n🌐 <b>ترافیک نودها در ۲۴ ساعت اخیر:</b>\n\n'
         for n_name, n_tot in metrics['nodes_usage_24h']:
             text += f'• {n_name}: <b>{n_tot} GB</b>\n'
 
     if metrics.get('top_users_24h'):
-        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف ۲۴ ساعت گذشته:</b>\n'
+        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف ۲۴ ساعت گذشته:</b>\n\n'
         for i, (em, tot) in enumerate(metrics['top_users_24h'], 1):
             text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
     elif metrics.get('top_users'):
-        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف تاریخچه:</b>\n'
+        text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف تاریخچه:</b>\n\n'
         for i, (em, tot) in enumerate(metrics['top_users'], 1):
             text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
 
@@ -1237,15 +1248,65 @@ def get_snapshot_text():
 
 def get_system_status_text():
     stats = get_system_stats()
+    metrics = get_snapshot_metrics()
     t_info = get_tehran_now()
     text = (
-        '🖥 <b>وضعیت منابع سرور</b>\n'
+        '🖥 <b>وضعیت منابع سرور و نودهای شبکه</b>\n'
         '────────────────────\n'
         f'🏷 <b>نام هاست:</b> <code>{stats.get("hostname", "-")}</code>\n'
         f'🌐 <b>آی‌پی سرور:</b> <code>{stats.get("public_ip", "-")}</code>\n'
-        f'⏱ <b>مدت روشن بودن:</b> <code>{stats.get("uptime", "-")}</code>\n'
+        f'⏱ <b>مدت زمان آپ‌تایم:</b> <code>{stats.get("uptime", "-")}</code>\n'
         f'🧠 <b>حافظه رم:</b> <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
-        f'💾 <b>فضای هارد:</b> <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
+        f'💾 <b>فضای دیسک:</b> <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
+        f'⚡️ <b>وضعیت پنل ({metrics["panel_type"]}):</b> <code>{metrics["panel_status"]}</code>\n'
+    )
+
+    pg_db = '/var/lib/pasarguard/db.sqlite3'
+    if os.path.exists(pg_db):
+        try:
+            con = sqlite3.connect(pg_db)
+            cur = con.cursor()
+            nodes = cur.execute('SELECT id, name, address, port, status, xray_version, uplink, downlink FROM nodes').fetchall()
+            con.close()
+            if nodes:
+                text += f'────────────────────\n📡 <b>وضعیت نودهای متصل به پنل ({len(nodes)} نود):</b>\n\n'
+                for id_, name, addr, port, status, xray_ver, up, down in nodes:
+                    flag = get_node_flag(name, addr)
+                    st_icon = "🟢 متصل" if status == "connected" else f"🔴 {status}"
+                    up_gb = round((up or 0) / (1024**3), 2)
+                    down_gb = round((down or 0) / (1024**3), 2)
+                    tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
+                    text += (
+                        f'{flag} <b>{name}</b> [{st_icon}]\n'
+                        f'• آدرس: <code>{addr}:{port}</code>\n'
+                        f'• ترافیک کل نود: <b>{tot_gb} GB</b> (⬇️ {down_gb} GB | ⬆️ {up_gb} GB)\n'
+                        f'• نسخه هسته: <code>Xray {xray_ver}</code>\n\n'
+                    )
+        except Exception:
+            pass
+
+    xui_db = '/etc/x-ui/x-ui.db'
+    if os.path.exists(xui_db):
+        try:
+            con = sqlite3.connect(xui_db)
+            cur = con.cursor()
+            inbounds = cur.execute('SELECT id, port, protocol, remark, up, down FROM inbounds').fetchall()
+            con.close()
+            if inbounds:
+                text += f'────────────────────\n🚪 <b>اینباندهای فعال ({len(inbounds)} درگاه):</b>\n\n'
+                for id_, port, proto, remark, up, down in inbounds:
+                    up_gb = round((up or 0) / (1024**3), 2)
+                    down_gb = round((down or 0) / (1024**3), 2)
+                    tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
+                    text += (
+                        f'🚪 <b>{remark or f"Inbound {id_}"}</b> (پورت {port})\n'
+                        f'• پروتکل: <code>{proto}</code>\n'
+                        f'• ترافیک: <b>{tot_gb} GB</b> (⬇️ {down_gb} GB | ⬆️ {up_gb} GB)\n\n'
+                    )
+        except Exception:
+            pass
+
+    text += (
         '────────────────────\n'
         f'📅 <b>زمان سرور (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
