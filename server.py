@@ -48,6 +48,8 @@ DEFAULT_CONFIG = {
     "keep_local_count": 15,
     "custom_panels": [],
     "servers": [],
+    "daily_digest_enabled": True,
+    "daily_digest_hours": [14, 1],
     "last_backup_at": "",
     "last_status": "آماده به کار",
     "last_error": ""
@@ -1376,6 +1378,7 @@ def get_daily_digest_text():
         f'├ 🗄 کل بکاپ‌های محلی ذخیره: <b>{bk_stats["total_count"]} نسخه</b>\n'
         f'├ ⚖️ حجم آخرین نسخه پشتیبان: <b>{bk_stats["latest_size_mb"]} MB</b>\n'
         f'├ ⏰ دوره بکاپ خودکار: هر <b>{cfg.get("interval_hours", 6)} ساعت</b>\n'
+        f'├ 📢 نوبت‌های گزارش روزانه: <b>{" و ".join([f"{int(h):02d}:00" for h in cfg.get("daily_digest_hours", [14, 1])])}</b> (تهران)\n'
         f'└ 💾 فضای دیسک سرور: <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
         '────────────────────\n'
         '🧠 <b>وضعیت منابع سخت‌افزاری:</b>\n'
@@ -1480,6 +1483,20 @@ def run_telegram_bot():
                             send_document_to_telegram(admin_id, res_b['file_path'], caption=cap, token=token)
                         else:
                             tg_api('sendMessage', {'chat_id': chat_id, 'text': f'❌ خطا در ساخت بکاپ: {res_b.get("error")}', 'parse_mode': 'HTML'}, token=token)
+                    elif m_text.startswith(('/setdigest', '/digest_hours')):
+                        parts = m_text.split()[1:]
+                        new_hours = []
+                        for p in parts:
+                            p_clean = p.replace(':', '').replace('-', '').strip()
+                            if p_clean.isdigit() and 0 <= int(p_clean) <= 23:
+                                new_hours.append(int(p_clean))
+                        if new_hours:
+                            cfg["daily_digest_hours"] = sorted(list(set(new_hours)))
+                            save_config(cfg)
+                            hours_str = " و ".join([f"{h:02d}:00" for h in cfg["daily_digest_hours"]])
+                            tg_api('sendMessage', {'chat_id': chat_id, 'text': f'✅ <b>ساعت‌های گزارش خودکار روزانه ذخیره شد:</b>\n⏰ نوبت‌ها: <b>{hours_str}</b> (به وقت تهران)', 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
+                        else:
+                            tg_api('sendMessage', {'chat_id': chat_id, 'text': '⚠️ لطفاً ساعت‌ها را مشخص کنید. مثال:\n<code>/setdigest 14 1</code>', 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
                     elif m_text in ['📋 گزارش روزانه', 'گزارش روزانه']:
                         digest_txt = get_daily_digest_text()
                         tg_api('sendMessage', {'chat_id': chat_id, 'text': digest_txt, 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
@@ -1594,9 +1611,13 @@ def run_scheduler():
                     except Exception as eb:
                         print(f"[Scheduler] Backup error: {eb}")
 
-            # --- 2. Automated Daily Digest (Twice a day: 09:00 & 21:00 Tehran time) ---
+            # --- 2. Automated Daily Digest (Twice a day: 14:00 & 01:00 Tehran time) ---
             if cfg.get("daily_digest_enabled", True) and token and chat_id:
-                digest_hours = cfg.get("daily_digest_hours", [9, 21])
+                digest_hours = cfg.get("daily_digest_hours", [14, 1])
+                try:
+                    digest_hours = [int(h) for h in digest_hours]
+                except Exception:
+                    digest_hours = [14, 1]
                 cur_hour = t_info.get("hour", 0)
                 cur_slot = t_info.get("date_slot", "")
                 last_slot = cfg.get("last_digest_slot", "")
@@ -3579,6 +3600,13 @@ class KhooshehHandler(BaseHTTPRequestHandler):
                     cfg["backup_password"] = body["backup_password"]
                 if "interval_hours" in body:
                     cfg["interval_hours"] = int(body["interval_hours"])
+                if "daily_digest_hours" in body:
+                    try:
+                        cfg["daily_digest_hours"] = [int(x) for x in body["daily_digest_hours"] if 0 <= int(x) <= 23]
+                    except Exception:
+                        pass
+                if "daily_digest_enabled" in body:
+                    cfg["daily_digest_enabled"] = bool(body["daily_digest_enabled"])
                 save_config(cfg)
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")

@@ -11,6 +11,8 @@
   "auto_schedule": true,
   "backup_type": "full",
   "keep_local_count": 15,
+  "daily_digest_enabled": true,
+  "daily_digest_hours": [14, 1],
   "custom_panels": [],
   "servers": [],
   "last_backup_at": "",
