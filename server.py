@@ -1358,6 +1358,65 @@ def get_system_status_text():
     )
     return text
 
+def get_live_nodes_data():
+    nodes_list = []
+    pg_db = '/var/lib/pasarguard/db.sqlite3'
+    if os.path.exists(pg_db):
+        try:
+            con = sqlite3.connect(pg_db)
+            cur = con.cursor()
+            rows = cur.execute('SELECT id, name, address, port, status, xray_version, uplink, downlink FROM nodes').fetchall()
+            con.close()
+            for id_, name, addr, port, status, xray_ver, up, down in rows:
+                flag = get_node_flag(name, addr)
+                up_gb = round((up or 0) / (1024**3), 2)
+                down_gb = round((down or 0) / (1024**3), 2)
+                tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
+                nodes_list.append({
+                    "id": f"pg_{id_}",
+                    "name": name,
+                    "flag": flag,
+                    "address": addr,
+                    "port": port,
+                    "status": "online" if status == "connected" else (status or "offline"),
+                    "xray_version": xray_ver or "--",
+                    "uplink_gb": up_gb,
+                    "downlink_gb": down_gb,
+                    "total_gb": tot_gb,
+                    "panel": "PasarGuard"
+                })
+        except Exception:
+            pass
+
+    xui_db = '/etc/x-ui/x-ui.db'
+    if os.path.exists(xui_db):
+        try:
+            con = sqlite3.connect(xui_db)
+            cur = con.cursor()
+            rows = cur.execute('SELECT id, port, protocol, remark, up, down FROM inbounds').fetchall()
+            con.close()
+            for id_, port, proto, remark, up, down in rows:
+                up_gb = round((up or 0) / (1024**3), 2)
+                down_gb = round((down or 0) / (1024**3), 2)
+                tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
+                nodes_list.append({
+                    "id": f"xui_{id_}",
+                    "name": remark or f"Inbound {id_}",
+                    "flag": "🚪",
+                    "address": "Local Server",
+                    "port": port,
+                    "status": "online",
+                    "xray_version": proto,
+                    "uplink_gb": up_gb,
+                    "downlink_gb": down_gb,
+                    "total_gb": tot_gb,
+                    "panel": "3X-UI"
+                })
+        except Exception:
+            pass
+
+    return nodes_list
+
 def get_daily_digest_text():
     stats = get_system_stats()
     metrics = get_snapshot_metrics()
@@ -1847,7 +1906,9 @@ HTML_PAGE = """<!DOCTYPE html>
               bot_token: json.config.bot_token || '',
               admin_chat_id: json.config.admin_chat_id || '',
               backup_password: json.config.backup_password || '',
-              interval_hours: json.config.interval_hours || 6
+              interval_hours: json.config.interval_hours || 6,
+              daily_digest_enabled: json.config.daily_digest_enabled !== false,
+              daily_digest_hours: json.config.daily_digest_hours || [14, 1]
             });
           }
         } catch (e) {
@@ -2035,6 +2096,32 @@ HTML_PAGE = """<!DOCTYPE html>
           }
         } catch (e) {
           message.error('خطا در اتصال به سرور');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleSendDigest = async () => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/send_digest', {
+            method: 'POST',
+            headers: getAuthHeader()
+          });
+          const json = await res.json();
+          if (json.ok) {
+            notification.success({
+              message: 'گزارش روزانه به تلگرام مخابره شد',
+              description: 'کارنامه سلامت سیستم و کاربران به ادمین ارسال گردید.'
+            });
+          } else {
+            notification.error({
+              message: 'خطا در ارسال گزارش',
+              description: json.error || 'ارتباط با تلگرام برقرار نشد.'
+            });
+          }
+        } catch (e) {
+          message.error('خطا در فراخوانی سرویس تلگرام');
         } finally {
           setActionLoading(false);
         }
@@ -2297,6 +2384,59 @@ HTML_PAGE = """<!DOCTYPE html>
         }
       ];
 
+      const liveNodeColumns = [
+        {
+          title: 'کشور',
+          dataIndex: 'flag',
+          key: 'flag',
+          width: 80,
+          align: 'center',
+          render: (f) => <span style={{ fontSize: 20 }}>{f || '🌐'}</span>
+        },
+        {
+          title: 'نام نود',
+          dataIndex: 'name',
+          key: 'name',
+          render: (text) => <Text strong>{text}</Text>
+        },
+        {
+          title: 'آدرس و پورت اتصال',
+          key: 'address',
+          render: (_, r) => <Text code className="code-text" style={{ color: '#1677ff' }}>{r.address}:{r.port}</Text>
+        },
+        {
+          title: 'وضعیت اتصال',
+          dataIndex: 'status',
+          key: 'status',
+          width: 120,
+          render: (st) => st === 'online' ? <Tag color="success">🟢 متصل</Tag> : <Tag color="error">🔴 {st || 'قطع'}</Tag>
+        },
+        {
+          title: 'هسته (Core)',
+          dataIndex: 'xray_version',
+          key: 'xray_version',
+          render: (v) => <Tag color="purple">Xray {v}</Tag>
+        },
+        {
+          title: 'دریافت (دانلود)',
+          dataIndex: 'downlink_gb',
+          key: 'downlink_gb',
+          render: (d) => <Text style={{ color: '#52c41a' }}>⬇️ {d} GB</Text>
+        },
+        {
+          title: 'ارسال (آپلود)',
+          dataIndex: 'uplink_gb',
+          key: 'uplink_gb',
+          render: (u) => <Text style={{ color: '#faad14' }}>⬆️ {u} GB</Text>
+        },
+        {
+          title: 'ترافیک کل نود',
+          dataIndex: 'total_gb',
+          key: 'total_gb',
+          render: (t) => <Text strong>{t} GB</Text>
+        }
+      ];
+
       const stats = data?.stats || {};
       const cfg = data?.config || {};
       const hostIp = stats.public_ip || window.location.hostname;
@@ -2486,10 +2626,69 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Col>
                   </Row>
 
+                  {/* LIVE USERS & TRAFFIC ANALYTICS */}
+                  <Row gutter={[16, 16]}>
+                    <Col xs={24} sm={12} md={6}>
+                      <Card bordered={false} className="kpi-card">
+                        <Statistic
+                          title="کاربران ثبت‌شده (کل)"
+                          value={data?.metrics?.users_count ?? '--'}
+                          suffix="کاربر"
+                          valueStyle={{ color: '#1677ff' }}
+                        />
+                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          <Tag color="green">🟢 آنلاین لحظه‌ای: {data?.metrics?.online_now ?? 0}</Tag>
+                          <Tag color="cyan">فعال ۲۴ ساعت: {data?.metrics?.online_24h ?? 0}</Tag>
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                      <Card bordered={false} className="kpi-card">
+                        <Statistic
+                          title="مصرف ۲۴ ساعت گذشته"
+                          value={data?.metrics?.traffic_24h_gb ?? 0}
+                          suffix="GB"
+                          valueStyle={{ color: '#52c41a' }}
+                        />
+                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          <Tag color="blue">⬇️ دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</Tag>
+                          <Tag color="orange">⬆️ آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</Tag>
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                      <Card bordered={false} className="kpi-card">
+                        <Statistic
+                          title="مصرف ۷ روز اخیر (هفته)"
+                          value={data?.metrics?.traffic_7d_gb ?? 0}
+                          suffix="GB"
+                          valueStyle={{ color: '#722ed1' }}
+                        />
+                        <div style={{ marginTop: 10 }}>
+                          <Tag color="purple">کل تاریخچه: {data?.metrics?.total_traffic_gb ?? 0} GB</Tag>
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={6}>
+                      <Card bordered={false} className="kpi-card">
+                        <Statistic
+                          title="پشتیبان‌های ۲۴ ساعت اخیر"
+                          value={data?.bk_stats?.count_24h ?? 0}
+                          suffix="نسخه موفق"
+                          valueStyle={{ color: '#fa8c16' }}
+                        />
+                        <div style={{ marginTop: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                          <Tag color="gold">⚖️ آخرین حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</Tag>
+                          <Tag color="geekblue">دوره: هر {cfg.interval_hours || 6}ساعت</Tag>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+
                   {/* QUICK ACTIONS & LINKS BANNER */}
                   <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#f9f9f9' }}>
                     <Row gutter={[16, 16]} align="middle">
-                      <Col xs={24} md={16}>
+                      <Col xs={24} md={14}>
                         <Space direction="vertical" size={4}>
                           <Text strong style={{ fontSize: 16 }}>🚀 نصب سریع روی سرور جدید و راه‌اندازی خوشه</Text>
                           <Text type="secondary">
@@ -2503,14 +2702,14 @@ HTML_PAGE = """<!DOCTYPE html>
                           </div>
                         </Space>
                       </Col>
-                      <Col xs={24} md={8} style={{ textAlign: 'left' }}>
-                        <Space size={8}>
+                      <Col xs={24} md={10} style={{ textAlign: 'left' }}>
+                        <Space size={8} wrap>
                           <Button
                             type="primary"
                             icon={<SyncOutlined />}
                             onClick={() => setCurrentTab('restore')}
                           >
-                            بازگردانی هوشمند بکاپ
+                            بازگردانی هوشمند
                           </Button>
                           <Button
                             icon={<ThunderboltOutlined />}
@@ -2519,10 +2718,114 @@ HTML_PAGE = """<!DOCTYPE html>
                           >
                             پشتیبان‌گیری فوری
                           </Button>
+                          <Button
+                            icon={<SendOutlined />}
+                            onClick={handleSendDigest}
+                            loading={actionLoading}
+                          >
+                            ارسال گزارش به تلگرام
+                          </Button>
                         </Space>
                       </Col>
                     </Row>
                   </Card>
+
+                  {/* TOP 5 CONSUMING USERS & LIVE HEALTH DIGEST PREVIEW */}
+                  <Row gutter={[16, 16]}>
+                    <Col xs={24} md={11}>
+                      <Card
+                        title="🏆 ۵ کاربر پرمصرف ۲۴ ساعت گذشته"
+                        bordered={false}
+                        extra={<Tag color="blue">{data?.metrics?.panel_type || 'پنل'}</Tag>}
+                      >
+                        <Table
+                          dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
+                          columns={[
+                            {
+                              title: 'رتبه',
+                              key: 'rank',
+                              width: 60,
+                              align: 'center',
+                              render: (_, __, idx) => ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][idx] || (idx + 1)
+                            },
+                            {
+                              title: 'نام کاربری / شناسه',
+                              dataIndex: 'email',
+                              key: 'email',
+                              render: (em) => <Text code className="code-text" strong>{em}</Text>
+                            },
+                            {
+                              title: 'مصرف ترافیک',
+                              dataIndex: 'traffic_gb',
+                              key: 'traffic_gb',
+                              width: 120,
+                              align: 'left',
+                              render: (t) => <Tag color="blue">{t} GB</Tag>
+                            }
+                          ]}
+                          rowKey="id"
+                          pagination={false}
+                          size="small"
+                          locale={{ emptyText: 'اطلاعات مصرفی برای ۲۴ ساعت اخیر یافت نشد.' }}
+                        />
+                      </Card>
+                    </Col>
+
+                    <Col xs={24} md={13}>
+                      <Card
+                        title="📋 پیش‌نمایش زنده کارنامه سلامت و گزارش روزانه"
+                        bordered={false}
+                        extra={
+                          <Space size={8}>
+                            <Button
+                              size="small"
+                              icon={<CopyOutlined />}
+                              onClick={() => {
+                                if (data?.digest_text) {
+                                  const clean = data.digest_text.replace(/<[^>]+>/g, '');
+                                  navigator.clipboard.writeText(clean);
+                                  message.success('متن گزارش روزانه در حافظه کپی شد.');
+                                }
+                              }}
+                            >
+                              کپی متن
+                            </Button>
+                            <Button
+                              type="primary"
+                              size="small"
+                              icon={<SendOutlined />}
+                              onClick={handleSendDigest}
+                              loading={actionLoading}
+                            >
+                              ارسال فوری به تلگرام
+                            </Button>
+                          </Space>
+                        }
+                      >
+                        <div
+                          style={{
+                            background: themeMode === 'dark' ? '#141414' : '#fafafa',
+                            padding: '12px 16px',
+                            borderRadius: 6,
+                            border: themeMode === 'dark' ? '1px solid #303030' : '1px solid #f0f0f0',
+                            maxHeight: 250,
+                            overflowY: 'auto'
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontFamily: 'monospace',
+                              fontSize: 12,
+                              lineHeight: '1.8',
+                              whiteSpace: 'pre-wrap',
+                              direction: 'rtl'
+                            }}
+                            dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
+                          />
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
 
                   {/* SUMMARY TABLE */}
                   <Card
@@ -2944,15 +3247,60 @@ HTML_PAGE = """<!DOCTYPE html>
 
               {/* 4. SERVERS */}
               {currentTab === 'servers' && (
-                <Card title="سرورها و نودهای متصل به خوشه" bordered={false}>
-                  <Table
-                    dataSource={data?.servers || []}
-                    columns={serverColumns}
-                    rowKey="id"
-                    pagination={false}
-                    size="middle"
-                  />
-                </Card>
+                <Space direction="vertical" size={20} style={{ width: '100%' }}>
+                  <Row gutter={[16, 16]}>
+                    <Col xs={24} sm={12} md={8}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="کل نودهای ثبت‌شده در پنل"
+                          value={data?.live_nodes?.length || data?.servers?.length || 0}
+                          suffix="نود"
+                          valueStyle={{ color: '#1677ff' }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={8}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="نودهای متصل و پایدار"
+                          value={(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
+                          suffix="نود فعال 🟢"
+                          valueStyle={{ color: '#52c41a' }}
+                        />
+                      </Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={8}>
+                      <Card bordered={false}>
+                        <Statistic
+                          title="مجموع ترافیک عبوری نودها"
+                          value={((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
+                          suffix="GB"
+                          valueStyle={{ color: '#faad14' }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+
+                  <Card
+                    title="لیست نودها و وضعیت زنده اتصال به شبکه"
+                    bordered={false}
+                    extra={
+                      <Space size={8}>
+                        <Tag color="blue">{data?.metrics?.panel_type || 'پنل'}</Tag>
+                        <Button icon={<ReloadOutlined />} size="small" onClick={() => fetchData()}>بروزرسانی</Button>
+                      </Space>
+                    }
+                  >
+                    <Table
+                      dataSource={data?.live_nodes && data.live_nodes.length > 0 ? data.live_nodes : (data?.servers || [])}
+                      columns={data?.live_nodes && data.live_nodes.length > 0 ? liveNodeColumns : serverColumns}
+                      rowKey="id"
+                      pagination={false}
+                      size="middle"
+                      locale={{ emptyText: 'هیچ نودی شناسایی نشده است.' }}
+                    />
+                  </Card>
+                </Space>
               )}
 
               {/* 5. SETTINGS */}
@@ -2983,7 +3331,7 @@ HTML_PAGE = """<!DOCTYPE html>
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={10}>
-                        <Form.Item name="interval_hours" label="بازه زمانی ارسال خودکار">
+                        <Form.Item name="interval_hours" label="بازه زمانی بکاپ خودکار">
                           <Select
                             options={[
                               { value: 1, label: 'هر ۱ ساعت' },
@@ -2992,6 +3340,43 @@ HTML_PAGE = """<!DOCTYPE html>
                               { value: 6, label: 'هر ۶ ساعت (پیش‌فرض)' },
                               { value: 12, label: 'هر ۱۲ ساعت' },
                               { value: 24, label: 'هر ۲۴ ساعت' },
+                            ]}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Divider orientation="right">تنظیمات گزارش‌دهی خودکار تلگرام (Daily Digest)</Divider>
+                    <Row gutter={16} align="middle">
+                      <Col xs={24} md={10}>
+                        <Form.Item
+                          name="daily_digest_enabled"
+                          label="گزارش جامع خودکار روزانه"
+                          valuePropName="checked"
+                          extra="ارسال کارنامه مصرف و پایش سلامت سرور به صورت زمان‌بندی‌شده به تلگرام"
+                        >
+                          <Switch checkedChildren="فعال" unCheckedChildren="غیرفعال" />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={14}>
+                        <Form.Item
+                          name="daily_digest_hours"
+                          label="ساعت‌های ارسال گزارش در شبانه‌روز (به وقت تهران)"
+                          extra="انتخاب ساعت‌های نوبت ارسال گزارش روزانه"
+                        >
+                          <Select
+                            mode="multiple"
+                            placeholder="انتخاب ساعت‌های ارسال"
+                            options={[
+                              { value: 0, label: '۰۰:۰۰ (۱۲ شب)' },
+                              { value: 1, label: '۰۱:۰۰ (۱ بامداد)' },
+                              { value: 6, label: '۰۶:۰۰ (۶ صبح)' },
+                              { value: 9, label: '۰۹:۰۰ (۹ صبح)' },
+                              { value: 12, label: '۱۲:۰۰ (۱۲ ظهر)' },
+                              { value: 14, label: '۱۴:۰۰ (۲ بعدازظهر)' },
+                              { value: 18, label: '۱۸:۰۰ (۶ عصر)' },
+                              { value: 21, label: '۲۱:۰۰ (۹ شب)' },
+                              { value: 23, label: '۲۳:۰۰ (۱۱ شب)' },
                             ]}
                           />
                         </Form.Item>
@@ -3306,12 +3691,19 @@ class KhooshehHandler(BaseHTTPRequestHandler):
                 "ok": True,
                 "version": VERSION,
                 "stats": stats,
+                "metrics": get_snapshot_metrics(),
+                "live_nodes": get_live_nodes_data(),
+                "bk_stats": get_backups_24h_stats(),
+                "tehran_now": get_tehran_now(),
+                "digest_text": get_daily_digest_text(),
                 "config": {
                     "admin_chat_id": cfg.get("admin_chat_id"),
                     "bot_token": cfg.get("bot_token", ""),
                     "backup_password": cfg.get("backup_password", ""),
                     "interval_hours": cfg.get("interval_hours", 6),
                     "auto_schedule": cfg.get("auto_schedule", True),
+                    "daily_digest_enabled": cfg.get("daily_digest_enabled", True),
+                    "daily_digest_hours": cfg.get("daily_digest_hours", [14, 1]),
                     "last_backup_at": cfg.get("last_backup_at", "")
                 },
                 "servers": cfg.get("servers", []),
@@ -3648,6 +4040,43 @@ class KhooshehHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": err}).encode())
+            return
+
+        if path == "/api/send_digest":
+            cfg = load_config()
+            token = cfg.get("bot_token")
+            chat_id = cfg.get("admin_chat_id")
+            if not token or not chat_id:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": "توکن ربات یا شناسه عددی ادمین تنظیم نشده است."}).encode())
+                return
+            try:
+                digest_txt = get_daily_digest_text()
+                reply_kb = get_reply_keyboard()
+                res = tg_api("sendMessage", {
+                    "chat_id": chat_id,
+                    "text": digest_txt,
+                    "parse_mode": "HTML",
+                    "reply_markup": reply_kb
+                }, token=token)
+                if res and res.get("ok"):
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"ok": True}).encode())
+                else:
+                    err = res.get("description", "خطای تلگرام") if res else "پاسخی دریافت نشد"
+                    self.send_response(500)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"ok": False, "error": err}).encode())
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
             return
 
         self.send_response(404)
