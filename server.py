@@ -164,7 +164,10 @@ def get_tehran_now():
     return {
         "shamsi": shamsi_str,
         "miladi": miladi_str,
-        "combined": f"{shamsi_str} شمسی | {miladi_str} میلادی (تهران)"
+        "combined": f"{shamsi_str} شمسی | {miladi_str} میلادی (تهران)",
+        "hour": now.hour,
+        "minute": now.minute,
+        "date_slot": f"{now.strftime('%Y-%m-%d')}_{now.hour:02d}"
     }
 
 # ==================== SYSTEM METRICS ====================
@@ -1135,8 +1138,8 @@ def get_reply_keyboard():
     return {
         'keyboard': [
             [{'text': '⚡️ بکاپ فوری'}, {'text': '📊 اسنپ‌شات کاربران'}],
-            [{'text': '🖥 وضعیت سرور'}, {'text': '📦 آخرین فایل بکاپ'}],
-            [{'text': '🌐 منوی اصلی'}]
+            [{'text': '📋 گزارش روزانه'}, {'text': '🖥 وضعیت سرور'}],
+            [{'text': '📦 آخرین فایل بکاپ'}, {'text': '🌐 منوی اصلی'}]
         ],
         'resize_keyboard': True,
         'is_persistent': True
@@ -1172,7 +1175,10 @@ def get_main_menu_data():
             {'text': '📊 اسنپ‌شات مصرف', 'callback_data': 'act:snapshot'}
         ],
         [
-            {'text': '🖥 وضعیت سیستم', 'callback_data': 'act:sys_stats'},
+            {'text': '📋 گزارش روزانه سیستم', 'callback_data': 'act:daily_digest'},
+            {'text': '🖥 وضعیت سرور', 'callback_data': 'act:sys_stats'}
+        ],
+        [
             {'text': '📦 آخرین فایل بکاپ', 'callback_data': 'act:latest_file'}
         ]
     ]
@@ -1193,38 +1199,71 @@ def get_node_flag(name, addr):
     if any(k in n for k in ["us", "usa", "america"]): return "🇺🇸"
     return "🌐"
 
+def get_backups_24h_stats():
+    now = time.time()
+    cutoff_24h = now - 86400
+    count_24h = 0
+    total_count = 0
+    latest_backup = None
+    latest_size_mb = 0
+    latest_mtime = 0
+    if os.path.exists(BACKUP_DIR):
+        files = [os.path.join(BACKUP_DIR, f) for f in os.listdir(BACKUP_DIR) if f.startswith("khoosheh_") and f.endswith(('.tar.gz', '.7z'))]
+        total_count = len(files)
+        files.sort(key=os.path.getmtime)
+        for f in files:
+            mtime = os.path.getmtime(f)
+            if mtime >= cutoff_24h:
+                count_24h += 1
+            if mtime > latest_mtime:
+                latest_mtime = mtime
+                latest_backup = os.path.basename(f)
+                try:
+                    latest_size_mb = round(os.path.getsize(f) / (1024 * 1024), 2)
+                except Exception:
+                    pass
+    return {
+        "count_24h": count_24h,
+        "total_count": total_count,
+        "latest_backup": latest_backup,
+        "latest_size_mb": latest_size_mb,
+        "latest_mtime": latest_mtime
+    }
+
 def get_snapshot_text():
     metrics = get_snapshot_metrics()
     stats = get_system_stats()
     t_info = get_tehran_now()
     text = (
-        '📊 <b>گزارش جامع و تحلیل زنده ترافیک سرور</b>\n'
+        '📊 <b>گزارش جامع وضعیت ترافیک و کاربران</b>\n'
         '────────────────────\n'
         f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
         f'⏱ <b>آپ‌تایم سرور:</b> <code>{stats.get("uptime", "-")}</code>\n'
-        f'⚡️ <b>وضعیت پنل ({metrics["panel_type"]}):</b> <code>{metrics["panel_status"]}</code>\n'
+        f'⚡️ <b>پنل شناسایی‌شده:</b> <code>{metrics["panel_type"]}</code> [{metrics["panel_status"]}]\n'
         '────────────────────\n'
         '👥 <b>وضعیت کاربران:</b>\n'
-        f'• کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
+        f'├ کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
     )
     if metrics.get('online_24h'):
-        text += f'• متصل در ۲۴ ساعت گذشته: <b>{metrics["online_24h"]} کاربر</b>\n'
+        text += f'├ متصل در ۲۴ ساعت گذشته: <b>{metrics["online_24h"]} کاربر</b>\n'
     if metrics.get('online_now'):
-        text += f'• آنلاین در لحظه (۱۵ دقیقه اخیر): <b>{metrics["online_now"]} کاربر 🟢</b>\n'
+        text += f'└ آنلاین در لحظه (۱۵ دقیقه اخیر): <b>{metrics["online_now"]} کاربر 🟢</b>\n'
+    else:
+        text += '└ وضعیت دیتابیس: <b>پایدار و آماده</b>\n'
     
     text += (
         '────────────────────\n'
-        '📈 <b>آمار ترافیک مصرفی:</b>\n\n'
+        '📈 <b>آمار ترافیک مصرفی شبکه:</b>\n\n'
     )
     if metrics.get('traffic_24h_gb') > 0:
-        text += f'• <b>مصرف ۲۴ ساعت گذشته:</b> <b>{metrics["traffic_24h_gb"]} GB</b>\n'
-        if metrics.get('down_24h_gb') or metrics.get('up_24h_gb'):
-            text += f'  └─ ⬇️ دانلود: <b>{metrics["down_24h_gb"]} GB</b> | ⬆️ آپلود: <b>{metrics["up_24h_gb"]} GB</b>\n\n'
-        else:
-            text += '\n'
+        text += (
+            f'▫️ <b>مصرف ۲۴ ساعت گذشته:</b> <b>{metrics["traffic_24h_gb"]} GB</b>\n'
+            f'   ├ ⬇️ دریافت (دانلود): <b>{metrics.get("down_24h_gb", 0)} GB</b>\n'
+            f'   └ ⬆️ ارسال (آپلود): <b>{metrics.get("up_24h_gb", 0)} GB</b>\n\n'
+        )
     if metrics.get('traffic_7d_gb') > 0:
-        text += f'• <b>مصرف ۷ روز گذشته (هفته):</b> <b>{metrics["traffic_7d_gb"]} GB</b>\n\n'
-    text += f'• <b>مجموع کل ترافیک تاریخچه:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
+        text += f'▫️ <b>مصرف ۷ روز گذشته (هفته):</b> <b>{metrics["traffic_7d_gb"]} GB</b>\n\n'
+    text += f'▫️ <b>مجموع کل ترافیک تاریخچه:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
 
     if metrics.get('nodes_usage_24h'):
         text += '────────────────────\n🌐 <b>ترافیک نودها در ۲۴ ساعت اخیر:</b>\n\n'
@@ -1234,11 +1273,11 @@ def get_snapshot_text():
     if metrics.get('top_users_24h'):
         text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف ۲۴ ساعت گذشته:</b>\n\n'
         for i, (em, tot) in enumerate(metrics['top_users_24h'], 1):
-            text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
+            text += f'{i}. <code>{em}</code> ── <b>{tot} GB</b>\n'
     elif metrics.get('top_users'):
         text += '────────────────────\n🏆 <b>۵ کاربر پرمصرف تاریخچه:</b>\n\n'
         for i, (em, tot) in enumerate(metrics['top_users'], 1):
-            text += f'{i}. <code>{em}</code> ➔ <b>{tot} GB</b>\n'
+            text += f'{i}. <code>{em}</code> ── <b>{tot} GB</b>\n'
 
     text += (
         '────────────────────\n'
@@ -1278,9 +1317,11 @@ def get_system_status_text():
                     tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
                     text += (
                         f'{flag} <b>{name}</b> [{st_icon}]\n'
-                        f'• آدرس: <code>{addr}:{port}</code>\n'
-                        f'• ترافیک کل نود: <b>{tot_gb} GB</b> (⬇️ {down_gb} GB | ⬆️ {up_gb} GB)\n'
-                        f'• نسخه هسته: <code>Xray {xray_ver}</code>\n\n'
+                        f'├ آدرس: <code>{addr}:{port}</code>\n'
+                        f'├ ترافیک کل نود: <b>{tot_gb} GB</b>\n'
+                        f'├ ⬇️ دریافت (دانلود): <b>{down_gb} GB</b>\n'
+                        f'├ ⬆️ ارسال (آپلود): <b>{up_gb} GB</b>\n'
+                        f'└ نسخه هسته: <code>Xray {xray_ver}</code>\n\n'
                     )
         except Exception:
             pass
@@ -1300,8 +1341,10 @@ def get_system_status_text():
                     tot_gb = round(((up or 0) + (down or 0)) / (1024**3), 2)
                     text += (
                         f'🚪 <b>{remark or f"Inbound {id_}"}</b> (پورت {port})\n'
-                        f'• پروتکل: <code>{proto}</code>\n'
-                        f'• ترافیک: <b>{tot_gb} GB</b> (⬇️ {down_gb} GB | ⬆️ {up_gb} GB)\n\n'
+                        f'├ پروتکل: <code>{proto}</code>\n'
+                        f'├ ترافیک کل: <b>{tot_gb} GB</b>\n'
+                        f'├ ⬇️ دریافت (دانلود): <b>{down_gb} GB</b>\n'
+                        f'└ ⬆️ ارسال (آپلود): <b>{up_gb} GB</b>\n\n'
                     )
         except Exception:
             pass
@@ -1309,6 +1352,79 @@ def get_system_status_text():
     text += (
         '────────────────────\n'
         f'📅 <b>زمان سرور (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
+        f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
+    )
+    return text
+
+def get_daily_digest_text():
+    stats = get_system_stats()
+    metrics = get_snapshot_metrics()
+    bk_stats = get_backups_24h_stats()
+    t_info = get_tehran_now()
+    cfg = load_config()
+
+    text = (
+        '📋 <b>گزارش روزانه و پایش جامع سلامت سامانه</b>\n'
+        '🌾 <i>سیستم مدیریت و پشتیبان‌گیری خوشه</i>\n'
+        '────────────────────\n'
+        f'🖥 <b>شناسه سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
+        f'⏱ <b>مدت زمان پایداری (Uptime):</b> <code>{stats.get("uptime", "-")}</code>\n'
+        f'⚡️ <b>پنل شناسایی‌شده:</b> <code>{metrics["panel_type"]}</code> [{metrics["panel_status"]}]\n'
+        '────────────────────\n'
+        '💾 <b>کارنامه پشتیبان‌گیری (۲۴ ساعت گذشته):</b>\n'
+        f'├ 📦 تعداد بکاپ‌های موفق: <b>{bk_stats["count_24h"]} نسخه</b>\n'
+        f'├ 🗄 کل بکاپ‌های محلی ذخیره: <b>{bk_stats["total_count"]} نسخه</b>\n'
+        f'├ ⚖️ حجم آخرین نسخه پشتیبان: <b>{bk_stats["latest_size_mb"]} MB</b>\n'
+        f'├ ⏰ دوره بکاپ خودکار: هر <b>{cfg.get("interval_hours", 6)} ساعت</b>\n'
+        f'└ 💾 فضای دیسک سرور: <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
+        '────────────────────\n'
+        '🧠 <b>وضعیت منابع سخت‌افزاری:</b>\n'
+        f'├ مصرف حافظه رم: <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
+        f'└ فشار پردازنده (Load): <code>{stats.get("load", "-")}</code>\n'
+        '────────────────────\n'
+        '👥 <b>وضعیت کاربران و اتصالات:</b>\n'
+        f'├ کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
+    )
+    if metrics.get('online_now') is not None:
+        text += f'├ آنلاین در لحظه (۱۵ دقیقه اخیر): <b>{metrics["online_now"]} کاربر 🟢</b>\n'
+    if metrics.get('online_24h') is not None:
+        text += f'└ کاربران فعال در ۲۴ ساعت اخیر: <b>{metrics["online_24h"]} کاربر</b>\n'
+    else:
+        text += '└ وضعیت پایگاه‌داده: <b>پایدار و آماده</b>\n'
+
+    text += (
+        '────────────────────\n'
+        '📈 <b>ترافیک مصرفی شبکه:</b>\n'
+    )
+    if metrics.get('traffic_24h_gb') > 0:
+        text += (
+            f'├ مصرف ۲۴ ساعت گذشته: <b>{metrics["traffic_24h_gb"]} GB</b>\n'
+            f'│  ├ ⬇️ دریافت: <b>{metrics.get("down_24h_gb", 0)} GB</b>\n'
+            f'│  └ ⬆️ ارسال: <b>{metrics.get("up_24h_gb", 0)} GB</b>\n'
+        )
+    if metrics.get('traffic_7d_gb') > 0:
+        text += f'├ مصرف ۷ روز اخیر: <b>{metrics["traffic_7d_gb"]} GB</b>\n'
+    text += f'└ مجموع مصرف تاریخچه: <b>{metrics["total_traffic_gb"]} GB</b>\n'
+
+    pg_db = '/var/lib/pasarguard/db.sqlite3'
+    if os.path.exists(pg_db):
+        try:
+            con = sqlite3.connect(pg_db)
+            cur = con.cursor()
+            nodes = cur.execute('SELECT name, address, status FROM nodes').fetchall()
+            con.close()
+            if nodes:
+                conn_cnt = sum(1 for n in nodes if n[2] == 'connected')
+                text += (
+                    '────────────────────\n'
+                    f'📡 <b>وضعیت نودها:</b> <b>{conn_cnt} از {len(nodes)} نود متصل و فعال 🟢</b>\n'
+                )
+        except Exception:
+            pass
+
+    text += (
+        '────────────────────\n'
+        f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
     )
     return text
@@ -1364,6 +1480,9 @@ def run_telegram_bot():
                             send_document_to_telegram(admin_id, res_b['file_path'], caption=cap, token=token)
                         else:
                             tg_api('sendMessage', {'chat_id': chat_id, 'text': f'❌ خطا در ساخت بکاپ: {res_b.get("error")}', 'parse_mode': 'HTML'}, token=token)
+                    elif m_text in ['📋 گزارش روزانه', 'گزارش روزانه']:
+                        digest_txt = get_daily_digest_text()
+                        tg_api('sendMessage', {'chat_id': chat_id, 'text': digest_txt, 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
                     elif m_text == '📊 اسنپ‌شات کاربران':
                         snap_txt = get_snapshot_text()
                         tg_api('sendMessage', {'chat_id': chat_id, 'text': snap_txt, 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
@@ -1382,7 +1501,7 @@ def run_telegram_bot():
                     else:
                         text, kb = get_main_menu_data()
                         tg_api('sendMessage', {'chat_id': chat_id, 'text': text, 'parse_mode': 'HTML', 'reply_markup': kb}, token=token)
-                        tg_api('sendMessage', {'chat_id': chat_id, 'text': '🎛 دکمه‌های پنلی ثابت برای دسترسی سریع فعال شدند:', 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
+                        tg_api('sendMessage', {'chat_id': chat_id, 'text': '🎛 دکمه‌های پنلی برای دسترسی سریع فعال شدند:', 'parse_mode': 'HTML', 'reply_markup': reply_kb}, token=token)
                 elif 'callback_query' in upd:
                     cq = upd['callback_query']
                     cid = cq.get('id')
@@ -1422,6 +1541,9 @@ def run_telegram_bot():
                     elif data == 'act:snapshot':
                         snap_txt = get_snapshot_text()
                         tg_api('sendMessage', {'chat_id': admin_id, 'text': snap_txt, 'parse_mode': 'HTML'}, token=token)
+                    elif data == 'act:daily_digest':
+                        digest_txt = get_daily_digest_text()
+                        tg_api('sendMessage', {'chat_id': admin_id, 'text': digest_txt, 'parse_mode': 'HTML'}, token=token)
                     elif data == 'act:sys_stats':
                         sys_txt = get_system_status_text()
                         tg_api('sendMessage', {'chat_id': admin_id, 'text': sys_txt, 'parse_mode': 'HTML'}, token=token)
@@ -1442,21 +1564,66 @@ def run_telegram_bot():
 
 # ==================== SCHEDULER THREAD ====================
 def run_scheduler():
-    print("[Scheduler] Automated backup schedule active.")
+    print("[Scheduler] Automated backup & daily digest scheduler active.")
+    last_backup_check = time.time()
+    
     while not scheduler_stop_event.is_set():
-        cfg = load_config()
-        if cfg.get("auto_schedule", True):
-            hrs = cfg.get("interval_hours", 6)
-            time.sleep(hrs * 3600)
-            try:
-                res = create_archive(cfg)
-                if res.get("success"):
-                    chat_id = cfg.get("admin_chat_id")
-                    send_document_to_telegram(chat_id, res["file_path"], caption=f"🌾 پشتیبان دوره‌ای خودکار ({res['size_mb']} MB)")
-            except Exception:
-                pass
-        else:
-            time.sleep(60)
+        try:
+            cfg = load_config()
+            now = time.time()
+            t_info = get_tehran_now()
+            token = cfg.get('bot_token')
+            chat_id = cfg.get('admin_chat_id')
+
+            # --- 1. Periodic Automated Backup ---
+            if cfg.get("auto_schedule", True):
+                hrs = max(cfg.get("interval_hours", 6), 1)
+                interval_secs = hrs * 3600
+                if now - last_backup_check >= interval_secs:
+                    last_backup_check = now
+                    try:
+                        res = create_archive(cfg)
+                        if res.get("success") and token and chat_id:
+                            cap = (
+                                f'🌾 <b>پشتیبان دوره‌ای خودکار خوشه</b>\n'
+                                f'────────────────────\n'
+                                f'📦 حجم: <b>{res["size_mb"]} MB</b>\n'
+                                f'📅 زمان: <code>{t_info["shamsi"]}</code>'
+                            )
+                            send_document_to_telegram(chat_id, res["file_path"], caption=cap, token=token)
+                    except Exception as eb:
+                        print(f"[Scheduler] Backup error: {eb}")
+
+            # --- 2. Automated Daily Digest (Twice a day: 09:00 & 21:00 Tehran time) ---
+            if cfg.get("daily_digest_enabled", True) and token and chat_id:
+                digest_hours = cfg.get("daily_digest_hours", [9, 21])
+                cur_hour = t_info.get("hour", 0)
+                cur_slot = t_info.get("date_slot", "")
+                last_slot = cfg.get("last_digest_slot", "")
+
+                if cur_hour in digest_hours and cur_slot != last_slot:
+                    cfg["last_digest_slot"] = cur_slot
+                    save_config(cfg)
+                    try:
+                        digest_txt = get_daily_digest_text()
+                        reply_kb = get_reply_keyboard()
+                        tg_api('sendMessage', {
+                            'chat_id': chat_id,
+                            'text': digest_txt,
+                            'parse_mode': 'HTML',
+                            'reply_markup': reply_kb
+                        }, token=token)
+                        print(f"[Scheduler] Automated daily digest dispatched for {cur_slot}")
+                    except Exception as ed:
+                        print(f"[Scheduler] Digest error: {ed}")
+
+        except Exception as e:
+            print(f"[Scheduler] General loop error: {e}")
+
+        for _ in range(30):
+            if scheduler_stop_event.is_set():
+                break
+            time.sleep(1)
 
 
 # ==================== WEB DASHBOARD UI ====================
