@@ -1737,30 +1737,164 @@ HTML_PAGE = """<!DOCTYPE html>
   <style>
     * {
       font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+      box-sizing: border-box;
     }
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      background-color: #141414;
+      min-height: 100%;
+      background-color: #090d16;
+      background-image: radial-gradient(circle at 50% 0%, #151e32 0%, #090d16 65%, #05070c 100%) !important;
+      background-attachment: fixed !important;
       -webkit-font-smoothing: antialiased;
+      color: #f1f5f9;
+    }
+    /* Sleek Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.45);
     }
     .code-text {
       direction: ltr !important;
       font-family: Consolas, Monaco, "Courier New", monospace !important;
       display: inline-block;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.3) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      padding: 2px 6px !important;
+      border-radius: 6px !important;
+    }
+    /* Modern Glassmorphism Cards */
+    .ant-card {
+      background: rgba(17, 24, 39, 0.72) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35) !important;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .kpi-card {
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.4), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .kpi-card:hover::before {
+      opacity: 1;
+    }
+    .kpi-card:hover {
+      border-color: rgba(16, 185, 129, 0.25) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.08) !important;
+    }
+    /* Radar Pulsing Indicator */
+    @keyframes radar-pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .status-radar {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: radar-pulse 2s infinite;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    /* Modern Glassmorphism Sider & Header */
+    .ant-layout-sider {
+      background: rgba(11, 15, 25, 0.88) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-left: 1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+    .ant-layout-header {
+      background: rgba(11, 15, 25, 0.75) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+    .ant-menu {
+      background: transparent !important;
+    }
+    .ant-menu-item {
+      border-radius: 10px !important;
+      margin: 4px 10px !important;
+      width: calc(100% - 20px) !important;
+      transition: all 0.2s ease !important;
+      font-weight: 500 !important;
+    }
+    .ant-menu-item-selected {
+      background: rgba(16, 185, 129, 0.15) !important;
+      color: #10b981 !important;
+      font-weight: 600 !important;
+      border-right: 3px solid #10b981 !important;
+    }
+    /* Button enhancements */
+    .ant-btn {
+      border-radius: 8px !important;
+      font-weight: 500 !important;
+      transition: all 0.2s ease !important;
+    }
+    .ant-btn-primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border: none !important;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+    }
+    .ant-btn-primary:hover {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+      transform: translateY(-1px);
+    }
+    /* Clean Modern Tables */
+    .ant-table-wrapper .ant-table {
+      background: transparent !important;
+    }
+    .ant-table-wrapper .ant-table-thead > tr > th {
+      background: rgba(255, 255, 255, 0.03) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr > td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+      background: rgba(255, 255, 255, 0.04) !important;
+    }
+    .ant-tag {
+      border-radius: 6px !important;
+      font-weight: 500 !important;
     }
     .ant-steps-item-title {
       font-weight: 600 !important;
-    }
-    .ant-card {
-      border-radius: 8px !important;
     }
   </style>
 
@@ -2451,43 +2585,74 @@ HTML_PAGE = """<!DOCTYPE html>
             width={240}
             theme={themeMode}
             style={{
-            position: 'sticky',
+              position: 'sticky',
               top: 0,
               height: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
               borderLeft: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0'
             }}
           >
-            <div style={{
-              height: 64,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0',
-              padding: '0 16px'
-            }}>
-              <span style={{ fontSize: 22 }}>🌾</span>
-              {!collapsed && (
-                <span style={{ fontWeight: 700, fontSize: 16, marginRight: 8 }}>
-                  خوشه (Khoosheh)
-                </span>
-              )}
+            <div>
+              <div style={{
+                height: 64,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0',
+                padding: '0 16px'
+              }}>
+                <span style={{ fontSize: 22, marginLeft: 8 }}>🌾</span>
+                {!collapsed && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-0.3px' }}>
+                      خوشه
+                    </span>
+                    <Tag style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: 11, padding: '0 6px', margin: 0, borderRadius: 6 }}>
+                      v{data?.version || '2.4'}
+                    </Tag>
+                  </div>
+                )}
+              </div>
+
+              <Menu
+                theme={themeMode}
+                mode="inline"
+                selectedKeys={[currentTab]}
+                onClick={({ key }) => setCurrentTab(key)}
+                items={[
+                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد و وضعیت' },
+                  { key: 'restore', icon: <SyncOutlined />, label: 'بازگردانی و مهاجرت' },
+                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌ها و دیتابیس‌ها' },
+                  { key: 'servers', icon: <ClusterOutlined />, label: 'سرورها و نودها' },
+                  { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات ربات و امنیت' },
+                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان' },
+                ]}
+                style={{ marginTop: 12 }}
+              />
             </div>
 
-            <Menu
-              theme={themeMode}
-              mode="inline"
-              selectedKeys={[currentTab]}
-              onClick={({ key }) => setCurrentTab(key)}
-              items={[
-                { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد و وضعیت' },
-                { key: 'restore', icon: <SyncOutlined />, label: 'بازگردانی و مهاجرت' },
-                { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌ها و دیتابیس‌ها' },
-                { key: 'servers', icon: <ClusterOutlined />, label: 'سرورها و نودها' },
-                { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات ربات و امنیت' },
-                { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان' },
-              ]}
-              style={{ marginTop: 8 }}
-            />
+            {!collapsed && (
+              <div style={{
+                padding: '12px 14px',
+                margin: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                borderRadius: 12,
+                border: '1px solid rgba(255, 255, 255, 0.06)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <Text type="secondary" style={{ fontSize: 12 }}>وضعیت سرور:</Text>
+                  <span style={{ display: 'flex', alignItems: 'center', color: '#10b981', fontSize: 12, fontWeight: 600 }}>
+                    <span className="status-radar"></span>
+                    پایدار 🟢
+                  </span>
+                </div>
+                <div style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: 11, fontFamily: 'monospace', direction: 'ltr', textAlign: 'left' }}>
+                  {data?.tehran_now?.shamsi || '--'}
+                </div>
+              </div>
+            )}
           </Sider>
 
           {/* MAIN LAYOUT */}
@@ -3580,9 +3745,19 @@ HTML_PAGE = """<!DOCTYPE html>
           theme={{
             algorithm: themeMode === 'dark' ? antd.theme.darkAlgorithm : antd.theme.defaultAlgorithm,
             token: {
-              colorPrimary: '#1677ff',
-              borderRadius: 6,
-              fontFamily: 'Vazirmatn, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              colorPrimary: '#10b981',
+              colorInfo: '#10b981',
+              colorSuccess: '#10b981',
+              colorWarning: '#f59e0b',
+              colorError: '#ef4444',
+              colorBgBase: themeMode === 'dark' ? '#090d16' : '#f8fafc',
+              colorBgContainer: themeMode === 'dark' ? '#111827' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#1a2234' : '#ffffff',
+              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0',
+              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#f1f5f9',
+              borderRadius: 10,
+              borderRadiusLG: 14,
+              fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             }
           }}
         >
