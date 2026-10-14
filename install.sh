@@ -45,19 +45,11 @@ chmod 700 /var/backups/khoosheh
 echo -e "${BLUE}▶ [3/5] Installing Khoosheh engine files...${NC}"
 REPO_RAW="https://raw.githubusercontent.com/dalroot/khoosheh/main"
 
-# If local script directory exists, copy from local; otherwise download from GitHub
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
-if [ -f "$SCRIPT_DIR/server.py" ]; then
-  cp "$SCRIPT_DIR/server.py" /opt/khoosheh/server.py
-  [ -f "$SCRIPT_DIR/khoosheh.service" ] && cp "$SCRIPT_DIR/khoosheh.service" /etc/systemd/system/khoosheh.service
-  [ -f "$SCRIPT_DIR/install.sh" ] && cp "$SCRIPT_DIR/install.sh" /opt/khoosheh/install.sh
-  [ -f "$SCRIPT_DIR/config.example.json" ] && cp "$SCRIPT_DIR/config.example.json" /opt/khoosheh/config.example.json
-else
-  curl -sSL "$REPO_RAW/server.py" -o /opt/khoosheh/server.py
-  curl -sSL "$REPO_RAW/khoosheh.service" -o /etc/systemd/system/khoosheh.service
-  curl -sSL "$REPO_RAW/install.sh" -o /opt/khoosheh/install.sh
-  curl -sSL "$REPO_RAW/config.example.json" -o /opt/khoosheh/config.example.json
-fi
+# Download latest engine files from GitHub repository
+curl -sSL "$REPO_RAW/server.py" -o /opt/khoosheh/server.py
+curl -sSL "$REPO_RAW/khoosheh.service" -o /etc/systemd/system/khoosheh.service
+curl -sSL "$REPO_RAW/install.sh" -o /opt/khoosheh/install.sh
+curl -sSL "$REPO_RAW/config.example.json" -o /opt/khoosheh/config.example.json
 
 chmod +x /opt/khoosheh/server.py
 chmod +x /opt/khoosheh/install.sh
@@ -115,7 +107,8 @@ UNIT
 fi
 
 systemctl daemon-reload
-systemctl enable --now khoosheh
+systemctl enable khoosheh
+systemctl restart khoosheh
 
 echo -e "${BLUE}▶ [5/5] Checking service status...${NC}"
 sleep 2
