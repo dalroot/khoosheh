@@ -37,7 +37,7 @@ jobs:
           sha256sum "${TAR_NAME}" > "${TAR_NAME}.sha256"
 
       - name: Generate Release Notes & Publish
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             khoosheh-*.tar.gz
