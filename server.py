@@ -1735,6 +1735,22 @@ HTML_PAGE = """<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
 
   <style>
+    :root {
+      --bg-root: #09090b;
+      --surface-subtle: #0f1013;
+      --surface-card: #121317;
+      --surface-elevated: #18191f;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-muted: rgba(255, 255, 255, 0.12);
+      --border-highlight: rgba(16, 185, 129, 0.35);
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --emerald-accent: #10b981;
+      --sky-accent: #38bdf8;
+      --amber-accent: #f59e0b;
+      --rose-accent: #f43f5e;
+    }
     * {
       font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
       box-sizing: border-box;
@@ -1743,11 +1759,12 @@ HTML_PAGE = """<!DOCTYPE html>
       margin: 0;
       padding: 0;
       min-height: 100%;
-      background-color: #09090b;
-      background-image: radial-gradient(circle at 50% -20%, #161a26 0%, #09090b 70%) !important;
+      background-color: #09090b !important;
+      background-image: radial-gradient(circle at 50% 0%, #13141c 0%, #09090b 70%) !important;
       background-attachment: fixed !important;
       -webkit-font-smoothing: antialiased;
-      color: #f1f5f9;
+      -moz-osx-font-smoothing: grayscale;
+      color: #f4f4f5;
     }
     /* Sleek Custom Scrollbars */
     ::-webkit-scrollbar {
@@ -1755,41 +1772,41 @@ HTML_PAGE = """<!DOCTYPE html>
       height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.3);
     }
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
+      border-radius: 6px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(16, 185, 129, 0.5);
+      background: rgba(16, 185, 129, 0.4);
     }
     .code-text {
       direction: ltr !important;
-      font-family: Consolas, Monaco, "Courier New", monospace !important;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
       display: inline-block;
-      font-size: 12px;
-      background: rgba(0, 0, 0, 0.35) !important;
+      font-size: 11.5px;
+      background: rgba(0, 0, 0, 0.4) !important;
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
       padding: 2px 7px !important;
-      border-radius: 6px !important;
+      border-radius: 5px !important;
       color: #cbd5e1;
     }
 
-    /* Top Navigation Bar (Vercel / Supabase Style) */
+    /* Top Navigation Bar (Vercel / Coolify Style) */
     .top-navbar {
-      height: 62px;
+      height: 56px;
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(12, 13, 17, 0.85) !important;
-      backdrop-filter: blur(18px) !important;
-      -webkit-backdrop-filter: blur(18px) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+      background: rgba(9, 9, 11, 0.85) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
     }
     .nav-brand {
       display: flex;
@@ -1800,160 +1817,169 @@ HTML_PAGE = """<!DOCTYPE html>
     .nav-tabs {
       display: flex;
       align-items: center;
-      gap: 3px;
-      background: rgba(255, 255, 255, 0.03);
+      gap: 2px;
+      background: #14151a;
       padding: 3px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .nav-tab-item {
-      padding: 6px 14px;
-      font-size: 13px;
+      padding: 5px 12px;
+      font-size: 12.5px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.65);
-      border-radius: 7px;
+      color: #a1a1aa;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.15s ease;
       display: flex;
       align-items: center;
       gap: 6px;
       user-select: none;
     }
     .nav-tab-item:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.06);
+      color: #f4f4f5;
+      background: rgba(255, 255, 255, 0.04);
     }
     .nav-tab-item.active {
-      color: #10b981;
-      background: rgba(16, 185, 129, 0.12);
-      font-weight: 600;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      color: #ffffff;
+      background: #20222a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
     .app-main-container {
       max-width: 1340px;
       margin: 0 auto;
-      padding: 24px 20px 48px;
+      padding: 22px 20px 48px;
       width: 100%;
     }
 
-    /* Core Ant Design Overrides - Minimal Matte Surfaces */
+    /* Core Card Overrides (shadcn/ui style) */
     .ant-card {
-      background: #111216 !important;
-      border: 1px solid rgba(255, 255, 255, 0.07) !important;
-      border-radius: 14px !important;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4) !important;
-      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      background: #121317 !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 12px !important;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03), 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+    }
+    .ant-card:hover {
+      border-color: rgba(255, 255, 255, 0.14) !important;
     }
     .ant-card-head {
       border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
-      padding: 0 20px !important;
-      min-height: 48px !important;
+      padding: 0 18px !important;
+      min-height: 46px !important;
     }
     .ant-card-head-title {
-      font-size: 13.5px !important;
+      font-size: 13px !important;
       font-weight: 600 !important;
-      color: #f8fafc !important;
+      color: #f4f4f5 !important;
+      letter-spacing: -0.2px;
+    }
+    .ant-card-body {
+      padding: 18px !important;
     }
 
-    /* Hero KPI Cards (Tier 1) - Single Accent Focus */
+    /* Hero KPI Cards (Bento Grid) */
     .hero-kpi-card {
-      background: #111216 !important;
-      border: 1px solid rgba(255, 255, 255, 0.07) !important;
-      border-radius: 14px !important;
-      padding: 20px 22px !important;
+      background: #121317 !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 12px !important;
+      padding: 18px 20px !important;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      min-height: 148px;
-      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-    .hero-kpi-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
-      opacity: 0.8;
+      min-height: 142px;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03) !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .hero-kpi-card:hover {
-      border-color: rgba(16, 185, 129, 0.3) !important;
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(16, 185, 129, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 8px 20px -4px rgba(0, 0, 0, 0.5) !important;
+      transform: translateY(-1px);
     }
     .hero-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .hero-title {
       font-size: 13px;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.65);
+      color: #a1a1aa;
     }
     .hero-val {
-      font-size: 30px;
+      font-size: 32px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
-      letter-spacing: -0.5px;
-      line-height: 1.15;
+      letter-spacing: -0.8px;
+      line-height: 1.1;
       color: #ffffff;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .hero-sub {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.55);
+      font-size: 11.5px;
+      color: #71717a;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     /* System Vitals Strip (Tier 2) */
     .vitals-strip {
-      background: #111216 !important;
-      border: 1px solid rgba(255, 255, 255, 0.07) !important;
-      border-radius: 14px !important;
-      padding: 16px 22px !important;
+      background: #121317 !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 12px !important;
+      padding: 14px 20px !important;
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.03);
     }
     .vital-col {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
     .vital-title-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.55);
+      color: #a1a1aa;
     }
     .vital-num {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      font-family: monospace;
-      color: #f1f5f9;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #f4f4f5;
       direction: ltr;
       text-align: left;
+    }
+    .ant-progress-inner {
+      background-color: rgba(255, 255, 255, 0.06) !important;
+      border-radius: 4px !important;
+    }
+    .ant-progress-bg {
+      border-radius: 4px !important;
     }
 
     /* Status Badges - Desaturated, Clean Tokens */
     .badge-emerald {
-      background: rgba(16, 185, 129, 0.1) !important;
-      color: #10b981 !important;
-      border: 1px solid rgba(16, 185, 129, 0.25) !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+      color: #34d399 !important;
+      border: 1px solid rgba(16, 185, 129, 0.2) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 2px 8px !important;
+      padding: 1px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 4px !important;
+      gap: 5px !important;
     }
     .badge-slate {
       background: rgba(255, 255, 255, 0.04) !important;
@@ -1961,110 +1987,213 @@ HTML_PAGE = """<!DOCTYPE html>
       border: 1px solid rgba(255, 255, 255, 0.08) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 2px 8px !important;
+      padding: 1px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 4px !important;
+      gap: 5px !important;
     }
     .badge-amber {
-      background: rgba(245, 158, 11, 0.1) !important;
-      color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.25) !important;
+      background: rgba(245, 158, 11, 0.08) !important;
+      color: #fbbf24 !important;
+      border: 1px solid rgba(245, 158, 11, 0.2) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 2px 8px !important;
+      padding: 1px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 4px !important;
+      gap: 5px !important;
     }
     .badge-rose {
-      background: rgba(239, 68, 68, 0.1) !important;
-      color: #ef4444 !important;
-      border: 1px solid rgba(239, 68, 68, 0.25) !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+      color: #f87171 !important;
+      border: 1px solid rgba(239, 68, 68, 0.2) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 2px 8px !important;
+      padding: 1px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 4px !important;
+      gap: 5px !important;
     }
 
     /* Radar Pulsing Indicator */
     @keyframes radar-pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
     .status-radar {
       display: inline-block;
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #10b981;
-      animation: radar-pulse 2s infinite;
-      margin-left: 6px;
+      animation: radar-pulse 2s infinite ease-in-out;
       vertical-align: middle;
     }
 
-    /* Physical Click Physics on Buttons */
+    /* Physical Click Physics on Buttons (shadcn style) */
     .ant-btn {
-      border-radius: 8px !important;
+      border-radius: 7px !important;
+      font-size: 12.5px !important;
       font-weight: 500 !important;
-      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      height: 32px !important;
+      padding: 0 12px !important;
+      transition: all 0.15s ease !important;
+      box-shadow: none !important;
     }
     .ant-btn:active {
       transform: scale(0.97) !important;
     }
+    .ant-btn-default {
+      background: #16171d !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #e4e4e7 !important;
+    }
+    .ant-btn-default:hover {
+      background: #20222a !important;
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      color: #ffffff !important;
+    }
     .ant-btn-primary {
       background: #10b981 !important;
+      color: #042f1d !important;
+      font-weight: 600 !important;
       border: none !important;
-      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25) !important;
     }
     .ant-btn-primary:hover {
       background: #059669 !important;
-      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4) !important;
+      color: #ffffff !important;
+    }
+    .ant-btn-link {
+      color: #38bdf8 !important;
+      height: auto !important;
+      padding: 0 4px !important;
     }
 
-    /* Tables */
+    /* Tables (shadcn DataTable Replica) */
     .ant-table-wrapper .ant-table {
       background: transparent !important;
     }
     .ant-table-wrapper .ant-table-thead > tr > th {
       background: rgba(255, 255, 255, 0.02) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-      color: rgba(255, 255, 255, 0.6) !important;
-      font-size: 12px !important;
-      font-weight: 600 !important;
-      padding: 10px 14px !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      color: #71717a !important;
+      font-size: 11.5px !important;
+      font-weight: 500 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      padding: 9px 12px !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr > td {
       border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
-      padding: 10px 14px !important;
+      padding: 9px 12px !important;
+      font-size: 13px !important;
+      color: #e4e4e7 !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr:hover > td {
-      background: rgba(255, 255, 255, 0.03) !important;
+      background: rgba(255, 255, 255, 0.025) !important;
     }
     .ant-tag {
       border-radius: 6px !important;
       font-weight: 500 !important;
     }
+
+    /* Rank Badges */
     .rank-circle {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       font-size: 11px;
       font-weight: 700;
     }
-    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
-    .rank-2 { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
-    .rank-3 { background: rgba(180, 83, 9, 0.18); color: #f97316; border: 1px solid rgba(180, 83, 9, 0.35); }
-    .rank-other { background: rgba(255, 255, 255, 0.04); color: #94a3b8; }
+    .rank-1 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .rank-2 { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); }
+    .rank-3 { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+    .rank-other { background: rgba(255, 255, 255, 0.04); color: #71717a; border: 1px solid rgba(255, 255, 255, 0.06); }
+
+    /* Terminal Preview Box */
+    .terminal-box {
+      background: #0a0b0e !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
+      border-radius: 10px !important;
+      overflow: hidden;
+    }
+    .terminal-header {
+      background: #121318 !important;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+    .terminal-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .terminal-content {
+      padding: 14px 16px;
+      max-height: 240px;
+      overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-size: 12px;
+      line-height: 1.8;
+      direction: rtl;
+      color: #cbd5e1;
+    }
+
+    /* Modal & Inputs */
+    .ant-modal-content {
+      background: #121317 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8) !important;
+      padding: 24px !important;
+    }
+    .ant-modal-header {
+      background: transparent !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      padding-bottom: 14px !important;
+      margin-bottom: 18px !important;
+    }
+    .ant-modal-title {
+      color: #f4f4f5 !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+    }
+    .ant-modal-close {
+      color: #71717a !important;
+    }
+    .ant-modal-close:hover {
+      color: #f4f4f5 !important;
+    }
+    .ant-input, .ant-input-number, .ant-select-selector {
+      background: #090a0d !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 7px !important;
+      color: #f4f4f5 !important;
+    }
+    .ant-input:focus, .ant-input-number-focused, .ant-select-focused .ant-select-selector {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+    }
+    .ant-form-item-label > label {
+      color: #a1a1aa !important;
+      font-size: 12.5px !important;
+    }
   </style>
 
   <script>
@@ -2541,7 +2670,7 @@ HTML_PAGE = """<!DOCTYPE html>
           key: 'filename',
           render: (text) => (
             <Space size={8}>
-              {text.endsWith('.7z') ? <span className="badge-amber">🔐 AES-256</span> : <span className="badge-slate">📦 tar.gz</span>}
+              {text.endsWith('.7z') ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">tar.gz</span>}
               <Text code className="code-text">{text}</Text>
             </Space>
           )
@@ -2677,7 +2806,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 110,
-          render: () => <span className="badge-emerald">🟢 آنلاین</span>
+          render: () => <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>آنلاین</span>
         },
         {
           title: 'سرویس‌ها و پورت‌ها',
@@ -2712,7 +2841,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 120,
-          render: (st) => st === 'online' ? <span className="badge-emerald">🟢 متصل</span> : <span className="badge-rose">🔴 {st || 'قطع'}</span>
+          render: (st) => st === 'online' ? <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>متصل</span> : <span className="badge-rose">{st || 'قطع'}</span>
         },
         {
           title: 'هسته (Core)',
@@ -2724,13 +2853,13 @@ HTML_PAGE = """<!DOCTYPE html>
           title: 'دریافت (دانلود)',
           dataIndex: 'downlink_gb',
           key: 'downlink_gb',
-          render: (d) => <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>⬇️ {d} GB</span>
+          render: (d) => <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>↓ {d} GB</span>
         },
         {
           title: 'ارسال (آپلود)',
           dataIndex: 'uplink_gb',
           key: 'uplink_gb',
-          render: (u) => <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>⬆️ {u} GB</span>
+          render: (u) => <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>↑ {u} GB</span>
         },
         {
           title: 'ترافیک کل نود',
@@ -2769,12 +2898,12 @@ HTML_PAGE = """<!DOCTYPE html>
               {/* HORIZONTAL TAB NAVIGATION */}
               <nav className="nav-tabs">
                 {[
-                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد و وضعیت' },
-                  { key: 'restore', icon: <SyncOutlined />, label: 'بازگردانی و مهاجرت' },
-                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌ها و دیتابیس‌ها' },
-                  { key: 'servers', icon: <ClusterOutlined />, label: 'سرورها و نودها' },
-                  { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات ربات و امنیت' },
-                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان' },
+                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد' },
+                  { key: 'restore', icon: <SyncOutlined />, label: 'بازیابی هوشمند' },
+                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌های متصل' },
+                  { key: 'servers', icon: <ClusterOutlined />, label: 'نودهای سرور' },
+                  { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
+                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیو پشتیبان' },
                 ].map((item) => (
                   <div
                     key={item.key}
@@ -2802,7 +2931,7 @@ HTML_PAGE = """<!DOCTYPE html>
                   target="_blank"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
                 >
-                  🔒 HTTPS
+                  HTTPS SSL
                 </Button>
               </Tooltip>
 
@@ -2851,12 +2980,12 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">👥 کاربران و اتصالات فعال</span>
-                            <span className="badge-emerald">🟢 آنلاین لحظه‌ای</span>
+                            <span className="hero-title">کاربران و اتصالات فعال</span>
+                            <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>آنلاین لحظه‌ای</span>
                           </div>
                           <div className="hero-val" style={{ color: '#10b981' }}>
                             {data?.metrics?.online_now ?? 0}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نفر</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>کاربر همزمان</span>
                           </div>
                         </div>
                         <div className="hero-sub">
@@ -2871,17 +3000,17 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">⚡ ترافیک مصرفی و پهنای باند</span>
+                            <span className="hero-title">مصرف پهنای باند و تبادل داده</span>
                             <span className="badge-slate">۲۴ ساعت اخیر</span>
                           </div>
                           <div className="hero-val" style={{ color: '#38bdf8' }}>
                             {data?.metrics?.traffic_24h_gb ?? 0}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>گیگابایت</span>
                           </div>
                         </div>
                         <div className="hero-sub">
-                          <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>⬇️ دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</span>
-                          <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>⬆️ آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</span>
+                          <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>↓ دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</span>
+                          <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>↑ آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</span>
                           <span className="badge-slate">۷ روز اخیر: {data?.metrics?.traffic_7d_gb ?? 0} GB</span>
                         </div>
                       </div>
@@ -2892,18 +3021,18 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">🛡️ وضعیت حفاظت و پشتیبان‌گیری</span>
-                            {cfg.backup_password ? <span className="badge-amber">🔐 AES-256 فعال</span> : <span className="badge-slate">🔓 بدون رمز</span>}
+                            <span className="hero-title">حفاظت امنیتی و چرخه پشتیبان</span>
+                            {cfg.backup_password ? <span className="badge-amber">AES-256 فعال</span> : <span className="badge-slate">بدون رمز</span>}
                           </div>
                           <div className="hero-val" style={{ color: '#f59e0b' }}>
                             {data?.bk_stats?.count_24h ?? 0}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نسخه ۲۴h</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نسخه ۲۴h</span>
                           </div>
                         </div>
                         <div className="hero-sub">
-                          <span className="badge-slate">⚖️ آخرین حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
-                          <span className="badge-slate">⏱️ هر {cfg.interval_hours || 6} ساعت</span>
-                          {data?.config?.bot_token ? <span className="badge-emerald">🤖 تلگرام متصل</span> : <span className="badge-slate">ربات غیرفعال</span>}
+                          <span className="badge-slate">آخرین حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
+                          <span className="badge-slate">هر {cfg.interval_hours || 6} ساعت</span>
+                          {data?.config?.bot_token ? <span className="badge-emerald">ربات تلگرام متصل</span> : <span className="badge-slate">ربات غیرفعال</span>}
                         </div>
                       </div>
                     </Col>
@@ -2915,7 +3044,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       <Col xs={24} sm={12} md={6}>
                         <div className="vital-col">
                           <div className="vital-title-row">
-                            <span>🖥 پردازنده (CPU Load)</span>
+                            <span>پردازنده (CPU Load)</span>
                             <span className="vital-num">{stats.load || '0.00'}</span>
                           </div>
                           <Progress
@@ -2931,7 +3060,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       <Col xs={24} sm={12} md={6}>
                         <div className="vital-col">
                           <div className="vital-title-row">
-                            <span>🧠 حافظه رم (RAM)</span>
+                            <span>حافظه رم (RAM)</span>
                             <span className="vital-num">{stats.ram_str || '--'}</span>
                           </div>
                           <Progress
@@ -2947,7 +3076,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       <Col xs={24} sm={12} md={6}>
                         <div className="vital-col">
                           <div className="vital-title-row">
-                            <span>💾 فضای دیسک (Disk)</span>
+                            <span>فضای دیسک (Disk)</span>
                             <span className="vital-num">{stats.disk_str || '--'}</span>
                           </div>
                           <Progress
@@ -2963,7 +3092,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       <Col xs={24} sm={12} md={6}>
                         <div className="vital-col">
                           <div className="vital-title-row">
-                            <span>⏱ آپ‌تایم و هاست</span>
+                            <span>آپ‌تایم و وضعیت هاست</span>
                             <span className="badge-slate" style={{ direction: 'ltr' }}>{stats.public_ip || hostIp}</span>
                           </div>
                           <div style={{ fontSize: 13, fontWeight: 500, color: '#10b981', marginTop: 3 }}>
@@ -2975,11 +3104,11 @@ HTML_PAGE = """<!DOCTYPE html>
                   </div>
 
                   {/* TIER 3: QUICK ACTIONS BAR */}
-                  <Card bordered={false} style={{ padding: '4px 8px' }}>
+                  <div className="vitals-strip" style={{ padding: '12px 18px' }}>
                     <Row gutter={[16, 12]} align="middle" justify="space-between">
                       <Col xs={24} md={14}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                          <span style={{ fontSize: 13, fontWeight: 600 }}>🚀 اتصال سرور جدید:</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 600, color: '#a1a1aa' }}>اتصال سرور جدید (Agent Node):</span>
                           <Text code className="code-text" style={{ padding: '4px 10px', fontSize: 12 }}>
                             curl -sSL http://{hostIp}:2099/install.sh | bash
                           </Text>
@@ -3007,19 +3136,19 @@ HTML_PAGE = """<!DOCTYPE html>
                             onClick={handleSendDigest}
                             loading={actionLoading}
                           >
-                            ارسال گزارش به تلگرام
+                            ارسال کارنامه به تلگرام
                           </Button>
                         </Space>
                       </Col>
                     </Row>
-                  </Card>
+                  </div>
 
                   {/* TIER 4: OPERATIONAL 2-COLUMN GRID (LEADERBOARD & DIGEST) */}
                   <Row gutter={[16, 16]}>
                     {/* LEADERBOARD */}
                     <Col xs={24} md={11}>
                       <Card
-                        title="🏆 ۵ کاربر پرمصرف ۲۴ ساعت گذشته"
+                        title="کاربران پرمصرف ۲۴ ساعت گذشته"
                         bordered={false}
                         extra={<span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>}
                       >
@@ -3037,7 +3166,7 @@ HTML_PAGE = """<!DOCTYPE html>
                               }
                             },
                             {
-                              title: 'نام کاربری / شناسه',
+                              title: 'شناسه کاربری',
                               dataIndex: 'email',
                               key: 'email',
                               render: (em) => <Text code className="code-text" strong>{em}</Text>
@@ -3059,12 +3188,18 @@ HTML_PAGE = """<!DOCTYPE html>
                       </Card>
                     </Col>
 
-                    {/* LIVE DIGEST PREVIEW */}
+                    {/* LIVE DIGEST PREVIEW (TERMINAL WINDOW STYLE) */}
                     <Col xs={24} md={13}>
-                      <Card
-                        title="📋 پیش‌نمایش زنده کارنامه سلامت و گزارش روزانه"
-                        bordered={false}
-                        extra={
+                      <div className="terminal-box">
+                        <div className="terminal-header">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div className="terminal-dots">
+                              <span className="terminal-dot dot-red"></span>
+                              <span className="terminal-dot dot-yellow"></span>
+                              <span className="terminal-dot dot-green"></span>
+                            </div>
+                            <span style={{ fontSize: 12, fontWeight: 500, color: '#a1a1aa' }}>کارنامه سلامت و مانیتورینگ روزانه</span>
+                          </div>
                           <Space size={8}>
                             <Button
                               size="small"
@@ -3086,34 +3221,15 @@ HTML_PAGE = """<!DOCTYPE html>
                               onClick={handleSendDigest}
                               loading={actionLoading}
                             >
-                              ارسال فوری به تلگرام
+                              ارسال به تلگرام
                             </Button>
                           </Space>
-                        }
-                      >
-                        <div
-                          style={{
-                            background: 'rgba(0, 0, 0, 0.3)',
-                            padding: '14px 16px',
-                            borderRadius: 10,
-                            border: '1px solid rgba(255, 255, 255, 0.06)',
-                            maxHeight: 250,
-                            overflowY: 'auto'
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontFamily: 'monospace',
-                              fontSize: 12,
-                              lineHeight: '1.85',
-                              whiteSpace: 'pre-wrap',
-                              direction: 'rtl',
-                              color: 'rgba(255, 255, 255, 0.85)'
-                            }}
-                            dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
-                          />
                         </div>
-                      </Card>
+                        <div
+                          className="terminal-content"
+                          dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
+                        />
+                      </div>
                     </Col>
                   </Row>
 
@@ -3123,8 +3239,8 @@ HTML_PAGE = """<!DOCTYPE html>
                     bordered={false}
                     extra={
                       <Space size={8}>
-                        {data?.config?.bot_token ? <span className="badge-emerald">🤖 تلگرام فعال</span> : <span className="badge-slate">ربات غیرفعال</span>}
-                        {cfg.backup_password ? <span className="badge-amber">🔐 رمزدار AES</span> : <span className="badge-slate">بدون رمز</span>}
+                        {data?.config?.bot_token ? <span className="badge-emerald">ربات تلگرام فعال</span> : <span className="badge-slate">ربات غیرفعال</span>}
+                        {cfg.backup_password ? <span className="badge-amber">رمزدار AES</span> : <span className="badge-slate">بدون رمز</span>}
                       </Space>
                     }
                   >
@@ -3543,12 +3659,12 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">🌐 نودهای زیرساخت</span>
+                            <span className="hero-title">نودهای زیرساخت</span>
                             <span className="badge-slate">ثبت‌شده</span>
                           </div>
                           <div className="hero-val" style={{ color: '#38bdf8' }}>
                             {data?.live_nodes?.length || data?.servers?.length || 0}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود</span>
                           </div>
                         </div>
                         <div className="hero-sub">
@@ -3560,12 +3676,12 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">🟢 وضعیت اتصال شبکه</span>
-                            <span className="badge-emerald">پایدار</span>
+                            <span className="hero-title">وضعیت اتصال شبکه</span>
+                            <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>پایدار</span>
                           </div>
                           <div className="hero-val" style={{ color: '#10b981' }}>
                             {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود فعال</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود فعال</span>
                           </div>
                         </div>
                         <div className="hero-sub">
@@ -3577,12 +3693,12 @@ HTML_PAGE = """<!DOCTYPE html>
                       <div className="hero-kpi-card">
                         <div>
                           <div className="hero-header">
-                            <span className="hero-title">⚡ ترافیک عبوری نودها</span>
+                            <span className="hero-title">ترافیک عبوری نودها</span>
                             <span className="badge-slate">مجموع</span>
                           </div>
                           <div className="hero-val" style={{ color: '#f59e0b' }}>
                             {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
-                            <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
+                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
                           </div>
                         </div>
                         <div className="hero-sub">
@@ -3744,7 +3860,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
           {/* MODAL: 1-CLICK PRESET PANEL CONNECTION */}
           <Modal
-            title="➕ اتصال پنل یا دیتابیس جدید به چرخه پشتیبان‌گیری"
+            title="اتصال پنل یا دیتابیس جدید به چرخه پشتیبان‌گیری"
             open={addPanelModal}
             onCancel={() => setAddPanelModal(false)}
             footer={null}
@@ -3799,7 +3915,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
           {/* MODAL: FIRST-RUN SETUP WIZARD */}
           <Modal
-            title="🌾 راه‌اندازی اولیه و ورود امنیتی به سامانه خوشه"
+            title="راه‌اندازی اولیه و ورود امنیتی به سامانه خوشه"
             open={setupModal}
             closable={false}
             footer={null}
@@ -3824,7 +3940,7 @@ HTML_PAGE = """<!DOCTYPE html>
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                     <span>کلمه عبور مدیر</span>
                     <Button type="link" size="small" onClick={handleGenerateSetupPassword} style={{ padding: 0 }}>
-                      🎲 تولید رمز تصادفی فوق‌امن
+                      تولید رمز تصادفی امن
                     </Button>
                   </div>
                 }
@@ -3851,7 +3967,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
           {/* MODAL: LOGIN MODAL */}
           <Modal
-            title="🔐 ورود به پنل مدیریت خوشه"
+            title="ورود به پنل مدیریت خوشه"
             open={loginModal}
             closable={false}
             footer={null}
@@ -3897,17 +4013,17 @@ HTML_PAGE = """<!DOCTYPE html>
             algorithm: themeMode === 'dark' ? antd.theme.darkAlgorithm : antd.theme.defaultAlgorithm,
             token: {
               colorPrimary: '#10b981',
-              colorInfo: '#10b981',
+              colorInfo: '#38bdf8',
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
-              colorError: '#ef4444',
+              colorError: '#f43f5e',
               colorBgBase: themeMode === 'dark' ? '#09090b' : '#fafafa',
-              colorBgContainer: themeMode === 'dark' ? '#111216' : '#ffffff',
+              colorBgContainer: themeMode === 'dark' ? '#121317' : '#ffffff',
               colorBgElevated: themeMode === 'dark' ? '#18191f' : '#ffffff',
-              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.07)' : '#e4e4e7',
+              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : '#e4e4e7',
               colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f4f4f5',
-              borderRadius: 10,
-              borderRadiusLG: 14,
+              borderRadius: 7,
+              borderRadiusLG: 10,
               fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             }
           }}
