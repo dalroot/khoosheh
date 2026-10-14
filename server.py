@@ -246,58 +246,173 @@ class PanelRegistry:
     @staticmethod
     def detect_panels():
         panels = []
-        # 1. 3X-UI
-        if os.path.exists("/etc/x-ui/x-ui.db") or os.path.exists("/usr/local/x-ui"):
+        
+        # 1. 3X-UI / X-UI (Sanaei, Alireza, FranzKafkaYu, vaxilu)
+        xui_candidates = [
+            "/etc/x-ui/x-ui.db",
+            "/usr/local/x-ui/bin/x-ui.db",
+            "/usr/local/x-ui/x-ui.db",
+            "/root/x-ui/x-ui.db",
+            "/opt/x-ui/x-ui.db"
+        ]
+        xui_found = None
+        for p in xui_candidates:
+            if os.path.exists(p):
+                xui_found = p
+                break
+        
+        xui_svc_active = (subprocess.run(["systemctl", "is-active", "--quiet", "x-ui"]).returncode == 0)
+        xui_docker_active = (subprocess.run(["docker", "ps", "-q", "-f", "name=x-ui"], capture_output=True).stdout.strip() != b"")
+        if xui_found or os.path.exists("/usr/local/x-ui") or xui_svc_active or xui_docker_active:
             info = "فعال و متصل"
-            try:
-                con = sqlite3.connect("/etc/x-ui/x-ui.db")
-                c = con.execute("SELECT count(*) FROM client_traffics").fetchone()[0]
-                i = con.execute("SELECT count(*) FROM inbounds").fetchone()[0]
-                con.close()
-                info = f"فعال ({c} کاربر | {i} اینباند)"
-            except Exception:
-                pass
-            panels.append({"id": "3x-ui", "name": "3X-UI (Sanaei / Alireza)", "status": "active", "details": info, "db_type": "SQLite (Online Backup)"})
-
-        # 2. Network & Proxy (Hawal & Nginx)
-        if os.path.exists("/etc/nginx") or os.path.exists("/etc/hawal") or os.path.exists("/opt/hawal"):
-            panels.append({"id": "network", "name": "Network (Nginx & Hawal Tunnels)", "status": "active", "details": "کانفیگ سابسکریپشن و تانل‌های سرور", "db_type": "Config Files"})
-
-        # 3. Marzban
-        if os.path.exists("/opt/marzban") or os.path.exists("/var/lib/marzban/db.sqlite3"):
-            panels.append({"id": "marzban", "name": "Marzban (مرزبان)", "status": "active", "details": "پشتیبانی دیتابیس SQLite/MySQL", "db_type": "SQLite/MySQL"})
+            if xui_found:
+                try:
+                    con = sqlite3.connect(xui_found)
+                    c = con.execute("SELECT count(*) FROM client_traffics").fetchone()[0]
+                    i = con.execute("SELECT count(*) FROM inbounds").fetchone()[0]
+                    con.close()
+                    info = f"فعال ({c} کاربر | {i} اینباند)"
+                except Exception:
+                    try:
+                        con = sqlite3.connect(xui_found)
+                        i = con.execute("SELECT count(*) FROM inbounds").fetchone()[0]
+                        con.close()
+                        info = f"فعال ({i} اینباند)"
+                    except Exception:
+                        pass
+            panels.append({
+                "id": "3x-ui",
+                "name": "3X-UI / X-UI (Sanaei / Alireza / FranzKafkaYu)",
+                "status": "active",
+                "details": info,
+                "db_type": "SQLite (Online Backup)"
+            })
         else:
-            panels.append({"id": "marzban", "name": "Marzban (مرزبان)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite/MySQL"})
+            panels.append({
+                "id": "3x-ui",
+                "name": "3X-UI / X-UI (Sanaei / Alireza / FranzKafkaYu)",
+                "status": "supported",
+                "details": "ماژول آماده اتصال",
+                "db_type": "SQLite (Online Backup)"
+            })
 
-        # 4. PasarGuard & Pasargad Panel
-        if os.path.exists("/var/lib/pasarguard/db.sqlite3") or os.path.exists("/opt/pasarguard"):
+        # 2. PasarGuard & Pasargad Panel
+        pg_candidates = [
+            "/var/lib/pasarguard/db.sqlite3",
+            "/opt/pasarguard/db.sqlite3"
+        ]
+        pg_found = None
+        for p in pg_candidates:
+            if os.path.exists(p):
+                pg_found = p
+                break
+        pg_docker_active = (subprocess.run(["docker", "ps", "-q", "-f", "name=pasarguard"], capture_output=True).stdout.strip() != b"")
+        if pg_found or os.path.exists("/opt/pasarguard") or pg_docker_active:
             info = "ماژول شناسایی شد"
-            try:
-                con = sqlite3.connect("/var/lib/pasarguard/db.sqlite3")
-                u_cnt = con.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-                i_cnt = con.execute("SELECT COUNT(*) FROM inbounds").fetchone()[0]
-                n_cnt = con.execute("SELECT COUNT(*) FROM nodes").fetchone()[0]
-                con.close()
-                info = f"فعال ({u_cnt} کاربر | {i_cnt} اینباند | {n_cnt} نود)"
-            except Exception:
-                pass
+            if pg_found:
+                try:
+                    con = sqlite3.connect(pg_found)
+                    u_cnt = con.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+                    i_cnt = con.execute("SELECT COUNT(*) FROM inbounds").fetchone()[0]
+                    n_cnt = con.execute("SELECT COUNT(*) FROM nodes").fetchone()[0]
+                    con.close()
+                    info = f"فعال ({u_cnt} کاربر | {i_cnt} اینباند | {n_cnt} نود)"
+                except Exception:
+                    pass
             panels.append({"id": "pasarguard", "name": "PasarGuard (پاسارگارد)", "status": "active", "details": info, "db_type": "SQLite (Online Backup)"})
         elif os.path.exists("/opt/pasargad") or os.path.exists("/var/www/pasargad"):
             panels.append({"id": "pasargad", "name": "Pasargad Panel (پاسارگاد قدیمی)", "status": "active", "details": "ماژول شناسایی شد", "db_type": "SQLite"})
         else:
             panels.append({"id": "pasarguard", "name": "PasarGuard (پاسارگارد)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite (Online Backup)"})
 
-        # 5. Remna / RemnaView
-        if os.path.exists("/opt/remna") or os.path.exists("/var/www/remna") or os.path.exists("/opt/remnaview"):
-            panels.append({"id": "remna", "name": "Remna / RemnaView (رمنا)", "status": "active", "details": "ماژول شناسایی شد", "db_type": "SQLite"})
+        # 3. Marzban (Gozargah)
+        marzban_candidates = [
+            "/var/lib/marzban/db.sqlite3",
+            "/opt/marzban/db.sqlite3",
+            "/var/lib/marzban/marzban.db"
+        ]
+        marzban_found = None
+        for p in marzban_candidates:
+            if os.path.exists(p):
+                marzban_found = p
+                break
+        marzban_docker_active = (subprocess.run(["docker", "ps", "-q", "-f", "name=marzban"], capture_output=True).stdout.strip() != b"")
+        marzban_svc_active = (subprocess.run(["systemctl", "is-active", "--quiet", "marzban"]).returncode == 0)
+        
+        if marzban_found or os.path.exists("/opt/marzban") or marzban_docker_active or marzban_svc_active:
+            info = "فعال و متصل"
+            if marzban_found:
+                try:
+                    con = sqlite3.connect(marzban_found)
+                    u_cnt = con.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+                    ib_cnt = con.execute("SELECT COUNT(*) FROM proxy_inbounds").fetchone()[0]
+                    con.close()
+                    info = f"فعال ({u_cnt} کاربر | {ib_cnt} اینباند)"
+                except Exception:
+                    pass
+            panels.append({"id": "marzban", "name": "Marzban (مرزبان)", "status": "active", "details": info, "db_type": "SQLite/MySQL"})
         else:
-            panels.append({"id": "remna", "name": "Remna / RemnaView (رمنا)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite"})
+            panels.append({"id": "marzban", "name": "Marzban (مرزبان)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite/MySQL"})
 
-        # 6. Hiddify Manager
-        if os.path.exists("/opt/hiddify-manager"):
-            panels.append({"id": "hiddify", "name": "Hiddify Manager (هیدیفای)", "status": "active", "details": "دیتابیس و تنظیمات پنل", "db_type": "SQLite"})
+        # 4. Remna / Remnawave
+        remna_candidates = [
+            "/opt/remnawave/database.sqlite",
+            "/opt/remna/database.sqlite",
+            "/opt/remna/db.sqlite3",
+            "/var/lib/remna/database.sqlite"
+        ]
+        remna_found = None
+        for p in remna_candidates:
+            if os.path.exists(p):
+                remna_found = p
+                break
+        remna_dir = any(os.path.exists(d) for d in ["/opt/remnawave", "/opt/remna", "/var/lib/remna", "/opt/remnaview", "/var/www/remna"])
+        remna_docker = (subprocess.run(["docker", "ps", "-q", "-f", "name=remna"], capture_output=True).stdout.strip() != b"")
+        if remna_found or remna_dir or remna_docker:
+            info = "ماژول شناسایی شد"
+            if remna_found:
+                try:
+                    con = sqlite3.connect(remna_found)
+                    u_cnt = con.execute("SELECT count(*) FROM users").fetchone()[0]
+                    con.close()
+                    info = f"فعال ({u_cnt} کاربر)"
+                except Exception:
+                    pass
+            panels.append({"id": "remna", "name": "Remnawave / Remna (رمنا)", "status": "active", "details": info, "db_type": "SQLite/PostgreSQL"})
+        else:
+            panels.append({"id": "remna", "name": "Remnawave / Remna (رمنا)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite/PostgreSQL"})
+
+        # 5. Hiddify (Manager & Config)
+        hid_candidates = [
+            "/opt/hiddify-config/hiddifypanel/hiddifypanel.db",
+            "/opt/hiddify-manager/hiddify-panel/hiddifypanel.db",
+            "/opt/hiddify-config/hiddify-panel/hiddifypanel.db"
+        ]
+        hid_found = None
+        for p in hid_candidates:
+            if os.path.exists(p):
+                hid_found = p
+                break
+        hid_app = any(os.path.exists(d) for d in ["/opt/hiddify-manager", "/opt/hiddify-config", "/opt/hiddify-server"])
+        hid_svc = (subprocess.run(["systemctl", "is-active", "--quiet", "hiddify-panel"]).returncode == 0)
+        if hid_found or hid_app or hid_svc:
+            info = "دیتابیس و تنظیمات پنل"
+            if hid_found:
+                try:
+                    con = sqlite3.connect(hid_found)
+                    u_cnt = con.execute("SELECT count(*) FROM user").fetchone()[0]
+                    d_cnt = con.execute("SELECT count(*) FROM domain").fetchone()[0]
+                    con.close()
+                    info = f"فعال ({u_cnt} کاربر | {d_cnt} دامنه)"
+                except Exception:
+                    pass
+            panels.append({"id": "hiddify", "name": "Hiddify Manager (هیدیفای)", "status": "active", "details": info, "db_type": "SQLite"})
         else:
             panels.append({"id": "hiddify", "name": "Hiddify Manager (هیدیفای)", "status": "supported", "details": "ماژول آماده اتصال", "db_type": "SQLite"})
+
+        # 6. Network & Proxy (Hawal & Nginx & HAProxy)
+        if os.path.exists("/etc/nginx") or os.path.exists("/etc/hawal") or os.path.exists("/opt/hawal") or os.path.exists("/etc/haproxy"):
+            panels.append({"id": "network", "name": "Network (Nginx & Hawal Tunnels)", "status": "active", "details": "کانفیگ سابسکریپشن و تانل‌های سرور", "db_type": "Config Files"})
 
         cfg = load_config()
         for cp in cfg.get("custom_panels", []):
@@ -316,63 +431,110 @@ class PanelRegistry:
     @staticmethod
     def collect(staging_dir, backup_type="full"):
         collected = []
-        # 1. 3X-UI
-        if backup_type in ["full", "3x-ui"] and os.path.exists("/etc/x-ui/x-ui.db"):
-            tgt = os.path.join(staging_dir, "3x-ui")
-            os.makedirs(tgt, exist_ok=True)
-            db_dst = os.path.join(tgt, "x-ui.db")
-            try:
-                src_conn = sqlite3.connect("/etc/x-ui/x-ui.db")
+        
+        # 1. 3X-UI / X-UI
+        if backup_type in ["full", "3x-ui"]:
+            xui_src = None
+            for p in ["/etc/x-ui/x-ui.db", "/usr/local/x-ui/bin/x-ui.db", "/usr/local/x-ui/x-ui.db", "/root/x-ui/x-ui.db", "/opt/x-ui/x-ui.db"]:
+                if os.path.exists(p):
+                    xui_src = p
+                    break
+            if xui_src:
+                tgt = os.path.join(staging_dir, "3x-ui")
+                os.makedirs(tgt, exist_ok=True)
+                db_dst = os.path.join(tgt, "x-ui.db")
                 try:
-                    src_conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                    src_conn = sqlite3.connect(xui_src)
+                    try:
+                        src_conn.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                    except Exception:
+                        pass
+                    dst_conn = sqlite3.connect(db_dst)
+                    src_conn.backup(dst_conn, pages=-1)
+                    dst_conn.close()
+                    src_conn.close()
                 except Exception:
-                    pass
-                dst_conn = sqlite3.connect(db_dst)
-                src_conn.backup(dst_conn, pages=-1)
-                dst_conn.close()
-                src_conn.close()
-            except Exception:
-                shutil.copy2("/etc/x-ui/x-ui.db", db_dst)
+                    shutil.copy2(xui_src, db_dst)
 
-            cert_dir = "/etc/x-ui/certs"
-            if os.path.exists(cert_dir):
-                shutil.copytree(cert_dir, os.path.join(tgt, "certs"), dirs_exist_ok=True)
-            collected.append("3X-UI")
+                for c_dir in ["/etc/x-ui/certs", "/root/cert", "/root/certs"]:
+                    if os.path.exists(c_dir):
+                        shutil.copytree(c_dir, os.path.join(tgt, "certs"), dirs_exist_ok=True)
+                        break
+                collected.append("3X-UI")
 
         # 2. Network & Proxy
         if backup_type in ["full", "network"]:
             tgt_net = os.path.join(staging_dir, "network")
             os.makedirs(tgt_net, exist_ok=True)
+            has_net = False
             if os.path.exists("/etc/nginx"):
                 shutil.copytree("/etc/nginx", os.path.join(tgt_net, "nginx"), dirs_exist_ok=True, ignore=shutil.ignore_patterns("*.log"))
+                has_net = True
             if os.path.exists("/opt/hawal"):
                 shutil.copytree("/opt/hawal", os.path.join(tgt_net, "hawal"), dirs_exist_ok=True, ignore=shutil.ignore_patterns("*.log", "tmp*"))
+                has_net = True
             if os.path.exists("/etc/hawal"):
                 shutil.copytree("/etc/hawal", os.path.join(tgt_net, "etc_hawal"), dirs_exist_ok=True)
-            collected.append("Network & Tunnels")
+                has_net = True
+            if os.path.exists("/etc/haproxy"):
+                shutil.copytree("/etc/haproxy", os.path.join(tgt_net, "haproxy"), dirs_exist_ok=True)
+                has_net = True
+            if has_net:
+                collected.append("Network & Tunnels")
 
         # 3. Marzban
-        if backup_type in ["full", "marzban"] and os.path.exists("/opt/marzban"):
-            tgt_m = os.path.join(staging_dir, "marzban")
-            os.makedirs(tgt_m, exist_ok=True)
-            if os.path.exists("/var/lib/marzban/db.sqlite3"):
+        if backup_type in ["full", "marzban"]:
+            m_db = None
+            for p in ["/var/lib/marzban/db.sqlite3", "/opt/marzban/db.sqlite3", "/var/lib/marzban/marzban.db"]:
+                if os.path.exists(p):
+                    m_db = p
+                    break
+            m_app = os.path.exists("/opt/marzban") or os.path.exists("/var/lib/marzban")
+            if m_db or m_app:
+                tgt_m = os.path.join(staging_dir, "marzban")
+                os.makedirs(tgt_m, exist_ok=True)
+                if m_db:
+                    try:
+                        s = sqlite3.connect(m_db)
+                        try:
+                            s.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                        except Exception:
+                            pass
+                        d = sqlite3.connect(os.path.join(tgt_m, "db.sqlite3"))
+                        s.backup(d)
+                        d.close()
+                        s.close()
+                    except Exception:
+                        shutil.copy2(m_db, os.path.join(tgt_m, "db.sqlite3"))
+                if os.path.exists("/opt/marzban/.env"):
+                    shutil.copy2("/opt/marzban/.env", os.path.join(tgt_m, ".env"))
+                if os.path.exists("/opt/marzban/docker-compose.yml"):
+                    shutil.copy2("/opt/marzban/docker-compose.yml", os.path.join(tgt_m, "docker-compose.yml"))
+                for sub in ["xray-core", "templates", "certs"]:
+                    sp = os.path.join("/var/lib/marzban", sub)
+                    if os.path.exists(sp):
+                        shutil.copytree(sp, os.path.join(tgt_m, sub), dirs_exist_ok=True)
+                # Check for MySQL container dump if present
                 try:
-                    s = sqlite3.connect("/var/lib/marzban/db.sqlite3")
-                    d = sqlite3.connect(os.path.join(tgt_m, "db.sqlite3"))
-                    s.backup(d)
-                    d.close()
-                    s.close()
+                    res = subprocess.run(["docker", "ps", "-q", "-f", "name=marzban.*mysql"], capture_output=True, text=True)
+                    if res.stdout.strip():
+                        c_id = res.stdout.strip().split()[0]
+                        dump_cmd = f"docker exec {c_id} mysqldump -u root --all-databases"
+                        d_res = subprocess.run(dump_cmd, shell=True, capture_output=True, text=True, timeout=30)
+                        if d_res.returncode == 0 and d_res.stdout:
+                            with open(os.path.join(tgt_m, "marzban_dump.sql"), "w", encoding="utf-8") as f:
+                                f.write(d_res.stdout)
                 except Exception:
-                    shutil.copy2("/var/lib/marzban/db.sqlite3", os.path.join(tgt_m, "db.sqlite3"))
-            if os.path.exists("/opt/marzban/.env"):
-                shutil.copy2("/opt/marzban/.env", os.path.join(tgt_m, ".env"))
-            collected.append("Marzban")
+                    pass
+                collected.append("Marzban")
 
-        # 4. PasarGuard
+        # 4. PasarGuard & Pasargad
         if backup_type in ["full", "pasarguard"] and (os.path.exists("/var/lib/pasarguard/db.sqlite3") or os.path.exists("/opt/pasarguard")):
             tgt_pg = os.path.join(staging_dir, "pasarguard")
             os.makedirs(tgt_pg, exist_ok=True)
             pg_db = "/var/lib/pasarguard/db.sqlite3"
+            if not os.path.exists(pg_db) and os.path.exists("/opt/pasarguard/db.sqlite3"):
+                pg_db = "/opt/pasarguard/db.sqlite3"
             if os.path.exists(pg_db):
                 dst_db = os.path.join(tgt_pg, "db.sqlite3")
                 try:
@@ -405,6 +567,92 @@ class PanelRegistry:
             os.makedirs(tgt_p, exist_ok=True)
             shutil.copytree("/opt/pasargad", tgt_p, dirs_exist_ok=True, ignore=shutil.ignore_patterns("*.log", "cache*"))
             collected.append("Pasargad")
+
+        # 5. Remna / Remnawave
+        if backup_type in ["full", "remna"]:
+            remna_dir = None
+            for d in ["/opt/remnawave", "/opt/remna", "/var/lib/remna", "/opt/remnaview"]:
+                if os.path.exists(d):
+                    remna_dir = d
+                    break
+            remna_db = None
+            for p in ["/opt/remnawave/database.sqlite", "/opt/remna/database.sqlite", "/opt/remna/db.sqlite3", "/var/lib/remna/database.sqlite"]:
+                if os.path.exists(p):
+                    remna_db = p
+                    break
+            if remna_dir or remna_db:
+                tgt_rw = os.path.join(staging_dir, "remna")
+                os.makedirs(tgt_rw, exist_ok=True)
+                if remna_db:
+                    try:
+                        s = sqlite3.connect(remna_db)
+                        try:
+                            s.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                        except Exception:
+                            pass
+                        d = sqlite3.connect(os.path.join(tgt_rw, "database.sqlite"))
+                        s.backup(d)
+                        d.close()
+                        s.close()
+                    except Exception:
+                        shutil.copy2(remna_db, os.path.join(tgt_rw, "database.sqlite"))
+                if remna_dir:
+                    for fn in [".env", "docker-compose.yml"]:
+                        fp = os.path.join(remna_dir, fn)
+                        if os.path.exists(fp):
+                            shutil.copy2(fp, os.path.join(tgt_rw, fn))
+                    c_dir = os.path.join(remna_dir, "certs")
+                    if os.path.exists(c_dir):
+                        shutil.copytree(c_dir, os.path.join(tgt_rw, "certs"), dirs_exist_ok=True)
+                # Check for Postgres container dump
+                try:
+                    res = subprocess.run(["docker", "ps", "-q", "-f", "name=remna.*db"], capture_output=True, text=True)
+                    if not res.stdout.strip():
+                        res = subprocess.run(["docker", "ps", "-q", "-f", "name=remnawave.*postgres"], capture_output=True, text=True)
+                    if res.stdout.strip():
+                        c_id = res.stdout.strip().split()[0]
+                        dump_cmd = f"docker exec {c_id} pg_dumpall -U postgres"
+                        d_res = subprocess.run(dump_cmd, shell=True, capture_output=True, text=True, timeout=30)
+                        if d_res.returncode == 0 and d_res.stdout:
+                            with open(os.path.join(tgt_rw, "remnawave.sql"), "w", encoding="utf-8") as f:
+                                f.write(d_res.stdout)
+                except Exception:
+                    pass
+                collected.append("Remna / Remnawave")
+
+        # 6. Hiddify Manager
+        if backup_type in ["full", "hiddify"]:
+            hid_db = None
+            for p in ["/opt/hiddify-config/hiddifypanel/hiddifypanel.db", "/opt/hiddify-manager/hiddify-panel/hiddifypanel.db", "/opt/hiddify-config/hiddify-panel/hiddifypanel.db"]:
+                if os.path.exists(p):
+                    hid_db = p
+                    break
+            hid_dir = "/opt/hiddify-manager" if os.path.exists("/opt/hiddify-manager") else ("/opt/hiddify-config" if os.path.exists("/opt/hiddify-config") else None)
+            if hid_db or hid_dir:
+                tgt_h = os.path.join(staging_dir, "hiddify")
+                os.makedirs(tgt_h, exist_ok=True)
+                if hid_db:
+                    try:
+                        s = sqlite3.connect(hid_db)
+                        try:
+                            s.execute("PRAGMA wal_checkpoint(TRUNCATE);")
+                        except Exception:
+                            pass
+                        d = sqlite3.connect(os.path.join(tgt_h, "hiddifypanel.db"))
+                        s.backup(d)
+                        d.close()
+                        s.close()
+                    except Exception:
+                        shutil.copy2(hid_db, os.path.join(tgt_h, "hiddifypanel.db"))
+                if hid_dir:
+                    for cf in ["current-config.json", ".env"]:
+                        fp = os.path.join(hid_dir, cf)
+                        if os.path.exists(fp):
+                            shutil.copy2(fp, os.path.join(tgt_h, cf))
+                    ssl_dir = os.path.join(hid_dir, "ssl")
+                    if os.path.exists(ssl_dir):
+                        shutil.copytree(ssl_dir, os.path.join(tgt_h, "ssl"), dirs_exist_ok=True)
+                collected.append("Hiddify Manager")
 
         # Custom Panels Backup
         cfg = load_config()
@@ -672,6 +920,85 @@ def deep_inspect_sqlite_pasarguard(db_path):
         report["error"] = str(e)
     return report
 
+def deep_inspect_sqlite_hiddify(db_path):
+    report = {
+        "found": True,
+        "users_count": 0,
+        "domains_count": 0,
+        "total_traffic_bytes": 0,
+        "total_traffic_human": "0 MB",
+        "domains": []
+    }
+    try:
+        conn = sqlite3.connect(db_path)
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = [r[0].lower() for r in cur.fetchall()]
+        for t in ["user", "users"]:
+            if t in tables:
+                cur.execute(f"SELECT count(*) FROM {t};")
+                report["users_count"] = cur.fetchone()[0] or 0
+                cur.execute(f"PRAGMA table_info({t});")
+                cols = [c[1].lower() for c in cur.fetchall()]
+                if "current_usage_gb" in cols:
+                    cur.execute(f"SELECT sum(current_usage_gb) FROM {t};")
+                    gb = cur.fetchone()[0] or 0
+                    report["total_traffic_bytes"] = int(gb * 1024**3)
+                    report["total_traffic_human"] = f"{round(gb, 2)} GB"
+                elif "current_usage" in cols:
+                    cur.execute(f"SELECT sum(current_usage) FROM {t};")
+                    b = cur.fetchone()[0] or 0
+                    report["total_traffic_bytes"] = b
+                    report["total_traffic_human"] = f"{round(b / (1024**3), 2)} GB" if b > 1024**3 else f"{round(b / (1024**2), 2)} MB"
+                break
+        for t in ["domain", "domains"]:
+            if t in tables:
+                cur.execute(f"SELECT count(*) FROM {t};")
+                report["domains_count"] = cur.fetchone()[0] or 0
+                try:
+                    cur.execute(f"SELECT domain FROM {t} LIMIT 5;")
+                    report["domains"] = [r[0] for r in cur.fetchall()]
+                except Exception:
+                    pass
+                break
+        conn.close()
+    except Exception as e:
+        report["error"] = str(e)
+    return report
+
+def deep_inspect_remnawave(remna_dir):
+    report = {
+        "found": True,
+        "users_count": 0,
+        "total_traffic_bytes": 0,
+        "total_traffic_human": "0 MB",
+        "has_env": os.path.exists(os.path.join(remna_dir, ".env")),
+        "has_compose": os.path.exists(os.path.join(remna_dir, "docker-compose.yml")),
+        "has_sql": os.path.exists(os.path.join(remna_dir, "remnawave.sql")),
+        "has_sqlite": False
+    }
+    sqlite_p = os.path.join(remna_dir, "database.sqlite")
+    if not os.path.exists(sqlite_p):
+        sqlite_p = os.path.join(remna_dir, "db.sqlite3")
+    if os.path.exists(sqlite_p):
+        report["has_sqlite"] = True
+        try:
+            conn = sqlite3.connect(sqlite_p)
+            cur = conn.cursor()
+            cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = [r[0].lower() for r in cur.fetchall()]
+            for t in ["users", "user", "clients"]:
+                if t in tables:
+                    cur.execute(f"SELECT count(*) FROM {t};")
+                    report["users_count"] = cur.fetchone()[0] or 0
+                    break
+            conn.close()
+        except Exception:
+            pass
+    elif report["has_sql"]:
+        report["db_type"] = "PostgreSQL Dump"
+    return report
+
 def inspect_backup_archive(archive_path, password=""):
     staging_id = f"khoosheh_inspect_{int(time.time())}_{secrets.token_hex(4)}"
     staging_dir = os.path.join("/tmp", staging_id)
@@ -726,6 +1053,8 @@ def inspect_backup_archive(archive_path, password=""):
         if os.path.exists(marzban_db_path):
             marzban_report = deep_inspect_sqlite_marzban(marzban_db_path)
             marzban_report["has_env"] = os.path.exists(os.path.join(staging_dir, "marzban", ".env"))
+            marzban_report["has_compose"] = os.path.exists(os.path.join(staging_dir, "marzban", "docker-compose.yml"))
+            marzban_report["has_sql"] = os.path.exists(os.path.join(staging_dir, "marzban", "marzban_dump.sql"))
 
         # 4. Inspect PasarGuard
         pasarguard_report = {"found": False}
@@ -736,21 +1065,50 @@ def inspect_backup_archive(archive_path, password=""):
             pasarguard_report["has_compose"] = os.path.exists(os.path.join(staging_dir, "pasarguard", "docker-compose.yml"))
             pasarguard_report["has_certs"] = os.path.exists(os.path.join(staging_dir, "pasarguard", "certs"))
 
-        # 5. Inspect Network
+        # 5. Inspect Remnawave
+        remna_report = {"found": False}
+        remna_dir = os.path.join(staging_dir, "remna")
+        if os.path.exists(remna_dir):
+            remna_report = deep_inspect_remnawave(remna_dir)
+
+        # 6. Inspect Hiddify
+        hiddify_report = {"found": False}
+        hid_dir = os.path.join(staging_dir, "hiddify")
+        hid_db_path = os.path.join(hid_dir, "hiddifypanel.db")
+        if os.path.exists(hid_db_path):
+            hiddify_report = deep_inspect_sqlite_hiddify(hid_db_path)
+            hiddify_report["has_config"] = os.path.exists(os.path.join(hid_dir, "current-config.json"))
+            hiddify_report["has_ssl"] = os.path.exists(os.path.join(hid_dir, "ssl"))
+        elif os.path.exists(hid_dir):
+            hiddify_report = {
+                "found": True,
+                "users_count": 0,
+                "domains_count": 0,
+                "total_traffic_human": "تنظیمات پنل",
+                "has_config": os.path.exists(os.path.join(hid_dir, "current-config.json")),
+                "has_ssl": os.path.exists(os.path.join(hid_dir, "ssl"))
+            }
+
+        # 7. Inspect Network
         network_report = {
             "found": os.path.exists(os.path.join(staging_dir, "network")),
             "has_nginx": os.path.exists(os.path.join(staging_dir, "network", "nginx")),
-            "has_hawal": os.path.exists(os.path.join(staging_dir, "network", "hawal")) or os.path.exists(os.path.join(staging_dir, "network", "etc_hawal"))
+            "has_hawal": os.path.exists(os.path.join(staging_dir, "network", "hawal")) or os.path.exists(os.path.join(staging_dir, "network", "etc_hawal")),
+            "has_haproxy": os.path.exists(os.path.join(staging_dir, "network", "haproxy"))
         }
 
-        # 6. Check Target Server status
+        # 8. Check Target Server status
         target_state = {
-            "x_ui_db_exists": os.path.exists("/etc/x-ui/x-ui.db"),
+            "x_ui_db_exists": os.path.exists("/etc/x-ui/x-ui.db") or os.path.exists("/usr/local/x-ui/bin/x-ui.db"),
             "x_ui_service_active": subprocess.run(["systemctl", "is-active", "--quiet", "x-ui"]).returncode == 0,
-            "marzban_exists": os.path.exists("/var/lib/marzban/db.sqlite3"),
-            "marzban_service_active": subprocess.run(["systemctl", "is-active", "--quiet", "marzban"]).returncode == 0,
-            "pasarguard_exists": os.path.exists("/var/lib/pasarguard/db.sqlite3"),
+            "marzban_exists": os.path.exists("/var/lib/marzban/db.sqlite3") or os.path.exists("/opt/marzban"),
+            "marzban_service_active": (subprocess.run(["systemctl", "is-active", "--quiet", "marzban"]).returncode == 0) or (subprocess.run(["docker", "ps", "-q", "-f", "name=marzban"], capture_output=True).stdout.strip() != b""),
+            "pasarguard_exists": os.path.exists("/var/lib/pasarguard/db.sqlite3") or os.path.exists("/opt/pasarguard"),
             "pasarguard_service_active": (subprocess.run(["docker", "ps", "-q", "-f", "name=pasarguard"], capture_output=True).stdout.strip() != b""),
+            "remna_exists": any(os.path.exists(d) for d in ["/opt/remnawave", "/opt/remna", "/var/lib/remna"]),
+            "remna_service_active": (subprocess.run(["docker", "ps", "-q", "-f", "name=remna"], capture_output=True).stdout.strip() != b""),
+            "hiddify_exists": any(os.path.exists(d) for d in ["/opt/hiddify-config", "/opt/hiddify-manager"]),
+            "hiddify_service_active": subprocess.run(["systemctl", "is-active", "--quiet", "hiddify-panel"]).returncode == 0,
             "nginx_active": subprocess.run(["systemctl", "is-active", "--quiet", "nginx"]).returncode == 0
         }
 
@@ -764,6 +1122,8 @@ def inspect_backup_archive(archive_path, password=""):
                 "3x-ui": xui_report,
                 "marzban": marzban_report,
                 "pasarguard": pasarguard_report,
+                "remna": remna_report,
+                "hiddify": hiddify_report,
                 "network": network_report
             },
             "target_server_state": target_state
@@ -877,17 +1237,85 @@ def execute_restore(staging_id, selected_panels, target_mode="existing", install
         # 3. RESTORE MARZBAN
         if "marzban" in selected_panels:
             src_marzban = os.path.join(staging_dir, "marzban")
-            src_m_db = os.path.join(src_marzban, "db.sqlite3")
-            if os.path.exists(src_m_db):
+            if os.path.exists(src_marzban):
+                log("آماده‌سازی بازگردانی پنل مرزبان (Marzban)...", "info")
+                m_compose_path = "/opt/marzban/docker-compose.yml"
+                has_compose = os.path.exists(m_compose_path)
+                
+                # Stop service
+                if has_compose:
+                    log("توقف موقت کانتینرهای مرزبان جهت آزادسازی قفل‌های دیتابیس...", "info")
+                    subprocess.run(["docker", "compose", "-f", m_compose_path, "down"], capture_output=True)
+                elif subprocess.run(["systemctl", "is-active", "--quiet", "marzban"]).returncode == 0:
+                    log("توقف موقت سرویس systemd مرزبان...", "info")
+                    subprocess.run(["systemctl", "stop", "marzban"], capture_output=True)
+
+                # Pre-restore safety backup
                 os.makedirs("/var/lib/marzban", exist_ok=True)
-                shutil.copy2(src_m_db, "/var/lib/marzban/db.sqlite3")
-                log("دیتابیس مرزبان در /var/lib/marzban/db.sqlite3 بازگردانی شد.", "ok")
-            if os.path.exists(os.path.join(src_marzban, ".env")):
                 os.makedirs("/opt/marzban", exist_ok=True)
-                shutil.copy2(os.path.join(src_marzban, ".env"), "/opt/marzban/.env")
-                log("فایل محیطی مرزبان (.env) بازگردانی شد.", "ok")
-            subprocess.run(["systemctl", "restart", "marzban"], capture_output=True)
-            log("سرویس مرزبان راه‌اندازی مجدد گردید.", "ok")
+                if os.path.exists("/var/lib/marzban/db.sqlite3"):
+                    try:
+                        shutil.copy2("/var/lib/marzban/db.sqlite3", f"/var/lib/marzban/db.sqlite3.pre_restore_{ts}.bak")
+                        log("نسخه پشتیبان حفاظتی دیتابیس مرزبان ایجاد شد.", "ok")
+                    except Exception:
+                        pass
+
+                # Restore SQLite DB
+                src_m_db = os.path.join(src_marzban, "db.sqlite3")
+                if os.path.exists(src_m_db):
+                    for extra_ext in ["-wal", "-shm"]:
+                        try:
+                            if os.path.exists(f"/var/lib/marzban/db.sqlite3{extra_ext}"):
+                                os.remove(f"/var/lib/marzban/db.sqlite3{extra_ext}")
+                        except Exception:
+                            pass
+                    shutil.copy2(src_m_db, "/var/lib/marzban/db.sqlite3")
+                    os.chmod("/var/lib/marzban/db.sqlite3", 0o644)
+                    
+                    # Integrity Check
+                    try:
+                        chk_con = sqlite3.connect("/var/lib/marzban/db.sqlite3")
+                        chk_res = chk_con.execute("PRAGMA integrity_check;").fetchone()[0]
+                        chk_con.close()
+                        if chk_res == "ok":
+                            log("سلامت دیتابیس مرزبان تایید شد (Integrity: OK) ✅", "ok")
+                        else:
+                            log("هشدار: دیتابیس مرزبان دارای ایراد ساختاری است.", "warning")
+                    except Exception as e:
+                        log(f"بررسی دیتابیس مرزبان: {e}", "info")
+                    log("دیتابیس مرزبان با موفقیت جایگزین شد.", "ok")
+
+                # Restore env and compose
+                for fn in [".env", "docker-compose.yml"]:
+                    f_src = os.path.join(src_marzban, fn)
+                    if os.path.exists(f_src):
+                        shutil.copy2(f_src, os.path.join("/opt/marzban", fn))
+                        log(f"فایل پیکربندی مرزبان ({fn}) بازگردانی شد.", "ok")
+
+                # Restore xray-core and templates
+                for sub in ["xray-core", "templates", "certs"]:
+                    sub_src = os.path.join(src_marzban, sub)
+                    if os.path.exists(sub_src):
+                        shutil.copytree(sub_src, os.path.join("/var/lib/marzban", sub), dirs_exist_ok=True)
+
+                # Restart Marzban
+                if os.path.exists(m_compose_path):
+                    log("راه‌اندازی کانتینرهای مرزبان با docker compose...", "info")
+                    subprocess.run(["docker", "compose", "-f", m_compose_path, "up", "-d"], capture_output=True)
+                    # Restore MySQL dump if present
+                    src_sql = os.path.join(src_marzban, "marzban_dump.sql")
+                    if os.path.exists(src_sql):
+                        time.sleep(3)
+                        res = subprocess.run(["docker", "ps", "-q", "-f", "name=marzban.*mysql"], capture_output=True, text=True)
+                        if res.stdout.strip():
+                            c_id = res.stdout.strip().split()[0]
+                            with open(src_sql, "r") as sql_f:
+                                subprocess.run(["docker", "exec", "-i", c_id, "mysql", "-u", "root"], stdin=sql_f, capture_output=True)
+                            log("پایگاه داده MySQL مرزبان با موفقیت ایمپورت شد.", "ok")
+                else:
+                    subprocess.run(["systemctl", "daemon-reload"], capture_output=True)
+                    subprocess.run(["systemctl", "restart", "marzban"], capture_output=True)
+                log("پنل مرزبان با موفقیت بازگردانی و راه‌اندازی شد. ✅", "ok")
 
         # 4. RESTORE PASARGUARD
         if "pasarguard" in selected_panels:
@@ -942,6 +1370,11 @@ def execute_restore(staging_id, selected_panels, target_mode="existing", install
                     os.makedirs("/var/lib/pasarguard/certs", exist_ok=True)
                     shutil.copytree(src_certs, "/var/lib/pasarguard/certs", dirs_exist_ok=True)
 
+                src_node_certs = os.path.join(src_pg, "node_certs")
+                if os.path.exists(src_node_certs):
+                    os.makedirs("/var/lib/pg-node/certs", exist_ok=True)
+                    shutil.copytree(src_node_certs, "/var/lib/pg-node/certs", dirs_exist_ok=True)
+
                 log("راه‌اندازی مجدد کانتینر پاسارگارد...", "info")
                 if os.path.exists("/opt/pasarguard/docker-compose.yml"):
                     subprocess.run(["docker", "compose", "-f", "/opt/pasarguard/docker-compose.yml", "up", "-d"], capture_output=True)
@@ -953,6 +1386,136 @@ def execute_restore(staging_id, selected_panels, target_mode="existing", install
                     log("سرویس لایو Subscription Bridge بروزرسانی شد.", "ok")
 
                 log("پنل پاسارگارد با موفقیت بازگردانی و راه‌اندازی شد.", "ok")
+
+        # 5. RESTORE REMNAWAVE / REMNA
+        if "remna" in selected_panels:
+            src_remna = os.path.join(staging_dir, "remna")
+            if os.path.exists(src_remna):
+                tgt_dir = "/opt/remnawave" if os.path.exists("/opt/remnawave") else "/opt/remna"
+                os.makedirs(tgt_dir, exist_ok=True)
+                
+                # Stop containers if running
+                comp_file = os.path.join(tgt_dir, "docker-compose.yml")
+                if os.path.exists(comp_file):
+                    log("توقف موقت کانتینرهای Remnawave...", "info")
+                    subprocess.run(["docker", "compose", "-f", comp_file, "down"], capture_output=True)
+                
+                # Safety snapshot of .env
+                if os.path.exists(os.path.join(tgt_dir, ".env")):
+                    shutil.copy2(os.path.join(tgt_dir, ".env"), os.path.join(tgt_dir, f".env.pre_restore_{ts}.bak"))
+                
+                # Restore configs
+                for fn in [".env", "docker-compose.yml"]:
+                    sf = os.path.join(src_remna, fn)
+                    if os.path.exists(sf):
+                        shutil.copy2(sf, os.path.join(tgt_dir, fn))
+                
+                # Restore sqlite if present
+                src_sqlite = os.path.join(src_remna, "database.sqlite")
+                if os.path.exists(src_sqlite):
+                    dst_sqlite = os.path.join(tgt_dir, "database.sqlite")
+                    for extra_ext in ["-wal", "-shm"]:
+                        try:
+                            if os.path.exists(f"{dst_sqlite}{extra_ext}"):
+                                os.remove(f"{dst_sqlite}{extra_ext}")
+                        except Exception:
+                            pass
+                    shutil.copy2(src_sqlite, dst_sqlite)
+                    os.chmod(dst_sqlite, 0o644)
+                    try:
+                        chk_con = sqlite3.connect(dst_sqlite)
+                        chk_res = chk_con.execute("PRAGMA integrity_check;").fetchone()[0]
+                        chk_con.close()
+                        if chk_res == "ok":
+                            log("سلامت دیتابیس SQLite رمنا تایید شد (Integrity: OK) ✅", "ok")
+                    except Exception:
+                        pass
+                    log("دیتابیس SQLite رمنا بازگردانی شد.", "ok")
+                
+                # Restore certs
+                if os.path.exists(os.path.join(src_remna, "certs")):
+                    shutil.copytree(os.path.join(src_remna, "certs"), os.path.join(tgt_dir, "certs"), dirs_exist_ok=True)
+                
+                # Bring up docker stack
+                if os.path.exists(os.path.join(tgt_dir, "docker-compose.yml")):
+                    log("راه‌اندازی کانتینرهای Remnawave...", "info")
+                    subprocess.run(["docker", "compose", "-f", os.path.join(tgt_dir, "docker-compose.yml"), "up", "-d"], capture_output=True)
+                    # Restore postgres dump if present
+                    if os.path.exists(os.path.join(src_remna, "remnawave.sql")):
+                        time.sleep(3)
+                        res = subprocess.run(["docker", "ps", "-q", "-f", "name=remna.*db"], capture_output=True, text=True)
+                        if not res.stdout.strip():
+                            res = subprocess.run(["docker", "ps", "-q", "-f", "name=remnawave.*postgres"], capture_output=True, text=True)
+                        if res.stdout.strip():
+                            c_id = res.stdout.strip().split()[0]
+                            with open(os.path.join(src_remna, "remnawave.sql"), "r") as sql_f:
+                                subprocess.run(["docker", "exec", "-i", c_id, "psql", "-U", "postgres"], stdin=sql_f, capture_output=True)
+                            log("دامپ دیتابیس PostgreSQL رمنا با موفقیت ایمپورت شد.", "ok")
+                
+                log("پنل Remnawave / Remna با موفقیت بازگردانی شد. ✅", "ok")
+
+        # 6. RESTORE HIDDIFY MANAGER
+        if "hiddify" in selected_panels:
+            src_hid = os.path.join(staging_dir, "hiddify")
+            if os.path.exists(src_hid):
+                log("توقف موقت سرویس Hiddify جهت اعمال تنظیمات...", "info")
+                subprocess.run(["systemctl", "stop", "hiddify-panel"], capture_output=True)
+                
+                # Target path resolution
+                h_dirs = ["/opt/hiddify-config", "/opt/hiddify-manager"]
+                h_target_dir = "/opt/hiddify-config"
+                for hd in h_dirs:
+                    if os.path.exists(hd):
+                        h_target_dir = hd
+                        break
+                os.makedirs(h_target_dir, exist_ok=True)
+                
+                # Restore hiddifypanel.db
+                src_db = os.path.join(src_hid, "hiddifypanel.db")
+                if os.path.exists(src_db):
+                    dst_db_paths = [
+                        os.path.join(h_target_dir, "hiddifypanel", "hiddifypanel.db"),
+                        os.path.join(h_target_dir, "hiddify-panel", "hiddifypanel.db")
+                    ]
+                    for dp in dst_db_paths:
+                        os.makedirs(os.path.dirname(dp), exist_ok=True)
+                        if os.path.exists(dp):
+                            try:
+                                shutil.copy2(dp, f"{dp}.pre_restore_{ts}.bak")
+                            except Exception:
+                                pass
+                        for extra_ext in ["-wal", "-shm"]:
+                            try:
+                                if os.path.exists(f"{dp}{extra_ext}"):
+                                    os.remove(f"{dp}{extra_ext}")
+                            except Exception:
+                                pass
+                        shutil.copy2(src_db, dp)
+                        os.chmod(dp, 0o644)
+                    
+                    try:
+                        chk_con = sqlite3.connect(dst_db_paths[0])
+                        chk_res = chk_con.execute("PRAGMA integrity_check;").fetchone()[0]
+                        chk_con.close()
+                        if chk_res == "ok":
+                            log("سلامت دیتابیس هیدیفای تایید شد (Integrity: OK) ✅", "ok")
+                    except Exception:
+                        pass
+                    log("دیتابیس SQLite هیدیفای (hiddifypanel.db) با موفقیت بازگردانی شد.", "ok")
+                
+                # Restore configs and SSL
+                for cf in ["current-config.json", ".env"]:
+                    if os.path.exists(os.path.join(src_hid, cf)):
+                        shutil.copy2(os.path.join(src_hid, cf), os.path.join(h_target_dir, cf))
+                if os.path.exists(os.path.join(src_hid, "ssl")):
+                    shutil.copytree(os.path.join(src_hid, "ssl"), os.path.join(h_target_dir, "ssl"), dirs_exist_ok=True)
+                
+                # Start service
+                log("راه‌اندازی مجدد سرویس Hiddify...", "info")
+                if os.path.exists(f"{h_target_dir}/apply_configs.sh"):
+                    subprocess.run(["bash", f"{h_target_dir}/apply_configs.sh"], capture_output=True)
+                subprocess.run(["systemctl", "restart", "hiddify-panel"], capture_output=True)
+                log("پنل هیدیفای با موفقیت بازگردانی و راه‌اندازی شد. ✅", "ok")
 
         log("عملیات بازگردانی با موفقیت کامل انجام گردید. سیستم آماده ارائه خدمات است.", "ok")
         return {"ok": True, "logs": logs}
@@ -2647,6 +3210,8 @@ HTML_PAGE = """<!DOCTYPE html>
             if (json.analysis['pasarguard']?.found) panelsFound.push('pasarguard');
             if (json.analysis['3x-ui']?.found) panelsFound.push('3x-ui');
             if (json.analysis['marzban']?.found) panelsFound.push('marzban');
+            if (json.analysis['remna']?.found) panelsFound.push('remna');
+            if (json.analysis['hiddify']?.found) panelsFound.push('hiddify');
             if (json.analysis['network']?.found) panelsFound.push('network');
             setSelectedPanelsToRestore(panelsFound.length > 0 ? panelsFound : ['3x-ui']);
             
@@ -3777,7 +4342,13 @@ HTML_PAGE = """<!DOCTYPE html>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="تعداد کل کاربران (Clients)"
-                                value={inspectResult.analysis['pasarguard']?.users_count || inspectResult.analysis['3x-ui']?.clients_count || inspectResult.analysis['marzban']?.users_count || 0}
+                                value={
+                                  inspectResult.analysis['pasarguard']?.users_count ||
+                                  inspectResult.analysis['3x-ui']?.clients_count ||
+                                  inspectResult.analysis['marzban']?.users_count ||
+                                  inspectResult.analysis['hiddify']?.users_count ||
+                                  inspectResult.analysis['remna']?.users_count || 0
+                                }
                                 valueStyle={{ color: '#10b981', fontWeight: 'bold' }}
                                 prefix={<UserOutlined />}
                                 suffix="کاربر"
@@ -3789,7 +4360,12 @@ HTML_PAGE = """<!DOCTYPE html>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="اینباندها و درگاه‌ها"
-                                value={inspectResult.analysis['pasarguard']?.inbounds_count ?? (inspectResult.analysis['3x-ui']?.inbounds_count || inspectResult.analysis['marzban']?.inbounds_count || 0)}
+                                value={
+                                  inspectResult.analysis['pasarguard']?.inbounds_count ??
+                                  (inspectResult.analysis['3x-ui']?.inbounds_count ||
+                                   inspectResult.analysis['marzban']?.inbounds_count ||
+                                   inspectResult.analysis['hiddify']?.domains_count || 0)
+                                }
                                 valueStyle={{ color: '#1677ff', fontWeight: 'bold' }}
                                 prefix={<ClusterOutlined />}
                                 suffix="پورت"
@@ -3801,7 +4377,13 @@ HTML_PAGE = """<!DOCTYPE html>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="مجموع ترافیک ثبت‌شده"
-                                value={inspectResult.analysis['pasarguard']?.total_traffic_human || inspectResult.analysis['3x-ui']?.total_traffic_human || inspectResult.analysis['marzban']?.total_traffic_human || '0 MB'}
+                                value={
+                                  inspectResult.analysis['pasarguard']?.total_traffic_human ||
+                                  inspectResult.analysis['3x-ui']?.total_traffic_human ||
+                                  inspectResult.analysis['marzban']?.total_traffic_human ||
+                                  inspectResult.analysis['hiddify']?.total_traffic_human ||
+                                  inspectResult.analysis['remna']?.total_traffic_human || '0 MB'
+                                }
                                 valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
                                 prefix={<CloudDownloadOutlined />}
                               />
@@ -3826,7 +4408,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           <Checkbox.Group
                             value={selectedPanelsToRestore}
                             onChange={setSelectedPanelsToRestore}
-                            style={{ display: 'flex', gap: 16 }}
+                            style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}
                           >
                             {inspectResult.analysis['pasarguard']?.found && (
                               <Checkbox value="pasarguard">
@@ -3835,12 +4417,27 @@ HTML_PAGE = """<!DOCTYPE html>
                             )}
                             {inspectResult.analysis['3x-ui']?.found && (
                               <Checkbox value="3x-ui">
-                                <b>دیتابیس 3X-UI</b>
+                                <b>دیتابیس 3X-UI / X-UI</b>
                               </Checkbox>
                             )}
                             {inspectResult.analysis['marzban']?.found && (
                               <Checkbox value="marzban">
-                                <b>دیتابیس مرزبان</b>
+                                <b>دیتابیس مرزبان (Marzban)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['remna']?.found && (
+                              <Checkbox value="remna">
+                                <b>دیتابیس رمنا (Remnawave)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['hiddify']?.found && (
+                              <Checkbox value="hiddify">
+                                <b>دیتابیس هیدیفای (Hiddify)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['network']?.found && (
+                              <Checkbox value="network">
+                                <b>تنظیمات شبکه و تانل‌ها (Nginx & Hawal)</b>
                               </Checkbox>
                             )}
                           </Checkbox.Group>
