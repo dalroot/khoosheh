@@ -1,0 +1,47 @@
+name: Official Release Builder
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate Syntax & Integrity
+        run: |
+          python -m py_compile server.py
+          bash -n install.sh
+          python -c "import json; json.load(open('config.example.json'))"
+
+      - name: Package Release Assets
+        run: |
+          VERSION=${GITHUB_REF_NAME:-v2.5.0}
+          TAR_NAME="khoosheh-${VERSION}.tar.gz"
+          tar -czvf "${TAR_NAME}" server.py install.sh khoosheh.service config.example.json LICENSE README.md
+          sha256sum "${TAR_NAME}" > "${TAR_NAME}.sha256"
+
+      - name: Generate Release Notes & Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            khoosheh-*.tar.gz
+            khoosheh-*.sha256
+          generate_release_notes: true
+          draft: false
+          prerelease: false

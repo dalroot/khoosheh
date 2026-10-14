@@ -2,131 +2,130 @@
 
 <div align="center">
 
-![Khoosheh Banner](https://raw.githubusercontent.com/dalroot/khoosheh/main/docs/banner.png)
+[![Release](https://img.shields.io/github/v/release/dalroot/khoosheh?color=blue&label=Release&logo=github)](https://github.com/dalroot/khoosheh/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![CI Quality](https://img.shields.io/github/actions/workflow/status/dalroot/khoosheh/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white)](https://github.com/dalroot/khoosheh/actions)
+[![Panels: 3X-UI | Marzban | PasarGuard | Remnawave | Hiddify](https://img.shields.io/badge/Panels-3X--UI%20%7C%20Marzban%20%7C%20PasarGuard%20%7C%20Remna%20%7C%20Hiddify-orange.svg)](#-ماتریکس-پشتیبانی-از-پنلها-supported-panels)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/Python-3.8%2B-brightgreen.svg)](https://www.python.org/)
-[![Panels: PasarGuard | 3X--UI | Marzban | Hiddify](https://img.shields.io/badge/Panels-PasarGuard%20%7C%203X--UI%20%7C%20Marzban%20%7C%20Hiddify-orange.svg)](#supported-panels)
+**سامانه جامع، خودکار و هوشمند پشتیبان‌گیری، بازرسی عمیق دیتابیس و مهاجرت/بازگردانی (Smart Restore) انواع پنل‌های مدیریت ترافیک و زیرساخت لینوکس**
 
-**سامانه جامع، خودکار و هوشمند پشتیبان‌گیری، بازرسی عمیق دیتابیس و بازگردانی (Restore) برای پنل‌های مدیریت ترافیک و سرورها**
-
-[فارسی](#راهنمای-فارسی) • [English](#english-guide) • [نصب سریع](#نصب-سریع-یکخطی) • [امکانات](#ویژگیهای-کلیدی)
+[فارسی](#-راهنمای-فارسی) • [English Guide](#-english-guide) • [نصب سریع](#-نصب-سریع-یکخطی-quick-install) • [پنل‌ها](#-ماتریکس-پشتیبانی-از-پنلها-supported-panels) • [مستندات API](#-مستندات-rest-api)
 
 </div>
 
 ---
 
-## راهنمای فارسی
+## 📖 راهنمای فارسی
 
-پروژه **«خوشه» (Khoosheh)** یک راهکار مستقل، سبک و همه‌منظوره برای پشتیبان‌گیری و بازگردانی خودکار انواع پنل‌های پروکسی و تنظیمات زیرساختی لینوکس است. خوشه به صورت مستقل با زبان پایتون ۳ بدون نیاز به وابستگی‌های سنگین پیاده‌سازی شده و دارای یک وب‌پنل مدرن (Ant Design) و ربات هوشمند تلگرام است.
+پروژه **«خوشه» (Khoosheh)** یک راهکار مستقل، فوق‌العاده سبک، ماژولار و تمام‌عیار برای پشتیبان‌گیری و بازگردانی خودکار انواع پنل‌های پروکسی و تنظیمات زیرساختی لینوکس است. خوشه به صورت مستقل با پایتون خالص (Pure Python) و بدون نیاز به وب‌سرورهای خارجی، بسته‌های حجیم npm/node یا فریم‌ورک‌های سنگین پیاده‌سازی شده و از یک داشبورد مهندسی‌شده و مدرن مشابه استاندارد ۳X-UI بهره می‌برد.
 
-### 🌟 ویژگی‌های کلیدی
-- **🛡️ پشتیبان‌گیری آنلاین دیتابیس بدون قطعی (Zero-Downtime Hot Backup):** پشتیبان‌گیری اتمیک از پایگاه‌های داده SQLite با استفاده از `PRAGMA wal_checkpoint(TRUNCATE)` و SQLite Backup API؛ بدون توقف سرویس و بدون خطر آسیب به دیتابیس‌های فعال.
-- **🔍 بازرسی عمیق دیتابیس (Deep Database Inspection):** استخراج خودکار تعداد کاربران، کاربران فعال، میزان مصرف ترافیک، اینباندها، نودها و گروه‌ها بدون باز کردن دستی دیتابیس.
-- **⚡ پشتیبانی چندپنله (Multi-Panel Support):** شناسایی و پشتیبان‌گیری از **PasarGuard (پاسارگارد)**، **3X-UI**، **مرزبان (Marzban)**، **هیدیفای (Hiddify)**، تانل‌های **هَوال (Hawal)** و تنظیمات Nginx و مسیرهای سفارشی.
-- **🤖 ربات هوشمند تلگرام:** ارسال دوره‌ای فایل‌های فشرده بکاپ به همراه آمار ترافیک، کاربران پرمصرف، وضعیت سرور و امکان درخواست فوری فایل بکاپ با کلیدهای شیشه‌ای.
+---
+
+### 🌟 ویژگی‌های کلیدی (Core Features)
+
+- **🛡️ پشتیبان‌گیری آنلاین دیتابیس بدون قطعی (Zero-Downtime Hot Backup):** پشتیبان‌گیری اتمیک از دیتابیس‌های SQLite با صدور فرمان `PRAGMA wal_checkpoint(TRUNCATE)` و استفاده از نیتیو SQLite Online Backup API پایتون؛ تضمین صددرصدی کپی سالم بدون قفل‌شدن جدول‌ها یا توقف سرویس.
+- **🔍 بازرسی عمیق دیتابیس بدون نیاز به اجرای پنل (Deep Offline Inspector):** تجزیه و تحلیل ساختار دیتابیس داخل فایل پشتیبان و استخراج تعداد کاربران، کاربران فعال، مصرف ترافیک، پروتکل‌ها، اینباندها و سرتیفیکیت‌ها قبل از بازگردانی.
+- **🔄 ویزارد بازگردانی هوشمند و بدون خطا (Smart Restore & Migration Wizard):**
+  - تهیه نسخه پشتیبان حفاظتی خودکار (`.pre_restore_<ts>.bak`) پیش از اعمال تغییرات.
+  - آزادسازی قفل‌های لینوکس و پاکسازی فایل‌های کش موقت SQLite (`-wal` و `-shm`).
+  - اعتبارسنجی یکپارچگی (`PRAGMA integrity_check`) با مکانیزم بازگشت خودکار (Auto-Rollback) در صورت معیوب بودن فایل آرشیو.
+  - مدیریت چرخه حیات کانتینرهای داکر و سرویس‌های systemd به صورت خودکار.
+- **⚡ پشتیبانی چندمسیره و چندپنله (Universal Multi-Panel Engine):** شناسایی و کشف خودکار پنل‌های **3X-UI** (تمام فورک‌های سنایی، علیرضا، فرانتس‌کافکا، واکسیلو)، **مرزبان (Marzban)**، **پاسارگارد (PasarGuard)**، **رمنا (Remnawave / Remna)**، **هیدیفای (Hiddify Manager)** و تانل‌های شبکه.
+- **🎨 طراحی داشبورد مهندسی مطابق استاندارد ۳X-UI:**
+  - تفکیک کامل نمودارهای اسپارک‌لاین از اعداد و متون بدون هیچ‌گونه تداخل بصری.
+  - نمایش اعداد و شاخص‌ها با فونت استاندارد مهندسی `Inter` و ارقام انگلیسی جدول‌بندی‌شده (`tabular-nums`).
+  - پالت‌های رنگی استاندارد تم تاریک (`#0b0f17`) و روشن (`#f0f2f5`).
+- **🤖 ربات تعاملی تلگرام:** ارسال خودکار فایل‌های فشرده آرشیو به پی‌وی ادمین، هشدارهای لحظه‌ای، کلیدهای شیشه‌ای درخواست پشتیبان فوری و خلاصه ترافیک مصرفی سرور.
 - **🔒 رمزنگاری استاندارد 7z (AES-256):** قابلیت محافظت از آرشیوهای پشتیبان با رمز عبور قدرتمند.
-- **📊 وب‌پنل سبک و مستقل:** رابط کاربری واکنش‌گرا با پشتیبانی از تم تاریک/روشن، ویزارد بازگردانی گام‌به‌گام (Restore Wizard) و بدون نیاز به نصب npm/node یا وب‌سرور خارجی.
-- **💾 مکانیزم ذخیره‌سازی اتمیک تنظیمات:** تضمین پایداری رمزهای عبور و سشن‌ها بدون ریست شدن یا فراموشی نشست‌ها.
+- **💾 ذخیره‌سازی اتمیک پیکربندی (Atomic Config Engine):** جلوگیری از Race Condition و پاک شدن تنظیمات در قطعی‌های ناگهانی برق یا ریستارت سرور.
 
 ---
 
-### 🖥️ پنل‌های پشتیبانی‌شده
+### 🖥️ ماتریکس پشتیبانی از پنل‌ها (Supported Panels)
 
-| پنل / سرویس | مسیر دیتابیس | نوع پشتیبان‌گیری | بازرسی هوشمند |
-| :--- | :--- | :--- | :---: |
-| **PasarGuard (پاسارگارد)** | `/var/lib/pasarguard/db.sqlite3` + کانتینر `/opt/pasarguard` | SQLite Online + Compose + Certs | ✅ |
-| **3X-UI (Sanaei / Alireza)** | `/etc/x-ui/x-ui.db` | SQLite Online + Certs | ✅ |
-| **Marzban (مرزبان)** | `/var/lib/marzban/db.sqlite3` | SQLite Online + `.env` | ✅ |
-| **Hiddify Manager (هیدیفای)** | `/opt/hiddify-manager/...` | SQLite Online + Config | ✅ |
-| **شبکه و تانل‌ها (Hawal / Nginx)** | `/etc/hawal/` و `/etc/nginx/` | Config Files + Tunnels | ✅ |
-| **مسیر سفارشی (Custom)** | هر مسیر فایل یا دایرکتوری دلخواه | Custom Path Engine | ✅ |
+| نام پنل | مخازن رسمی پشتیبانی‌شده | مسیرهای پایگاه داده و تنظیمات | نوع پشتیبان‌گیری | بازرسی عمیق |
+| :--- | :--- | :--- | :--- | :---: |
+| **3X-UI / X-UI** | `MHSanaei/3x-ui`<br>`alireza0/x-ui`<br>`FranzKafkaYu/x-ui`<br>`vaxilu/x-ui` | `/etc/x-ui/x-ui.db`<br>`/usr/local/x-ui/bin/x-ui.db`<br>`/opt/x-ui/x-ui.db`<br>`./db/x-ui.db` | SQLite Online + سرتیفیکیت‌های `/etc/x-ui/certs` و `/root/cert` | ✅ |
+| **Marzban (مرزبان)** | `Gozargah/Marzban` | `/var/lib/marzban/db.sqlite3`<br>`/opt/marzban/.env`<br>`/opt/marzban/docker-compose.yml` | SQLite Online + دامپ MySQL + تمپلت‌ها و `xray-core` | ✅ |
+| **PasarGuard (پاسارگارد)** | `PasarGuard` | `/var/lib/pasarguard/db.sqlite3`<br>`/opt/pasarguard/.env`<br>`/opt/pasarguard/sub_bridge.py` | SQLite Online + کانتینر + سرتیفیکیت نودها `/var/lib/pg-node/certs` | ✅ |
+| **Remna / Remnawave** | `remnawave` | `/opt/remnawave/`<br>`/opt/remna/`<br>`database.sqlite`<br>`remnawave-db` (Postgres) | SQLite Online + دامپ کانتینری `pg_dumpall` + `.env` | ✅ |
+| **Hiddify Manager** | `hiddify-manager`<br>`hiddify-config` | `/opt/hiddify-config/hiddifypanel/hiddifypanel.db`<br>`/opt/hiddify-manager/...`<br>`current-config.json` | SQLite Online + تنظیمات JSON + کلیدهای `ssl/` | ✅ |
+| **Network & Tunnels** | Hawal & Nginx | `/etc/nginx`<br>`/opt/hawal`<br>`/etc/hawal`<br>`/etc/haproxy` | فایل‌های پیکربندی تانل و رورس‌پروکسی | ✅ |
+| **مسیر دلخواه (Custom)** | هر نوع اسکریپت یا پنل اختصاصی | مسیر فایل دیتابیس یا پوشه دلخواه کاربر | SQLite / فایل‌ها و دایرکتوری‌ها | ✅ |
 
 ---
 
-### 🚀 نصب سریع یک‌خطی
+### 🚀 نصب سریع یک‌خطی (Quick Install)
 
-برای نصب خودکار خوشه روی انواع توزیع‌های اوبونتو و دبیان:
+برای نصب خودکار خوشه روی توزیع‌های اوبونتو یا دبیان:
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/install.sh | bash
 ```
 
-پس از اتمام نصب، وب‌پنل روی آدرس زیر در دسترس خواهد بود:
+پس از اتمام نصب، وب‌پنل روی پورت پیش‌فرض در دسترس خواهد بود:
 ```text
 http://YOUR_SERVER_IP:2099
 ```
-> در اولین ورود به وب‌پنل، پنجره راه‌اندازی اولیه باز می‌شود و می‌توانید نام کاربری و رمز عبور دلخواه خود را تعیین کنید.
+> در اولین ورود، پنجره راه‌اندازی اولیه نمایش داده می‌شود که می‌توانید نام کاربری و رمز عبور دلخواه مدیریت را تنظیم کنید.
 
 ---
 
-### 🛠️ نصب دستی (Manual Installation)
-
-اگر مایلید خوشه را مرحله‌به‌مرحله به صورت دستی نصب و پیکربندی کنید:
+### 🛠️ دستورات مدیریت سرویس (Service Management)
 
 ```bash
-# ۱. نصب پیش‌نیازها
-sudo apt-get update && sudo apt-get install -y python3 p7zip-full sqlite3 curl
+# بررسی وضعیت سرویس
+sudo systemctl status khoosheh
 
-# ۲. ایجاد مسیرها
-sudo mkdir -p /opt/khoosheh /var/backups/khoosheh
-cd /opt/khoosheh
+# راه‌اندازی مجدد
+sudo systemctl restart khoosheh
 
-# ۳. دانلود سورس‌کد
-sudo curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/server.py -o /opt/khoosheh/server.py
-sudo curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/config.example.json -o /opt/khoosheh/config.json
-sudo curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/khoosheh.service -o /etc/systemd/system/khoosheh.service
-
-# ۴. تنظیم دسترسی‌ها
-sudo chmod +x /opt/khoosheh/server.py
-sudo chmod 600 /opt/khoosheh/config.json
-
-# ۵. راه‌اندازی سرویس
-sudo systemctl daemon-reload
-sudo systemctl enable --now khoosheh
+# مشاهده لاگ‌های لحظه‌ای
+journalctl -u khoosheh -f --no-pager
 ```
 
 ---
 
-### ⚙️ تنظیم ربات تلگرام
+### 📡 مستندات REST API
 
-برای دریافت خودکار فایل‌های بکاپ در تلگرام:
-1. در پنل وب وارد تب **«تنظیمات سیستم»** شوید.
-2. توکن ربات تلگرام (`bot_token`) دریافتی از BotFather را وارد کنید.
-3. شناسه عددی تلگرام خود (`admin_chat_id`) دریافتی از userinfobot را ثبت نمایید.
-4. دکمه **«تست اتصال تلگرام»** را بزنید تا پیام تایید در پی‌وی ربات ارسال شود.
+سامانه خوشه دارای یک API داخلی سریع جهت مانیتورینگ و ادغام در سیستم‌های Devops است:
 
----
-
-### 📂 ساختار اسنپ‌شات پاسارگاد (PasarGuard Snapshot Spec)
-
-بکاپ اختصاصی پاسارگاد شامل اجزای زیر به صورت کاملاً ایزوله است:
-1. `pasarguard/db.sqlite3` — دیتابیس تثبیت‌شده کاربران، اینباندها و لاگ‌ها (WAL Checkpoint شده)
-2. `pasarguard/.env` — مقادیر محیطی و کلیدهای امنیتی پنل
-3. `pasarguard/docker-compose.yml` — تعریف سرویس‌های داکر
-4. `pasarguard/sub_bridge.py` — پل سابسکریپشن کلاینت‌ها (در صورت وجود)
-5. `pasarguard/certs/` — گواهینامه‌های SSL دامنه
+| متد | مسیر (Endpoint) | توضیحات |
+| :--- | :--- | :--- |
+| `GET` | `/api/status` | وضعیت لایو سرور، منابع سخت‌افزاری، پنل‌های شناسایی‌شده و لیست بکاپ‌ها |
+| `POST` | `/api/backup` | ایجاد فوری یک نسخه پشتیبان رمزنگاری‌شده از کلیه پنل‌ها |
+| `POST` | `/api/restore/inspect` | بازگشایی امن آرشیو و تحلیل عمیق متادیتا بدون اعمال روی سرور |
+| `POST` | `/api/restore/execute` | اجرای فرآیند بازگردانی پنل‌های انتخاب‌شده با اعتبارسنجی و ریستارت هوشمند |
+| `POST` | `/api/restore/upload` | آپلود فایل بکاپ خارجی جهت بازگردانی مستقیم |
+| `GET` | `/api/backups/download/<file>` | دانلود ایمن فایل آرشیو بکاپ |
 
 ---
 
-## English Guide
+## 🌐 English Guide
 
-**Khoosheh** is an autonomous, lightweight backup and restore system designed for Linux servers and proxy management panels (PasarGuard, 3X-UI, Marzban, Hiddify).
+**Khoosheh** is an autonomous, lightweight, zero-dependency backup and smart restore engine designed specifically for Linux servers and modern proxy management panels.
 
-### Quick Install
+### Highlights
+- **Zero-Downtime Hot Backups**: Native SQLite WAL checkpoints (`PRAGMA wal_checkpoint(TRUNCATE)`) and atomic streaming backups.
+- **Deep Database Inspector**: Inspect user counts, active clients, inbounds, traffic usage, protocols, and TLS certificates directly from backup archives before initiating restoration.
+- **Automated Smart Restore Engine**: Automated pre-restore rollback snapshots, stale WAL/SHM file cleanup, SQLite integrity validation (`PRAGMA integrity_check`), and seamless container / systemd service orchestration.
+- **Multi-Panel Architecture**: Native auto-discovery for **3X-UI** (Sanaei, Alireza, FranzKafkaYu, vaxilu), **Marzban**, **PasarGuard**, **Remnawave**, **Hiddify**, and custom directories.
+- **Official 3X-UI Grade UI**: Clean, responsive Ant Design dashboard featuring isolated sparklines, tabular numbers, and connection statistics in Dark & Light palettes.
+- **Interactive Telegram Bot**: Automated backup distribution, AES-256 encryption, and instant on-demand backups via inline keyboard.
+
+### Quick Start
 ```bash
 curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/install.sh | bash
 ```
 
-### Features
-- Native support for SQLite WAL checkpoints and non-blocking online backups
-- PasarGuard container & volume automatic discovery
-- Integrated Ant Design React Web Interface
-- Real-time Telegram alerts and scheduled archive distribution
-- Built-in AES-256 encryption using 7z
-- Atomic and race-condition free configuration storage
+Access the web interface at:
+```text
+http://YOUR_SERVER_IP:2099
+```
 
 ---
 
-## لایسنس (License)
-پروژه تحت لایسنس [MIT](LICENSE) به صورت متن‌باز منتشر شده است.
+## 📄 لایسنس (License)
+
+این پروژه تحت لایسنس بین‌المللی [MIT](LICENSE) به صورت متن‌باز منتشر شده است.
