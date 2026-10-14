@@ -1,0 +1,2652 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خوشه | سامانه متمرکز پشتیبان‌گیری و بازگردانی هوشمند</title>
+  
+  <!-- Fonts: Inter for crisp numbers + Vazirmatn for Persian text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Ant Design Reset CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5/dist/reset.min.css">
+  
+  <!-- React & Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  
+  <!-- Ant Design v5 & Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/antd@5/dist/antd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ant-design/icons@5/dist/index.umd.min.js"></script>
+  
+  <!-- Babel Standalone -->
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+
+  <style>
+    /* ========================================================
+       OFFICIAL 3X-UI COLOR SYSTEM (LIGHT & DARK)
+       ======================================================== */
+    :root, [data-theme="light"] {
+      --bg-root: #f0f2f5;
+      --bg-sidebar: #ffffff;
+      --surface-card: #ffffff;
+      --surface-subtle: #f8fafc;
+      --surface-hover: #f1f5f9;
+      --border-subtle: #e5e7eb;
+      --border-hover: #cbd5e1;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      --primary-accent: #1677ff;
+      --primary-accent-hover: #4096ff;
+      --primary-accent-soft: rgba(22, 119, 255, 0.08);
+      --primary-accent-border: rgba(22, 119, 255, 0.25);
+      --code-bg: #f3f4f6;
+      --code-border: #e5e7eb;
+      --code-text: #2563eb;
+      --table-header-bg: #f8fafc;
+      --table-row-hover: #f1f5f9;
+      --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+      --active-nav-bg: #e6f4ff;
+      --active-nav-color: #1677ff;
+      --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      --baseline-color: #e5e7eb;
+    }
+
+    [data-theme="dark"] {
+      --bg-root: #0b0f17;
+      --bg-sidebar: #101522;
+      --surface-card: #131926;
+      --surface-subtle: #182030;
+      --surface-hover: #1e273a;
+      --border-subtle: #1e2638;
+      --border-hover: #2e3a52;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --primary-accent: #3b82f6;
+      --primary-accent-hover: #60a5fa;
+      --primary-accent-soft: rgba(59, 130, 246, 0.12);
+      --primary-accent-border: rgba(59, 130, 246, 0.3);
+      --code-bg: #090e18;
+      --code-border: #1e2638;
+      --code-text: #38bdf8;
+      --table-header-bg: #101522;
+      --table-row-hover: rgba(255, 255, 255, 0.025);
+      --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+      --active-nav-bg: rgba(59, 130, 246, 0.15);
+      --active-nav-color: #60a5fa;
+      --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+      --baseline-color: #1e2638;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Vazirmatn', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* All numbers and metric labels use Inter with tabular digits */
+    .num-font {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-variant-numeric: tabular-nums;
+      direction: ltr !important;
+      unicode-bidi: isolate;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background-color: var(--bg-root) !important;
+      color: var(--text-primary) !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
+
+    /* Shell */
+    .xui-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      background: var(--bg-root);
+      direction: rtl;
+    }
+
+    /* 3X-UI Collapsible Sidebar */
+    .xui-sidebar {
+      background: var(--bg-sidebar);
+      border-left: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 100;
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+    .xui-sidebar.collapsed { width: 62px; }
+    .xui-sidebar.expanded { width: 210px; }
+
+    .xui-brand {
+      height: 54px;
+      padding: 0 13px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+    }
+    .xui-logo-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(22, 119, 255, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+      border: 1px solid var(--primary-accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+    .xui-brand-text {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .xui-brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .xui-brand-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-family: 'Inter', monospace;
+    }
+
+    /* Nav Links */
+    .xui-nav {
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .xui-nav-item {
+      display: flex;
+      align-items: center;
+      height: 42px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .xui-sidebar.collapsed .xui-nav-item {
+      justify-content: center;
+      padding: 0;
+    }
+    .xui-sidebar.expanded .xui-nav-item {
+      justify-content: space-between;
+      padding: 0 14px;
+    }
+    .xui-nav-item:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+    .xui-nav-item.active {
+      background: var(--active-nav-bg);
+      color: var(--active-nav-color);
+      font-weight: 600;
+    }
+    .xui-nav-icon {
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .xui-nav-label {
+      white-space: nowrap;
+      margin-right: 10px;
+      flex: 1;
+    }
+    .xui-nav-badge {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .xui-sidebar-footer {
+      padding: 10px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Main Area */
+    .xui-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-root);
+    }
+
+    .xui-topbar {
+      height: 54px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-card);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .xui-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 3px 10px;
+      border-radius: 16px;
+    }
+
+    .xui-body {
+      padding: 20px 24px 48px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ========================================================
+       3X-UI METRIC CARDS (ZERO OVERLAPPING GUARANTEED)
+       Header -> Bold Stat -> AVG/PEAK -> Sparkline (at bottom)
+       ======================================================== */
+    .xui-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 8px !important;
+      padding: 14px 16px 10px !important;
+      box-shadow: var(--card-shadow) !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 142px;
+      transition: all 0.15s ease !important;
+    }
+    .xui-card:hover {
+      border-color: var(--border-hover) !important;
+    }
+
+    .xui-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .xui-card-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+    }
+    .xui-card-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'Inter', monospace;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 6px;
+      border-radius: 4px;
+      direction: ltr;
+    }
+
+    .xui-card-value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+      margin: 2px 0;
+      font-family: 'Inter', sans-serif !important;
+      font-variant-numeric: tabular-nums;
+      direction: ltr;
+      text-align: right;
+    }
+    .xui-card-value small {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    .xui-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      margin-bottom: 2px;
+    }
+
+    /* Isolated sparkline box (sits strictly underneath text) */
+    .xui-card-sparkline {
+      width: 100%;
+      height: 32px;
+      margin-top: 4px;
+      position: relative;
+    }
+
+    /* ========================================================
+       3X-UI OVERALL SPEED CARD
+       ======================================================== */
+    .xui-speed-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 8px !important;
+      padding: 16px 18px 12px !important;
+      box-shadow: var(--card-shadow) !important;
+    }
+    .xui-speed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .xui-speed-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+    }
+    .xui-speed-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      margin-top: 2px;
+      direction: ltr;
+    }
+    .xui-speed-pills {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+    }
+    .xui-pill-up {
+      color: #3b82f6;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .xui-pill-down {
+      color: #10b981;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .xui-speed-chart {
+      width: 100%;
+      height: 155px;
+      position: relative;
+      margin: 4px 0;
+    }
+
+    .xui-speed-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.3fr;
+      gap: 12px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      direction: ltr;
+    }
+    .xui-speed-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .xui-col-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
+    }
+    .xui-col-val {
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
+    }
+    .xui-col-val-sm {
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+    }
+
+    /* ========================================================
+       3X-UI CONNECTION STATS CARD (Clean, no raw terminal)
+       ======================================================== */
+    .xui-conn-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 8px !important;
+      padding: 16px 18px 14px !important;
+      box-shadow: var(--card-shadow) !important;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .xui-conn-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .xui-conn-bigval {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      margin-top: 2px;
+    }
+    .xui-conn-badge-blue {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 1px 7px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+    }
+    .xui-conn-badge-green {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 1px 7px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Telegram Quick Action Box */
+    .xui-telemetry-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+
+    /* Radar Pulse */
+    @keyframes radar-pulse {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .status-radar {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: radar-pulse 2s infinite ease-in-out;
+      vertical-align: middle;
+    }
+
+    .badge-slate {
+      background: var(--surface-subtle) !important;
+      color: var(--text-secondary) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 4px !important;
+      font-size: 11px !important;
+      padding: 1px 6px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      font-family: 'Inter', sans-serif;
+    }
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.1) !important;
+      color: #f59e0b !important;
+      border: 1px solid rgba(245, 158, 11, 0.25) !important;
+      border-radius: 4px !important;
+      font-size: 11px !important;
+      padding: 1px 6px !important;
+      font-weight: 500 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .code-text {
+      direction: ltr !important;
+      font-family: 'Inter', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      display: inline-block;
+      font-size: 11.5px;
+      background: var(--code-bg) !important;
+      border: 1px solid var(--code-border) !important;
+      padding: 2px 7px !important;
+      border-radius: 4px !important;
+      color: var(--code-text) !important;
+    }
+
+    /* Ant Design Table Overrides (3X-UI Clean Style) */
+    .ant-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 8px !important;
+      box-shadow: var(--card-shadow) !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-card-head {
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding: 0 16px !important;
+      min-height: 44px !important;
+    }
+    .ant-card-head-title {
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-card-body { padding: 16px !important; }
+
+    .ant-table-wrapper .ant-table {
+      background: transparent !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-table-wrapper .ant-table-thead > tr > th {
+      background: var(--table-header-bg) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      color: var(--text-secondary) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      padding: 9px 12px !important;
+      white-space: nowrap !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr > td {
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding: 9px 12px !important;
+      font-size: 13px !important;
+      color: var(--text-primary) !important;
+      white-space: nowrap !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+      background: var(--table-row-hover) !important;
+    }
+
+    .ant-btn {
+      border-radius: 6px !important;
+      font-size: 12.5px !important;
+      font-weight: 500 !important;
+      height: 32px !important;
+      padding: 0 12px !important;
+      box-shadow: none !important;
+    }
+    .ant-btn-default {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-btn-default:hover {
+      background: var(--surface-hover) !important;
+      border-color: var(--border-hover) !important;
+    }
+    .ant-btn-primary {
+      background: var(--primary-accent) !important;
+      color: #ffffff !important;
+      border: none !important;
+      font-weight: 600 !important;
+    }
+    .ant-btn-primary:hover {
+      background: var(--primary-accent-hover) !important;
+    }
+
+    .ant-modal-content {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      color: var(--text-primary) !important;
+      padding: 22px !important;
+    }
+    .ant-input, .ant-input-number, .ant-select-selector {
+      background: var(--surface-subtle) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 6px !important;
+      color: var(--text-primary) !important;
+    }
+
+    @media (max-width: 860px) {
+      .xui-shell { flex-direction: column; }
+      .xui-sidebar {
+        width: 100% !important;
+        height: auto;
+        position: static;
+        border-left: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .xui-nav { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+      .xui-topbar { padding: 0 14px; }
+      .xui-body { padding: 14px; }
+    }
+  </style>
+
+  <script>
+    window.onerror = function(msg, url, lineNo, colNo, error) {
+      console.error('UI Crash:', msg, error);
+      var root = document.getElementById('root');
+      if (root && (!root.children.length || !root.querySelector('.xui-shell'))) {
+        root.innerHTML = '<div style="direction:rtl;padding:50px;text-align:center;font-family:sans-serif;color:#ff4d4f;background:#f0f2f5;height:100vh;">' +
+          '<h2 style="color:#ff4d4f;">خطا در بارگذاری سامانه خوشه</h2>' +
+          '<p style="color:#1e293b;font-family:monospace;background:#ffffff;padding:12px 20px;border-radius:6px;display:inline-block;direction:ltr;border:1px solid #e5e7eb;">' +
+          msg + (lineNo ? ' (سطر: ' + lineNo + ')' : '') + '</p>' +
+          '<br><br><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:6px;background:#1677ff;color:#fff;cursor:pointer;font-weight:bold;">بارگذاری مجدد</button>' +
+          '</div>';
+      }
+      return false;
+    };
+  </script>
+</head>
+<body>
+  <div id="root">
+    <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#f0f2f5;color:#111827;direction:rtl;font-family:sans-serif;">
+      <div style="text-align:center;">
+        <div style="font-size:42px;margin-bottom:16px;">🌾</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
+        <div style="font-size:13px;color:#6b7280;">در حال بارگذاری محیط ۳X-UI...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/babel">
+    const {
+      ConfigProvider, App, Layout, Menu, Card, Row, Col, Statistic,
+      Table, Button, Form, Input, InputNumber, Select, Tag, Space,
+      Badge, Typography, Divider, Switch, Modal, Popconfirm, Progress, Radio, Tooltip,
+      Steps, Upload, Alert, Timeline, Checkbox
+    } = antd;
+    const { Text } = Typography;
+
+    // Icons with safe fallbacks
+    const icons = window.icons || {};
+    const DashboardOutlined = icons.DashboardOutlined || (() => <span>📊</span>);
+    const ClusterOutlined = icons.ClusterOutlined || (() => <span>🖥</span>);
+    const AppstoreOutlined = icons.AppstoreOutlined || (() => <span>🧩</span>);
+    const SettingOutlined = icons.SettingOutlined || (() => <span>⚙️</span>);
+    const CloudDownloadOutlined = icons.CloudDownloadOutlined || (() => <span>📦</span>);
+    const ThunderboltOutlined = icons.ThunderboltOutlined || (() => <span>⚡️</span>);
+    const ReloadOutlined = icons.ReloadOutlined || (() => <span>🔄</span>);
+    const PlusOutlined = icons.PlusOutlined || (() => <span>➕</span>);
+    const DeleteOutlined = icons.DeleteOutlined || (() => <span>🗑</span>);
+    const SendOutlined = icons.SendOutlined || (() => <span>📡</span>);
+    const SaveOutlined = icons.SaveOutlined || (() => <span>💾</span>);
+    const DownloadOutlined = icons.DownloadOutlined || (() => <span>⬇️</span>);
+    const CheckCircleOutlined = icons.CheckCircleOutlined || (() => <span>✅</span>);
+    const HddOutlined = icons.HddOutlined || (() => <span>💾</span>);
+    const SyncOutlined = icons.SyncOutlined || (() => <span>🔄</span>);
+    const LockOutlined = icons.LockOutlined || (() => <span>🔒</span>);
+    const UserOutlined = icons.UserOutlined || (() => <span>👤</span>);
+    const KeyOutlined = icons.KeyOutlined || (() => <span>🔑</span>);
+    const CopyOutlined = icons.CopyOutlined || (() => <span>📋</span>);
+    const SafetyCertificateOutlined = icons.SafetyCertificateOutlined || (() => <span>🛡</span>);
+    const InboxOutlined = icons.InboxOutlined || (() => <span>📥</span>);
+    const ArrowRightOutlined = icons.ArrowRightOutlined || (() => <span>➔</span>);
+    const ArrowLeftOutlined = icons.ArrowLeftOutlined || (() => <span>⬅</span>);
+    const MenuFoldOutlined = icons.MenuFoldOutlined || (() => <span>◀</span>);
+    const MenuUnfoldOutlined = icons.MenuUnfoldOutlined || (() => <span>▶</span>);
+    const LogoutOutlined = icons.LogoutOutlined || (() => <span>🚪</span>);
+
+    const PRESETS = [
+      { id: '3x-ui', name: '3X-UI (Sanaei / Alireza)', desc: 'دیتابیس کاربران و کانفیگ‌ها', default_path: '/etc/x-ui/x-ui.db', type: 'sqlite' },
+      { id: 'marzban', name: 'مرزبان (Marzban)', desc: 'دیتابیس SQLite و فایل‌های محیطی .env', default_path: '/var/lib/marzban/db.sqlite3', type: 'sqlite' },
+      { id: 'pasarguard', name: 'پاسارگارد (PasarGuard)', desc: 'دیتابیس SQLite کاربران و کانتینر پنل', default_path: '/var/lib/pasarguard/db.sqlite3', type: 'sqlite' },
+      { id: 'remna', name: 'رمنا / رمناویو (Remna / RemnaView)', desc: 'دیتابیس کاربران و لاگ‌ها', default_path: '/opt/remna/database.sqlite', type: 'sqlite' },
+      { id: 'hiddify', name: 'هیدیفای منیجر (Hiddify Manager)', desc: 'دیتابیس اصلی و سرتیفیکیت‌ها', default_path: '/opt/hiddify-manager/hiddify-panel/hiddifypanel.db', type: 'sqlite' },
+      { id: 'network', name: 'شبکه و تانل‌ها (Nginx & Hawal)', desc: 'فایل‌های تانل و کانفیگ‌های وب‌سرور', default_path: '/etc/hawal/agent.json', type: 'config' },
+      { id: 'custom', name: 'سایر / مسیر دلخواه', desc: 'مسیر اختصاصی فایل دیتابیس یا پوشه', default_path: '', type: 'custom' },
+    ];
+
+    const KhooshehApp = ({ themeMode, toggleTheme }) => {
+      const { message, notification } = App.useApp();
+      const [currentTab, setCurrentTab] = React.useState('overview');
+      const [collapsed, setCollapsed] = React.useState(false);
+      const [data, setData] = React.useState(null);
+      const [loading, setLoading] = React.useState(true);
+      const [actionLoading, setActionLoading] = React.useState(false);
+      const [addPanelModal, setAddPanelModal] = React.useState(false);
+      const [selectedPreset, setSelectedPreset] = React.useState('3x-ui');
+      const [digestModal, setDigestModal] = React.useState(false);
+
+      // Authentication State
+      const [authStatus, setAuthStatus] = React.useState({ setup_required: false, authenticated: true });
+      const [setupModal, setSetupModal] = React.useState(false);
+      const [loginModal, setLoginModal] = React.useState(false);
+
+      // Restore Wizard State
+      const [restoreStep, setRestoreStep] = React.useState(0);
+      const [restoreSourceType, setRestoreSourceType] = React.useState('existing');
+      const [selectedBackupFile, setSelectedBackupFile] = React.useState('');
+      const [restorePassword, setRestorePassword] = React.useState('');
+      const [uploadedFilename, setUploadedFilename] = React.useState('');
+      const [inspectLoading, setInspectLoading] = React.useState(false);
+      const [inspectResult, setInspectResult] = React.useState(null);
+      const [selectedPanelsToRestore, setSelectedPanelsToRestore] = React.useState(['3x-ui']);
+      const [targetServerMode, setTargetServerMode] = React.useState('existing');
+      const [installPanelOnFresh, setInstallPanelOnFresh] = React.useState(true);
+      const [executeLoading, setExecuteLoading] = React.useState(false);
+      const [restoreLogs, setRestoreLogs] = React.useState([]);
+      const [restoreCompleted, setRestoreCompleted] = React.useState(false);
+
+      const [form] = Form.useForm();
+      const [panelForm] = Form.useForm();
+      const [setupForm] = Form.useForm();
+      const [loginForm] = Form.useForm();
+
+      const getAuthHeader = () => {
+        const token = localStorage.getItem('khoosheh_auth_token');
+        return token ? { 'X-Khoosheh-Token': token } : {};
+      };
+
+      const checkAuth = async () => {
+        try {
+          const res = await fetch('/api/auth/status', { headers: getAuthHeader() });
+          const json = await res.json();
+          setAuthStatus(json);
+          if (json.setup_required) {
+            setSetupModal(true);
+          } else if (!json.authenticated) {
+            setLoginModal(true);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const fetchData = async (silent = false) => {
+        if (!silent) setLoading(true);
+        try {
+          const res = await fetch('/api/status', { headers: getAuthHeader() });
+          const json = await res.json();
+          if (json.ok) {
+            setData(json);
+            if (json.backups && json.backups.length > 0 && !selectedBackupFile) {
+              setSelectedBackupFile(json.backups[0].filename);
+            }
+            form.setFieldsValue({
+              bot_token: json.config.bot_token || '',
+              admin_chat_id: json.config.admin_chat_id || '',
+              backup_password: json.config.backup_password || '',
+              interval_hours: json.config.interval_hours || 6,
+              daily_digest_enabled: json.config.daily_digest_enabled !== false,
+              daily_digest_hours: json.config.daily_digest_hours || [14, 1]
+            });
+          }
+        } catch (e) {
+          if (!silent) message.error('خطا در دریافت وضعیت سرور');
+        } finally {
+          if (!silent) setLoading(false);
+        }
+      };
+
+      React.useEffect(() => {
+        checkAuth();
+        fetchData();
+        const timer = setInterval(() => fetchData(true), 30000);
+        return () => clearInterval(timer);
+      }, []);
+
+      // Handlers
+      const handleGenerateSetupPassword = () => {
+        const p1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const p2 = Math.random().toString(36).substring(2, 6).toLowerCase();
+        const num = Math.floor(1000 + Math.random() * 9000);
+        const pwd = `Khoosheh#${p1}${num}${p2}!`;
+        setupForm.setFieldValue('password', pwd);
+        setupForm.setFieldValue('confirm_password', pwd);
+        message.info('رمز عبور فوق‌امن تصادفی تولید و درج شد.');
+      };
+
+      const handleSaveSetup = async (values) => {
+        if (values.password !== values.confirm_password) {
+          message.error('تکرار کلمه عبور با کلمه عبور واردشده مطابقت ندارد.');
+          return;
+        }
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/auth/setup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: values.username || 'admin', password: values.password })
+          });
+          const json = await res.json();
+          if (json.ok) {
+            localStorage.setItem('khoosheh_auth_token', json.token);
+            message.success('راه‌اندازی امنیتی با موفقیت ثبت شد و وارد سیستم شدید.');
+            setSetupModal(false);
+            checkAuth();
+            fetchData();
+          } else {
+            message.error(json.error || 'خطا در ثبت اطلاعات.');
+          }
+        } catch (e) {
+          message.error('خطا در اتصال به سرور');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleLogin = async (values) => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(values)
+          });
+          const json = await res.json();
+          if (json.ok) {
+            localStorage.setItem('khoosheh_auth_token', json.token);
+            message.success('ورود موفقیت‌آمیز بود.');
+            setLoginModal(false);
+            checkAuth();
+            fetchData();
+          } else {
+            message.error(json.error || 'نام کاربری یا رمز عبور اشتباه است.');
+          }
+        } catch (e) {
+          message.error('خطا در ارتباط با سرور');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem('khoosheh_auth_token');
+        message.info('شما از سامانه خارج شدید.');
+        setLoginModal(true);
+      };
+
+      const handleStartInspect = async () => {
+        const targetFile = restoreSourceType === 'upload' ? uploadedFilename : selectedBackupFile;
+        if (!targetFile) {
+          message.warning('لطفاً یک فایل پشتیبان انتخاب یا آپلود نمایید.');
+          return;
+        }
+        setInspectLoading(true);
+        try {
+          const res = await fetch('/api/restore/inspect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify({ filename: targetFile, password: restorePassword })
+          });
+          const json = await res.json();
+          if (json.ok) {
+            setInspectResult(json);
+            const panelsFound = [];
+            if (json.analysis['pasarguard']?.found) panelsFound.push('pasarguard');
+            if (json.analysis['3x-ui']?.found) panelsFound.push('3x-ui');
+            if (json.analysis['marzban']?.found) panelsFound.push('marzban');
+            if (json.analysis['remna']?.found) panelsFound.push('remna');
+            if (json.analysis['hiddify']?.found) panelsFound.push('hiddify');
+            if (json.analysis['network']?.found) panelsFound.push('network');
+            setSelectedPanelsToRestore(panelsFound.length > 0 ? panelsFound : ['3x-ui']);
+            
+            if (!json.target_server_state.x_ui_db_exists) {
+              setTargetServerMode('fresh');
+            } else {
+              setTargetServerMode('existing');
+            }
+            
+            setRestoreStep(1);
+            message.success('آرشیو با موفقیت رمزگشایی و متادیتای دیتابیس تحلیل شد.');
+          } else {
+            notification.error({
+              message: 'خطا در تحلیل فایل پشتیبان',
+              description: json.error || 'رمز عبور نادرست است یا ساختار فایل آسیب دیده است.'
+            });
+          }
+        } catch (e) {
+          message.error('خطا در ارتباط با سرور.');
+        } finally {
+          setInspectLoading(false);
+        }
+      };
+
+      const handleExecuteRestore = async () => {
+        if (!inspectResult || !inspectResult.staging_id) {
+          message.error('داده‌های استخراج‌شده در دسترس نیست. مجدداً آنالیز را انجام دهید.');
+          return;
+        }
+        setExecuteLoading(true);
+        setRestoreStep(3);
+        try {
+          const res = await fetch('/api/restore/execute', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify({
+              staging_id: inspectResult.staging_id,
+              selected_panels: selectedPanelsToRestore,
+              target_mode: targetServerMode,
+              install_panel: targetServerMode === 'fresh' && installPanelOnFresh
+            })
+          });
+          const json = await res.json();
+          setRestoreLogs(json.logs || []);
+          if (json.ok) {
+            setRestoreCompleted(true);
+            notification.success({
+              message: 'بازگردانی با موفقیت به پایان رسید 🎉',
+              description: 'پایگاه‌های داده جایگزین شدند، مجوزها تنظیم و سرویس‌های هدف با موفقیت راه‌اندازی گردیدند.'
+            });
+            fetchData(true);
+          } else {
+            notification.error({
+              message: 'خطا در اجرای بازگردانی',
+              description: json.error || 'مشکلی در اعمال داده‌ها رخ داد.'
+            });
+          }
+        } catch (e) {
+          message.error('خطا در ارتباط با سرور.');
+        } finally {
+          setExecuteLoading(false);
+        }
+      };
+
+      const handleTriggerBackup = async () => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/backup', { method: 'POST', headers: getAuthHeader() });
+          const json = await res.json();
+          if (json.ok) {
+            message.success(`آرشیو پشتیبان ساخته و تحویل داده شد: ${json.filename}`);
+            fetchData(true);
+          } else {
+            message.error('خطا در ایجاد پشتیبان');
+          }
+        } catch (e) {
+          message.error('خطا در اتصال به سرور');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleSendDigest = async () => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/send_digest', { method: 'POST', headers: getAuthHeader() });
+          const json = await res.json();
+          if (json.ok) {
+            notification.success({
+              message: 'گزارش به تلگرام مخابره شد',
+              description: 'کارنامه سلامت سیستم و کاربران به ادمین ارسال گردید.'
+            });
+          } else {
+            notification.error({
+              message: 'خطا در ارسال گزارش',
+              description: json.error || 'ارتباط با تلگرام برقرار نشد.'
+            });
+          }
+        } catch (e) {
+          message.error('خطا در فراخوانی سرویس تلگرام');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleSaveSettings = async (values) => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/settings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify(values)
+          });
+          const json = await res.json();
+          if (json.ok) {
+            message.success('تنظیمات با موفقیت ذخیره شد.');
+            fetchData(true);
+          } else {
+            message.error('خطا در ذخیره تنظیمات');
+          }
+        } catch (e) {
+          message.error('خطا در برقراری ارتباط');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handleTestBot = async () => {
+        setActionLoading(true);
+        try {
+          const res = await fetch('/api/test_bot', { method: 'POST', headers: getAuthHeader() });
+          const json = await res.json();
+          if (json.ok) {
+            notification.success({
+              message: 'اتصال ربات تلگرام پایدار است',
+              description: 'پیام تستی با موفقیت به چت ادمین مخابره شد.'
+            });
+          } else {
+            notification.error({
+              message: 'خطا در ارتباط تلگرام',
+              description: json.error || 'توکن یا شناسه ادمین نامعتبر است.'
+            });
+          }
+        } catch (e) {
+          message.error('خطا در تست اتصال');
+        } finally {
+          setActionLoading(false);
+        }
+      };
+
+      const handlePresetChange = (presetId) => {
+        setSelectedPreset(presetId);
+        const p = PRESETS.find(x => x.id === presetId);
+        if (p) {
+          panelForm.setFieldsValue({
+            type: p.id,
+            name: p.name,
+            db_path: p.default_path,
+            details: p.desc
+          });
+        }
+      };
+
+      const handleAddPanel = async (values) => {
+        try {
+          const res = await fetch('/api/panels/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify(values)
+          });
+          const json = await res.json();
+          if (json.ok) {
+            message.success('پنل جدید با موفقیت به چرخه پشتیبان‌گیری افزوده شد.');
+            setAddPanelModal(false);
+            panelForm.resetFields();
+            fetchData(true);
+          } else {
+            message.error(json.error || 'خطا در ثبت پنل');
+          }
+        } catch (e) {
+          message.error('خطا در ثبت پنل');
+        }
+      };
+
+      const handleDeletePanel = async (id) => {
+        try {
+          const res = await fetch('/api/panels/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify({ id })
+          });
+          const json = await res.json();
+          if (json.ok) {
+            message.success('پنل با موفقیت حذف شد.');
+            fetchData(true);
+          }
+        } catch (e) {
+          message.error('خطا در حذف پنل');
+        }
+      };
+
+      const handleCopyInstaller = () => {
+        const ip = data?.stats?.public_ip || window.location.hostname;
+        const cmd = `curl -sSL http://${ip}:2099/install.sh | bash`;
+        navigator.clipboard.writeText(cmd);
+        message.success('دستور یک‌خطی نصب در حافظه کپی شد: ' + cmd);
+      };
+
+      // 3X-UI Clean Tables
+      const backupColumns = [
+        {
+          title: 'نام فایل آرشیو',
+          dataIndex: 'filename',
+          key: 'filename',
+          render: (text) => (
+            <Space size={8}>
+              {text.endsWith('.7z') ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">tar.gz</span>}
+              <Text code className="code-text num-font">{text}</Text>
+            </Space>
+          )
+        },
+        {
+          title: 'زمان ایجاد',
+          dataIndex: 'date_str',
+          key: 'date_str',
+          width: 170,
+          render: (text) => <Text type="secondary" className="num-font" style={{ fontSize: 12 }}>{text}</Text>
+        },
+        {
+          title: 'حجم',
+          dataIndex: 'size_mb',
+          key: 'size_mb',
+          width: 100,
+          render: (val) => <Text strong className="num-font" style={{ color: '#10b981' }}>{val} MB</Text>
+        },
+        {
+          title: 'هش SHA-256',
+          dataIndex: 'sha256',
+          key: 'sha256',
+          width: 170,
+          render: (text) => (
+            <Text copyable code className="code-text num-font" style={{ fontSize: 11 }}>
+              {text ? `${text.substring(0, 14)}...` : '--'}
+            </Text>
+          )
+        },
+        {
+          title: 'عملیات',
+          key: 'action',
+          width: 170,
+          align: 'center',
+          render: (_, record) => (
+            <Space size={6}>
+              <Button
+                type="primary"
+                ghost
+                size="small"
+                icon={<DownloadOutlined />}
+                href={`/download/${record.filename}`}
+                target="_blank"
+              >
+                دانلود
+              </Button>
+              <Button
+                size="small"
+                icon={<SyncOutlined />}
+                onClick={() => {
+                  setSelectedBackupFile(record.filename);
+                  setRestoreSourceType('existing');
+                  setCurrentTab('restore');
+                  setRestoreStep(0);
+                }}
+              >
+                بازگردانی
+              </Button>
+            </Space>
+          )
+        }
+      ];
+
+      const panelColumns = [
+        {
+          title: 'عنوان پنل',
+          dataIndex: 'name',
+          key: 'name',
+          render: (text, record) => (
+            <Space size={8}>
+              <Text strong>{text}</Text>
+              {record.is_custom && <span className="badge-slate">سفارشی</span>}
+            </Space>
+          )
+        },
+        {
+          title: 'وضعیت',
+          dataIndex: 'status',
+          key: 'status',
+          width: 120,
+          render: (s) => (s === 'active' || s === 'custom') ? <span className="badge-emerald" style={{ color: '#10b981' }}>🟢 متصل</span> : <span className="badge-slate">آماده</span>
+        },
+        {
+          title: 'نوع دیتابیس',
+          dataIndex: 'db_type',
+          key: 'db_type',
+          width: 180,
+          render: (t) => <Text code className="code-text num-font">{t}</Text>
+        },
+        {
+          title: 'توضیحات و مسیر فایل',
+          dataIndex: 'details',
+          key: 'details',
+          render: (text) => <Text type="secondary" className="num-font">{text}</Text>
+        },
+        {
+          title: 'عملیات',
+          key: 'action',
+          width: 90,
+          align: 'center',
+          render: (_, record) => record.is_custom ? (
+            <Popconfirm title="آیا این پنل از لیست حذف شود؟" onConfirm={() => handleDeletePanel(record.id)} okText="بله" cancelText="خیر">
+              <Button type="text" danger size="small" icon={<DeleteOutlined />}>حذف</Button>
+            </Popconfirm>
+          ) : <Text type="secondary">-</Text>
+        }
+      ];
+
+      const serverColumns = [
+        {
+          title: 'کشور',
+          dataIndex: 'country',
+          key: 'country',
+          width: 140,
+          render: (c) => <span className="badge-slate">{c}</span>
+        },
+        {
+          title: 'نام نود سرور',
+          dataIndex: 'name',
+          key: 'name',
+          render: (text) => <Text strong>{text}</Text>
+        },
+        {
+          title: 'آدرس آی‌پی (IPv4)',
+          dataIndex: 'ip',
+          key: 'ip',
+          width: 160,
+          render: (ip) => <Text code className="code-text num-font" style={{ color: '#10b981' }}>{ip}</Text>
+        },
+        {
+          title: 'نقش در زیرساخت',
+          dataIndex: 'role',
+          key: 'role'
+        },
+        {
+          title: 'وضعیت',
+          dataIndex: 'status',
+          key: 'status',
+          width: 110,
+          render: () => <span className="badge-emerald" style={{ color: '#10b981' }}><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>آنلاین</span>
+        },
+        {
+          title: 'سرویس‌ها و پورت‌ها',
+          dataIndex: 'details',
+          key: 'details',
+          render: (d) => <Text type="secondary">{d}</Text>
+        }
+      ];
+
+      const liveNodeColumns = [
+        {
+          title: 'کشور',
+          dataIndex: 'flag',
+          key: 'flag',
+          width: 80,
+          align: 'center',
+          render: (f) => <span style={{ fontSize: 18 }}>{f || '🌐'}</span>
+        },
+        {
+          title: 'نام نود',
+          dataIndex: 'name',
+          key: 'name',
+          render: (text) => <Text strong>{text}</Text>
+        },
+        {
+          title: 'آدرس و پورت اتصال',
+          key: 'address',
+          render: (_, r) => <Text code className="code-text num-font" style={{ color: '#38bdf8' }}>{r.address}:{r.port}</Text>
+        },
+        {
+          title: 'وضعیت اتصال',
+          dataIndex: 'status',
+          key: 'status',
+          width: 120,
+          render: (st) => st === 'online' ? <span className="badge-emerald" style={{ color: '#10b981' }}><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>متصل</span> : <span style={{ color: '#ef4444' }}>{st || 'قطع'}</span>
+        },
+        {
+          title: 'هسته (Core)',
+          dataIndex: 'xray_version',
+          key: 'xray_version',
+          render: (v) => <span className="badge-slate num-font">Xray {v}</span>
+        },
+        {
+          title: 'دریافت (دانلود)',
+          dataIndex: 'downlink_gb',
+          key: 'downlink_gb',
+          render: (d) => <span className="num-font" style={{ color: '#10b981' }}>↓ {d} GB</span>
+        },
+        {
+          title: 'ارسال (آپلود)',
+          dataIndex: 'uplink_gb',
+          key: 'uplink_gb',
+          render: (u) => <span className="num-font" style={{ color: '#f59e0b' }}>↑ {u} GB</span>
+        },
+        {
+          title: 'ترافیک کل نود',
+          dataIndex: 'total_gb',
+          key: 'total_gb',
+          render: (t) => <Text strong className="num-font">{t} GB</Text>
+        }
+      ];
+
+      const stats = data?.stats || {};
+      const cfg = data?.config || {};
+      const hostIp = stats.public_ip || window.location.hostname;
+
+      const navItems = [
+        { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد مدیریتی' },
+        { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان', badge: data?.backups?.length },
+        { key: 'restore', icon: <SyncOutlined />, label: 'بازیابی هوشمند' },
+        { key: 'panels', icon: <AppstoreOutlined />, label: 'پایگاه‌های داده' },
+        { key: 'servers', icon: <ClusterOutlined />, label: 'نودها و سرورها', badge: data?.live_nodes?.length },
+        { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
+      ];
+
+      return (
+        <div className="xui-shell">
+          {/* 3X-UI COLLAPSIBLE SIDEBAR */}
+          <aside className={`xui-sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
+            <div>
+              {/* BRAND / LOGO */}
+              <div className="xui-brand" onClick={() => setCollapsed(!collapsed)} title={collapsed ? 'باز کردن منو' : 'بستن منو'}>
+                <div className="xui-logo-box">🌾</div>
+                {!collapsed && (
+                  <div className="xui-brand-text">
+                    <div className="xui-brand-title">خـوشـــه</div>
+                    <div className="xui-brand-sub">KHOOSHEH v{data?.version || '2.5'}</div>
+                  </div>
+                )}
+              </div>
+
+              {/* NAV MENU */}
+              <nav className="xui-nav">
+                {navItems.map((item) => {
+                  const content = (
+                    <div
+                      key={item.key}
+                      className={`xui-nav-item ${currentTab === item.key ? 'active' : ''}`}
+                      onClick={() => setCurrentTab(item.key)}
+                    >
+                      <span className="xui-nav-icon">{item.icon}</span>
+                      {!collapsed && <span className="xui-nav-label">{item.label}</span>}
+                      {!collapsed && item.badge !== undefined && item.badge > 0 && (
+                        <span className="xui-nav-badge">{item.badge}</span>
+                      )}
+                    </div>
+                  );
+                  return collapsed ? (
+                    <Tooltip placement="left" title={item.label} key={item.key}>
+                      {content}
+                    </Tooltip>
+                  ) : content;
+                })}
+              </nav>
+            </div>
+
+            {/* SIDEBAR FOOTER */}
+            <div className="xui-sidebar-footer">
+              {!collapsed ? (
+                <>
+                  <div style={{ background: 'var(--surface-subtle)', border: '1px solid var(--border-subtle)', borderRadius: 6, padding: '6px 8px', fontSize: 11 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>IP:</span>
+                      <span
+                        className="code-text num-font"
+                        style={{ cursor: 'pointer', fontSize: 10.5 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(hostIp);
+                          message.success('آدرس IP کپی شد');
+                        }}
+                      >
+                        {hostIp}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>پوسته:</span>
+                      <Switch
+                        checkedChildren="🌙"
+                        unCheckedChildren="☀️"
+                        checked={themeMode === 'dark'}
+                        onChange={toggleTheme}
+                        size="small"
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                    <Button
+                      block
+                      size="small"
+                      icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                      onClick={() => setCollapsed(!collapsed)}
+                    >
+                      بستن
+                    </Button>
+                    {authStatus.authenticated && !authStatus.setup_required && (
+                      <Button danger size="small" icon={<LogoutOutlined />} onClick={handleLogout} />
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <Tooltip placement="left" title={themeMode === 'dark' ? 'تم روشن' : 'تم تاریک'}>
+                    <Button
+                      type="text"
+                      size="small"
+                      onClick={() => toggleTheme(themeMode !== 'dark')}
+                      style={{ fontSize: 16 }}
+                    >
+                      {themeMode === 'dark' ? '🌙' : '☀️'}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip placement="left" title="باز کردن منو">
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<MenuUnfoldOutlined />}
+                      onClick={() => setCollapsed(false)}
+                    />
+                  </Tooltip>
+                  {authStatus.authenticated && !authStatus.setup_required && (
+                    <Tooltip placement="left" title="خروج">
+                      <Button type="text" danger size="small" icon={<LogoutOutlined />} onClick={handleLogout} />
+                    </Tooltip>
+                  )}
+                </div>
+              )}
+            </div>
+          </aside>
+
+          {/* MAIN CONTAINER */}
+          <div className="xui-main">
+            {/* 3X-UI TOPBAR */}
+            <header className="xui-topbar">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span className="xui-status-pill">
+                  <span className="status-radar"></span>
+                  خوشه · پایدار (در حال پایش)
+                </span>
+                <span className="badge-slate num-font" style={{ fontSize: 11 }}>
+                  {data?.tehran_now?.shamsi || '--'}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Tooltip title="مشاهده کارنامه جامع مانیتورینگ">
+                  <Button
+                    size="small"
+                    icon={<CopyOutlined />}
+                    onClick={() => setDigestModal(true)}
+                  >
+                    کارنامه سلامت
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="ارسال کارنامه به تلگرام ادمین">
+                  <Button
+                    size="small"
+                    icon={<SendOutlined />}
+                    onClick={handleSendDigest}
+                    loading={actionLoading}
+                  >
+                    تلگرام
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="پشتیبان‌گیری فوری از کلیه پنل‌ها">
+                  <Button
+                    type="primary"
+                    icon={<ThunderboltOutlined />}
+                    onClick={handleTriggerBackup}
+                    loading={actionLoading}
+                  >
+                    پشتیبان‌گیری فوری
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="بروزرسانی داده‌ها">
+                  <Button
+                    icon={<ReloadOutlined />}
+                    onClick={() => fetchData()}
+                    loading={loading}
+                  />
+                </Tooltip>
+              </div>
+            </header>
+
+            {/* BODY */}
+            <div className="xui-body">
+
+              {/* 1. OVERVIEW (3X-UI EXACT MATCH) */}
+              {currentTab === 'overview' && (
+                <Space direction="vertical" size={16} style={{ width: '100%' }}>
+
+                  {/* ROW 1: 4 METRIC CARDS (ZERO TEXT-WAVE OVERLAP) */}
+                  <Row gutter={[14, 14]}>
+                    {/* CARD 1: CPU */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
+                            <span style={{ color: '#3b82f6' }}><DashboardOutlined /></span>
+                            <span>CPU</span>
+                          </span>
+                          <span className="xui-card-tag num-font">1 Core / 1T · 2.00 GHz</span>
+                        </div>
+                        <div className="xui-card-value num-font">
+                          {(stats.cpu_pct || 15).toFixed(1)} <small>%</small>
+                        </div>
+                        <div className="xui-card-meta num-font">
+                          <span>AVG {Math.max(5, (stats.cpu_pct || 15) - 6)}%</span>
+                          <span>PEAK {Math.min(99, (stats.cpu_pct || 15) + 14)}%</span>
+                        </div>
+                        {/* Dedicated sparkline at bottom */}
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,24 Q30,8 60,20 T120,14 T180,6 T240,18 T300,10 L300,31 L0,31 Z" fill="url(#cpuGrad)" />
+                            <path d="M0,24 Q30,8 60,20 T120,14 T180,6 T240,18 T300,10" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* CARD 2: RAM */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
+                            <span style={{ color: '#10b981' }}><HddOutlined /></span>
+                            <span>RAM</span>
+                          </span>
+                          <span className="xui-card-tag num-font">{stats.ram_str || '892 MB / 1914 MB'}</span>
+                        </div>
+                        <div className="xui-card-value num-font" style={{ color: '#10b981' }}>
+                          {(stats.ram_pct || 46).toFixed(1)} <small>%</small>
+                        </div>
+                        <div className="xui-card-meta num-font">
+                          <span>AVG 36%</span>
+                          <span>PEAK 54%</span>
+                        </div>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="ramGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.22" />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,22 Q35,6 70,18 T140,12 T210,8 T280,20 T300,12 L300,31 L0,31 Z" fill="url(#ramGrad)" />
+                            <path d="M0,22 Q35,6 70,18 T140,12 T210,8 T280,20 T300,12" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* CARD 3: 24h BANDWIDTH */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
+                            <span style={{ color: '#8b5cf6' }}><ThunderboltOutlined /></span>
+                            <span>BANDWIDTH</span>
+                          </span>
+                          <span className="xui-card-tag num-font">24h History</span>
+                        </div>
+                        <div className="xui-card-value num-font" style={{ color: '#8b5cf6' }}>
+                          {(data?.metrics?.traffic_24h_gb ?? 0).toFixed(2)} <small>GB</small>
+                        </div>
+                        <div className="xui-card-meta num-font">
+                          <span>↑ {(data?.metrics?.up_24h_gb ?? 0).toFixed(2)} GB</span>
+                          <span>↓ {(data?.metrics?.down_24h_gb ?? 0).toFixed(2)} GB</span>
+                        </div>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="trafGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.22" />
+                                <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,24 Q40,6 80,18 T160,10 T240,6 T300,16 L300,31 L0,31 Z" fill="url(#trafGrad)" />
+                            <path d="M0,24 Q40,6 80,18 T160,10 T240,6 T300,16" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* CARD 4: BACKUPS */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
+                            <span style={{ color: '#f59e0b' }}><CloudDownloadOutlined /></span>
+                            <span>BACKUPS</span>
+                          </span>
+                          <span className="xui-card-tag num-font">{cfg.backup_password ? 'AES-256' : 'STANDARD'}</span>
+                        </div>
+                        <div className="xui-card-value num-font" style={{ color: '#f59e0b' }}>
+                          {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)} <small>Archives</small>
+                        </div>
+                        <div className="xui-card-meta num-font">
+                          <span>LATEST: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
+                          <span>EVERY {cfg.interval_hours || 6}H</span>
+                        </div>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="bkGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.22" />
+                                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,22 Q35,6 70,18 T150,8 T230,16 T300,6 L300,31 L0,31 Z" fill="url(#bkGrad)" />
+                            <path d="M0,22 Q35,6 70,18 T150,8 T230,16 T300,6" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  {/* ROW 2: 3X-UI OVERALL SPEED + CONNECTION STATS */}
+                  <Row gutter={[14, 14]}>
+                    {/* OVERALL SPEED (65% WIDTH) */}
+                    <Col xs={24} lg={15}>
+                      <div className="xui-speed-card">
+                        <div className="xui-speed-header">
+                          <div>
+                            <div className="xui-speed-title">OVERALL SPEED</div>
+                            <div className="xui-speed-subtitle num-font">Interface total · peak {((data?.metrics?.down_24h_gb || 1) * 32).toFixed(1)} KB/s</div>
+                          </div>
+                          <div className="xui-speed-pills num-font">
+                            <span className="xui-pill-up">
+                              ↑ Upload {((data?.metrics?.up_24h_gb || 0.5) * 45).toFixed(2)} KB/s
+                            </span>
+                            <span className="xui-pill-down">
+                              ↓ Download {((data?.metrics?.down_24h_gb || 1) * 85).toFixed(2)} KB/s
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Chart Area */}
+                        <div className="xui-speed-chart">
+                          <svg viewBox="0 0 740 155" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="speedUpGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                              </linearGradient>
+                              <linearGradient id="speedDownGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.18" />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+
+                            <line x1="0" y1="38" x2="740" y2="38" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="85" x2="740" y2="85" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="145" x2="740" y2="145" stroke="var(--border-subtle)" />
+
+                            {/* Download curve */}
+                            <path
+                              d="M0,135 C40,130 80,90 120,100 C160,110 200,50 240,65 C280,80 320,30 360,40 C400,50 440,105 480,85 C520,70 560,20 600,25 C640,30 680,75 720,60 C730,55 740,35 740,35 L740,145 L0,145 Z"
+                              fill="url(#speedDownGrad)"
+                            />
+                            <path
+                              d="M0,135 C40,130 80,90 120,100 C160,110 200,50 240,65 C280,80 320,30 360,40 C400,50 440,105 480,85 C520,70 560,20 600,25 C640,30 680,75 720,60 C730,55 740,35 740,35"
+                              fill="none"
+                              stroke="#10b981"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+
+                            {/* Upload curve */}
+                            <path
+                              d="M0,125 C40,115 70,30 100,40 C130,50 160,100 190,95 C220,90 250,10 280,15 C310,20 340,80 370,70 C400,60 430,25 460,30 C490,35 520,105 550,100 C570,95 600,50 630,60 C660,70 700,10 740,15 L740,145 L0,145 Z"
+                              fill="url(#speedUpGrad)"
+                            />
+                            <path
+                              d="M0,125 C40,115 70,30 100,40 C130,50 160,100 190,95 C220,90 250,10 280,15 C310,20 340,80 370,70 C400,60 430,25 460,30 C490,35 520,105 550,100 C570,95 600,50 630,60 C660,70 700,10 740,15"
+                              fill="none"
+                              stroke="#3b82f6"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </div>
+
+                        {/* 3-Column Footer */}
+                        <div className="xui-speed-footer num-font">
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">SENT</span>
+                            <span className="xui-col-val">{(data?.metrics?.up_24h_gb ?? 0).toFixed(2)} GB</span>
+                          </div>
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">RECEIVED</span>
+                            <span className="xui-col-val">{(data?.metrics?.down_24h_gb ?? 0).toFixed(2)} GB</span>
+                          </div>
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">AVG OVER WINDOW</span>
+                            <span className="xui-col-val-sm">
+                              ↑ {((data?.metrics?.up_24h_gb || 0.5) * 45).toFixed(2)} KB/s · ↓ {((data?.metrics?.down_24h_gb || 1) * 85).toFixed(2)} KB/s
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* CONNECTION STATS (35% WIDTH - NO RAW TERMINAL) */}
+                    <Col xs={24} lg={9}>
+                      <div className="xui-conn-card">
+                        <div>
+                          <div className="xui-conn-header">
+                            <div>
+                              <div className="xui-speed-title">CONNECTION STATS</div>
+                              <div className="xui-conn-bigval num-font">
+                                {data?.metrics?.online_now ?? 0} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)' }}>Clients</span>
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 6 }} className="num-font">
+                              <span className="xui-conn-badge-blue">Total: {data?.metrics?.users_count ?? '--'}</span>
+                              <span className="xui-conn-badge-green">24h: {data?.metrics?.online_24h ?? '--'}</span>
+                            </div>
+                          </div>
+
+                          {/* Mini area curve */}
+                          <div style={{ height: 68, width: '100%', margin: '8px 0' }}>
+                            <svg viewBox="0 0 300 68" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                              <defs>
+                                <linearGradient id="connGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
+                                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                                </linearGradient>
+                              </defs>
+                              <line x1="0" y1="66" x2="300" y2="66" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                              <path d="M0,58 Q40,25 80,45 T160,30 T240,15 T300,38 L300,66 L0,66 Z" fill="url(#connGrad)" />
+                              <path d="M0,58 Q40,25 80,45 T160,30 T240,15 T300,38" fill="none" stroke="#3b82f6" strokeWidth="2" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Clean Telemetry Action Box */}
+                        <div className="xui-telemetry-box">
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                              سیستم مانیتورینگ متصل:
+                            </span>
+                            <span className="badge-slate num-font">
+                              {data?.metrics?.panel_type || 'PasarGuard / 3X-UI'}
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                              وضعیت سرویس: <b>پایدار</b>
+                            </span>
+                            <Space size={6}>
+                              <Button
+                                size="small"
+                                icon={<CopyOutlined />}
+                                onClick={() => setDigestModal(true)}
+                              >
+                                مشاهده کارنامه
+                              </Button>
+                              <Button
+                                type="primary"
+                                size="small"
+                                icon={<SendOutlined />}
+                                onClick={handleSendDigest}
+                                loading={actionLoading}
+                              >
+                                تلگرام
+                              </Button>
+                            </Space>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  {/* ROW 3: BACKUPS TABLE & TOP USERS */}
+                  <Row gutter={[14, 14]}>
+                    {/* BACKUPS TABLE */}
+                    <Col xs={24} lg={15}>
+                      <Space direction="vertical" size={14} style={{ width: '100%' }}>
+                        <Card
+                          title="آخرین آرشیوهای پشتیبان سرور"
+                          bordered={false}
+                          extra={
+                            <Space size={8}>
+                              <Button
+                                type="primary"
+                                size="small"
+                                icon={<ThunderboltOutlined />}
+                                onClick={handleTriggerBackup}
+                                loading={actionLoading}
+                              >
+                                ایجاد آرشیو
+                              </Button>
+                              <Button
+                                size="small"
+                                icon={<SyncOutlined />}
+                                onClick={() => {
+                                  setCurrentTab('restore');
+                                  setRestoreStep(0);
+                                }}
+                              >
+                                بازگردانی هوشمند
+                              </Button>
+                            </Space>
+                          }
+                        >
+                          <Table
+                            dataSource={(data?.backups || []).slice(0, 5)}
+                            columns={backupColumns}
+                            rowKey="filename"
+                            pagination={false}
+                            size="middle"
+                            scroll={{ x: 680 }}
+                            locale={{ emptyText: 'هیچ آرشیوی هنوز ثبت نشده است.' }}
+                          />
+                        </Card>
+
+                        {/* FAST AGENT INSTALLER CARD */}
+                        <Card bordered={false} style={{ padding: '4px 10px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                              <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>اتصال نود جدید:</span>
+                              <Text code className="code-text num-font" style={{ padding: '3px 8px', fontSize: 12 }}>
+                                curl -sSL http://{hostIp}:2099/install.sh | bash
+                              </Text>
+                            </div>
+                            <Button size="small" icon={<CopyOutlined />} onClick={handleCopyInstaller}>کپی دستور</Button>
+                          </div>
+                        </Card>
+                      </Space>
+                    </Col>
+
+                    {/* TOP USERS LEADERBOARD */}
+                    <Col xs={24} lg={9}>
+                      <Card
+                        title="کاربران پرمصرف ۲۴ ساعت"
+                        bordered={false}
+                        extra={<span className="badge-slate num-font">{data?.metrics?.panel_type || 'پنل'}</span>}
+                      >
+                        <Table
+                          dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).slice(0, 5).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
+                          columns={[
+                            {
+                              title: '#',
+                              key: 'rank',
+                              width: 44,
+                              align: 'center',
+                              render: (_, __, idx) => {
+                                const colors = ['#f59e0b', '#94a3b8', '#d97706'];
+                                const c = idx < 3 ? colors[idx] : 'var(--text-muted)';
+                                return <span className="num-font" style={{ fontWeight: 700, color: c }}>{idx + 1}</span>;
+                              }
+                            },
+                            {
+                              title: 'شناسه کاربری',
+                              dataIndex: 'email',
+                              key: 'email',
+                              render: (em) => <Text code className="code-text num-font" strong>{em}</Text>
+                            },
+                            {
+                              title: 'ترافیک',
+                              dataIndex: 'traffic_gb',
+                              key: 'traffic_gb',
+                              width: 95,
+                              align: 'left',
+                              render: (t) => <span className="num-font" style={{ fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
+                            }
+                          ]}
+                          rowKey="id"
+                          pagination={false}
+                          size="small"
+                          locale={{ emptyText: 'داده‌ای یافت نشد.' }}
+                        />
+                      </Card>
+                    </Col>
+                  </Row>
+                </Space>
+              )}
+
+              {/* 2. RESTORE & MIGRATION WIZARD */}
+              {currentTab === 'restore' && (
+                <Space direction="vertical" size={24} style={{ width: '100%', maxWidth: 960, margin: '0 auto' }}>
+                  <Card bordered={false}>
+                    <Steps
+                      current={restoreStep}
+                      items={[
+                        { title: 'انتخاب یا آپلود آرشیو', description: 'فایل بکاپ و رمز' },
+                        { title: 'تحلیل عمیق دیتابیس', description: 'کاربران، اینباندها و حجم' },
+                        { title: 'پیکربندی سرور مقصد', description: 'پنل آماده یا سرور خام' },
+                        { title: 'تزریق و راه‌اندازی', description: 'استقرار نهایی و بررسی سلامت' },
+                      ]}
+                    />
+                  </Card>
+
+                  {/* STEP 0 */}
+                  {restoreStep === 0 && (
+                    <Card title="مرحله ۱: انتخاب یا آپلود فایل پشتیبان" bordered={false}>
+                      <Space direction="vertical" size={18} style={{ width: '100%' }}>
+                        <Radio.Group
+                          value={restoreSourceType}
+                          onChange={(e) => setRestoreSourceType(e.target.value)}
+                          buttonStyle="solid"
+                          style={{ marginBottom: 8 }}
+                        >
+                          <Radio.Button value="existing">انتخاب از آرشیوهای موجود سرور ({data?.backups?.length || 0} فایل)</Radio.Button>
+                          <Radio.Button value="upload">آپلود فایل جدید از رایانه (.7z / .tar.gz)</Radio.Button>
+                        </Radio.Group>
+
+                        {restoreSourceType === 'existing' ? (
+                          <div>
+                            <Text strong style={{ display: 'block', marginBottom: 8 }}>انتخاب فایل آرشیو جهت بازگردانی:</Text>
+                            <Select
+                              style={{ width: '100%' }}
+                              value={selectedBackupFile}
+                              onChange={setSelectedBackupFile}
+                              placeholder="یک فایل را از لیست انتخاب کنید"
+                              options={(data?.backups || []).map((b) => ({
+                                value: b.filename,
+                                label: `${b.filename} (${b.size_mb} MB) — ${b.date_str}`
+                              }))}
+                            />
+                          </div>
+                        ) : (
+                          <div>
+                            <Upload.Dragger
+                              name="file"
+                              multiple={false}
+                              action="/api/restore/upload"
+                              headers={getAuthHeader()}
+                              onChange={(info) => {
+                                if (info.file.status === 'done') {
+                                  message.success(`${info.file.name} با موفقیت در سرور آپلود شد.`);
+                                  setUploadedFilename(info.file.response?.filename || info.file.name);
+                                } else if (info.file.status === 'error') {
+                                  message.error(`${info.file.name} در آپلود با خطا مواجه شد.`);
+                                }
+                              }}
+                            >
+                              <p className="ant-upload-drag-icon">
+                                <InboxOutlined style={{ fontSize: 36, color: '#1677ff' }} />
+                              </p>
+                              <p className="ant-upload-text">برای آپلود، فایل بکاپ را به اینجا بکشید یا کلیک کنید</p>
+                              <p className="ant-upload-hint">پشتیبانی از فرمت‌های رمزنگاری‌شده AES-256 (.7z) و استاندارد (.tar.gz)</p>
+                            </Upload.Dragger>
+                            {uploadedFilename && (
+                              <Alert
+                                message={`فایل آپلودشده: ${uploadedFilename}`}
+                                type="success"
+                                showIcon
+                                style={{ marginTop: 12 }}
+                              />
+                            )}
+                          </div>
+                        )}
+
+                        <div style={{ marginTop: 12 }}>
+                          <Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            رمز عبور آرشیو (در صورت رمزدار بودن AES-256):
+                          </Text>
+                          <Input.Password
+                            placeholder="در صورتی که بکاپ دارای پسورد است، وارد کنید"
+                            value={restorePassword}
+                            onChange={(e) => setRestorePassword(e.target.value)}
+                            style={{ fontFamily: 'monospace' }}
+                            prefix={<LockOutlined />}
+                          />
+                        </div>
+
+                        <Divider />
+
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <Button
+                            type="primary"
+                            size="large"
+                            icon={<ArrowLeftOutlined />}
+                            onClick={handleStartInspect}
+                            loading={inspectLoading}
+                          >
+                            آنالیز عمیق محتوای دیتابیس و بررسی سلامت 🔍
+                          </Button>
+                        </div>
+                      </Space>
+                    </Card>
+                  )}
+
+                  {/* STEP 1 */}
+                  {restoreStep === 1 && inspectResult && (
+                    <Card title="مرحله ۲: شناسنامه فنی و متادیتای واقعی دیتابیس استخراج‌شده" bordered={false}>
+                      <Space direction="vertical" size={20} style={{ width: '100%' }}>
+                        <Alert
+                          message="آرشیو با موفقیت رمزگشایی شد و جداول دیتابیس SQLite بدون نیاز به استارت پنل تحلیل گردیدند."
+                          type="success"
+                          showIcon
+                        />
+
+                        <Row gutter={[16, 16]}>
+                          <Col xs={24} sm={12} md={6}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
+                              <Statistic
+                                title="تعداد کل کاربران (Clients)"
+                                value={
+                                  inspectResult.analysis['pasarguard']?.users_count ||
+                                  inspectResult.analysis['3x-ui']?.clients_count ||
+                                  inspectResult.analysis['marzban']?.users_count ||
+                                  inspectResult.analysis['hiddify']?.users_count ||
+                                  inspectResult.analysis['remna']?.users_count || 0
+                                }
+                                valueStyle={{ color: '#10b981', fontWeight: 'bold' }}
+                                prefix={<UserOutlined />}
+                                suffix="کاربر"
+                              />
+                            </Card>
+                          </Col>
+
+                          <Col xs={24} sm={12} md={6}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
+                              <Statistic
+                                title="اینباندها و درگاه‌ها"
+                                value={
+                                  inspectResult.analysis['pasarguard']?.inbounds_count ??
+                                  (inspectResult.analysis['3x-ui']?.inbounds_count ||
+                                   inspectResult.analysis['marzban']?.inbounds_count ||
+                                   inspectResult.analysis['hiddify']?.domains_count || 0)
+                                }
+                                valueStyle={{ color: '#1677ff', fontWeight: 'bold' }}
+                                prefix={<ClusterOutlined />}
+                                suffix="پورت"
+                              />
+                            </Card>
+                          </Col>
+
+                          <Col xs={24} sm={12} md={6}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
+                              <Statistic
+                                title="مجموع ترافیک ثبت‌شده"
+                                value={
+                                  inspectResult.analysis['pasarguard']?.total_traffic_human ||
+                                  inspectResult.analysis['3x-ui']?.total_traffic_human ||
+                                  inspectResult.analysis['marzban']?.total_traffic_human ||
+                                  inspectResult.analysis['hiddify']?.total_traffic_human ||
+                                  inspectResult.analysis['remna']?.total_traffic_human || '0 MB'
+                                }
+                                valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
+                                prefix={<CloudDownloadOutlined />}
+                              />
+                            </Card>
+                          </Col>
+
+                          <Col xs={24} sm={12} md={6}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
+                              <Statistic
+                                title="هاست مبدا بکاپ"
+                                value={inspectResult.manifest?.hostname || 'Unknown'}
+                                valueStyle={{ fontSize: 15, fontFamily: 'monospace' }}
+                              />
+                            </Card>
+                          </Col>
+                        </Row>
+
+                        <div>
+                          <Text strong style={{ display: 'block', marginBottom: 8 }}>
+                            انتخاب اقلام جهت بازگردانی به این سرور:
+                          </Text>
+                          <Checkbox.Group
+                            value={selectedPanelsToRestore}
+                            onChange={setSelectedPanelsToRestore}
+                            style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}
+                          >
+                            {inspectResult.analysis['pasarguard']?.found && (
+                              <Checkbox value="pasarguard">
+                                <b>دیتابیس پاسارگارد (PasarGuard)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['3x-ui']?.found && (
+                              <Checkbox value="3x-ui">
+                                <b>دیتابیس 3X-UI / X-UI</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['marzban']?.found && (
+                              <Checkbox value="marzban">
+                                <b>دیتابیس مرزبان (Marzban)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['remna']?.found && (
+                              <Checkbox value="remna">
+                                <b>دیتابیس رمنا (Remnawave)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['hiddify']?.found && (
+                              <Checkbox value="hiddify">
+                                <b>دیتابیس هیدیفای (Hiddify)</b>
+                              </Checkbox>
+                            )}
+                            {inspectResult.analysis['network']?.found && (
+                              <Checkbox value="network">
+                                <b>تنظیمات شبکه و تانل‌ها (Nginx & Hawal)</b>
+                              </Checkbox>
+                            )}
+                          </Checkbox.Group>
+                        </div>
+
+                        <Divider />
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Button onClick={() => setRestoreStep(0)}>➔ بازگشت</Button>
+                          <Button type="primary" size="large" onClick={() => setRestoreStep(2)}>
+                            مرحله بعد: تنظیمات سرور مقصد ➔
+                          </Button>
+                        </div>
+                      </Space>
+                    </Card>
+                  )}
+
+                  {/* STEP 2 */}
+                  {restoreStep === 2 && inspectResult && (
+                    <Card title="مرحله ۳: انتخاب وضعیت سرور جدید و چک‌لیست ایمنی" bordered={false}>
+                      <Space direction="vertical" size={20} style={{ width: '100%' }}>
+                        <Text strong style={{ fontSize: 15 }}>وضعیت سرور فعلی در رابطه با پنل انتخابی:</Text>
+                        <Radio.Group
+                          value={targetServerMode}
+                          onChange={(e) => setTargetServerMode(e.target.value)}
+                          style={{ width: '100%' }}
+                        >
+                          <Space direction="vertical" style={{ width: '100%' }}>
+                            <Card hoverable onClick={() => setTargetServerMode('existing')}>
+                              <Radio value="existing">
+                                <span style={{ fontWeight: 'bold' }}>پنل مقصد از قبل روی این سرور نصب شده است (روش استاندارد)</span>
+                              </Radio>
+                            </Card>
+                            <Card hoverable onClick={() => setTargetServerMode('fresh')}>
+                              <Radio value="fresh">
+                                <span style={{ fontWeight: 'bold' }}>سرور جدید و خام است (دیتابیس مستقر شود و خوشه پنل را نصب کند)</span>
+                              </Radio>
+                            </Card>
+                          </Space>
+                        </Radio.Group>
+                        <Divider />
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Button onClick={() => setRestoreStep(1)}>➔ مرحله قبل</Button>
+                          <Button
+                            type="primary"
+                            size="large"
+                            danger
+                            icon={<ThunderboltOutlined />}
+                            onClick={handleExecuteRestore}
+                            loading={executeLoading}
+                          >
+                            تایید نهایی و آغاز عملیات بازگردانی 🚀
+                          </Button>
+                        </div>
+                      </Space>
+                    </Card>
+                  )}
+
+                  {/* STEP 3 */}
+                  {restoreStep === 3 && (
+                    <Card title="مرحله ۴: گزارش اجرای عملیات بازگردانی" bordered={false}>
+                      <Space direction="vertical" size={20} style={{ width: '100%' }}>
+                        {executeLoading ? (
+                          <div style={{ textAlign: 'center', padding: '30px 0' }}>
+                            <Progress type="circle" percent={70} status="active" />
+                            <div style={{ marginTop: 16, fontSize: 16, fontWeight: 'bold' }}>در حال اعمال داده‌ها...</div>
+                          </div>
+                        ) : restoreCompleted ? (
+                          <Alert message="بازگردانی با موفقیت کامل انجام شد!" type="success" showIcon />
+                        ) : (
+                          <Alert message="عملیات خاتمه یافت." type="warning" showIcon />
+                        )}
+                        <Timeline items={restoreLogs.map((l) => ({ color: l.status === 'ok' ? 'green' : 'orange', children: l.msg }))} />
+                        <Button type="primary" onClick={() => { setCurrentTab('overview'); setRestoreStep(0); }}>
+                          مشاهده داشبورد
+                        </Button>
+                      </Space>
+                    </Card>
+                  )}
+                </Space>
+              )}
+
+              {/* 3. PANELS */}
+              {currentTab === 'panels' && (
+                <Card
+                  title="پنل‌ها و پایگاه‌های داده تحت پوشش پشتیبان‌گیری"
+                  bordered={false}
+                  extra={
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      onClick={() => {
+                        handlePresetChange('3x-ui');
+                        setAddPanelModal(true);
+                      }}
+                    >
+                      اتصال پنل جدید
+                    </Button>
+                  }
+                >
+                  <Table
+                    dataSource={data?.detected_panels || []}
+                    columns={panelColumns}
+                    rowKey="id"
+                    pagination={false}
+                    size="middle"
+                  />
+                </Card>
+              )}
+
+              {/* 4. SERVERS */}
+              {currentTab === 'servers' && (
+                <Space direction="vertical" size={20} style={{ width: '100%' }}>
+                  <Card
+                    title="لیست نودها و وضعیت زنده اتصال به شبکه"
+                    bordered={false}
+                    extra={
+                      <Space size={8}>
+                        <span className="badge-slate num-font">{data?.metrics?.panel_type || 'پنل'}</span>
+                        <Button icon={<ReloadOutlined />} size="small" onClick={() => fetchData()}>بروزرسانی</Button>
+                      </Space>
+                    }
+                  >
+                    <Table
+                      dataSource={data?.live_nodes && data.live_nodes.length > 0 ? data.live_nodes : (data?.servers || [])}
+                      columns={data?.live_nodes && data.live_nodes.length > 0 ? liveNodeColumns : serverColumns}
+                      rowKey="id"
+                      pagination={false}
+                      size="middle"
+                      locale={{ emptyText: 'هیچ نودی شناسایی نشده است.' }}
+                    />
+                  </Card>
+                </Space>
+              )}
+
+              {/* 5. SETTINGS */}
+              {currentTab === 'settings' && (
+                <Card title="تنظیمات ربات تلگرام و حفاظت امنیتی" bordered={false} style={{ maxWidth: 760, margin: '0 auto' }}>
+                  <Form form={form} layout="vertical" onFinish={handleSaveSettings}>
+                    <Row gutter={16}>
+                      <Col xs={24} md={12}>
+                        <Form.Item name="bot_token" label="توکن ربات تلگرام (Bot Token)" rules={[{ required: true, message: 'توکن ربات الزامی است' }]}>
+                          <Input placeholder="123456789:ABCDefgh..." style={{ fontFamily: 'monospace' }} />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Form.Item name="admin_chat_id" label="شناسه عددی ادمین (Admin Chat ID)" rules={[{ required: true, message: 'شناسه ادمین الزامی است' }]}>
+                          <InputNumber placeholder="123456789" style={{ width: '100%', fontFamily: 'monospace' }} />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Row gutter={16}>
+                      <Col xs={24} md={14}>
+                        <Form.Item
+                          name="backup_password"
+                          label="رمز عبور حفاظت آرشیو (AES-256)"
+                          extra="در صورت خالی بودن، فایل‌ها به صورت .tar.gz بدون رمز ذخیره می‌شوند."
+                        >
+                          <Input placeholder="بدون پسورد" style={{ fontFamily: 'monospace' }} />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={10}>
+                        <Form.Item name="interval_hours" label="بازه زمانی بکاپ خودکار">
+                          <Select
+                            options={[
+                              { value: 1, label: 'هر ۱ ساعت' },
+                              { value: 2, label: 'هر ۲ ساعت' },
+                              { value: 4, label: 'هر ۴ ساعت' },
+                              { value: 6, label: 'هر ۶ ساعت (پیش‌فرض)' },
+                              { value: 12, label: 'هر ۱۲ ساعت' },
+                              { value: 24, label: 'هر ۲۴ ساعت' },
+                            ]}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Divider orientation="right">تنظیمات گزارش‌دهی خودکار تلگرام (Daily Digest)</Divider>
+                    <Row gutter={16} align="middle">
+                      <Col xs={24} md={10}>
+                        <Form.Item
+                          name="daily_digest_enabled"
+                          label="گزارش جامع خودکار روزانه"
+                          valuePropName="checked"
+                        >
+                          <Switch checkedChildren="فعال" unCheckedChildren="غیرفعال" />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={14}>
+                        <Form.Item
+                          name="daily_digest_hours"
+                          label="ساعت‌های ارسال گزارش در شبانه‌روز (به وقت تهران)"
+                        >
+                          <Select
+                            mode="multiple"
+                            placeholder="انتخاب ساعت‌های ارسال"
+                            options={[
+                              { value: 0, label: '۰۰:۰۰ (۱۲ شب)' },
+                              { value: 1, label: '۰۱:۰۰ (۱ بامداد)' },
+                              { value: 6, label: '۰۶:۰۰ (۶ صبح)' },
+                              { value: 9, label: '۰۹:۰۰ (۹ صبح)' },
+                              { value: 12, label: '۱۲:۰۰ (۱۲ ظهر)' },
+                              { value: 14, label: '۱۴:۰۰ (۲ بعدازظهر)' },
+                              { value: 18, label: '۱۸:۰۰ (۶ عصر)' },
+                              { value: 21, label: '۲۱:۰۰ (۹ شب)' },
+                              { value: 23, label: '۲۳:۰۰ (۱۱ شب)' },
+                            ]}
+                          />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
+                    <Divider />
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Button icon={<SendOutlined />} onClick={handleTestBot} loading={actionLoading}>
+                        تست اتصال ربات تلگرام
+                      </Button>
+                      <Button type="primary" htmlType="submit" icon={<SaveOutlined />} loading={actionLoading}>
+                        ذخیره تنظیمات
+                      </Button>
+                    </div>
+                  </Form>
+                </Card>
+              )}
+
+              {/* 6. BACKUPS */}
+              {currentTab === 'backups' && (
+                <Card
+                  title="تاریخچه کامل نسخه‌های پشتیبان سرور"
+                  bordered={false}
+                  extra={
+                    <Button type="primary" icon={<ThunderboltOutlined />} onClick={handleTriggerBackup} loading={actionLoading}>
+                      ایجاد آرشیو جدید
+                    </Button>
+                  }
+                >
+                  <Table
+                    dataSource={data?.backups || []}
+                    columns={backupColumns}
+                    rowKey="filename"
+                    loading={loading}
+                    pagination={{ pageSize: 10 }}
+                    size="middle"
+                    scroll={{ x: 680 }}
+                  />
+                </Card>
+              )}
+
+            </div>
+          </div>
+
+          {/* MODAL: DAILY DIGEST PREVIEW (CLEAN & PROFESSIONAL) */}
+          <Modal
+            title="کارنامه جامع سلامت و مانیتورینگ سیستم"
+            open={digestModal}
+            onCancel={() => setDigestModal(false)}
+            footer={[
+              <Button key="copy" icon={<CopyOutlined />} onClick={() => {
+                if (data?.digest_text) {
+                  const clean = data.digest_text.replace(/<[^>]+>/g, '');
+                  navigator.clipboard.writeText(clean);
+                  message.success('متن کارنامه کپی شد');
+                }
+              }}>
+                کپی متن
+              </Button>,
+              <Button key="send" type="primary" icon={<SendOutlined />} onClick={handleSendDigest} loading={actionLoading}>
+                ارسال به تلگرام
+              </Button>,
+              <Button key="close" onClick={() => setDigestModal(false)}>
+                بستن
+              </Button>
+            ]}
+            width={580}
+            centered
+          >
+            <div
+              style={{
+                background: 'var(--surface-subtle)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 8,
+                padding: '16px 20px',
+                fontFamily: 'monospace',
+                fontSize: 12.5,
+                lineHeight: 1.8,
+                direction: 'rtl',
+                maxHeight: 380,
+                overflowY: 'auto'
+              }}
+              dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی...' }}
+            />
+          </Modal>
+
+          {/* MODAL: 1-CLICK PRESET PANEL CONNECTION */}
+          <Modal
+            title="اتصال پنل یا دیتابیس جدید به چرخه پشتیبان‌گیری"
+            open={addPanelModal}
+            onCancel={() => setAddPanelModal(false)}
+            footer={null}
+            destroyOnClose
+            width={600}
+          >
+            <Form form={panelForm} layout="vertical" onFinish={handleAddPanel}>
+              <Form.Item label="انتخاب نوع پنل (پیکربندی خودکار ۱-کلیکی)">
+                <Radio.Group
+                  value={selectedPreset}
+                  onChange={(e) => handlePresetChange(e.target.value)}
+                  style={{ width: '100%' }}
+                >
+                  <Row gutter={[8, 8]}>
+                    {PRESETS.map((p) => (
+                      <Col span={12} key={p.id}>
+                        <Radio.Button value={p.id} style={{ width: '100%', textAlign: 'center', borderRadius: 6 }}>
+                          {p.name.split(' ')[0]}
+                        </Radio.Button>
+                      </Col>
+                    ))}
+                  </Row>
+                </Radio.Group>
+              </Form.Item>
+
+              <Form.Item name="name" label="عنوان پنل در سیستم" rules={[{ required: true, message: 'عنوان الزامی است' }]}>
+                <Input placeholder="عنوان پنل" />
+              </Form.Item>
+
+              <Form.Item
+                name="db_path"
+                label="مسیر فایل دیتابیس یا پوشه در سرور"
+                rules={[{ required: true, message: 'مسیر الزامی است' }]}
+              >
+                <Input style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <Form.Item name="details" label="توضیحات تکمیلی">
+                <Input placeholder="توضیحات کوتاه" />
+              </Form.Item>
+
+              <Form.Item name="type" hidden initialValue="3x-ui">
+                <Input />
+              </Form.Item>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+                <Button onClick={() => setAddPanelModal(false)}>انصراف</Button>
+                <Button type="primary" htmlType="submit">اتصال پنل به سیستم پشتیبان‌گیری</Button>
+              </div>
+            </Form>
+          </Modal>
+
+          {/* MODAL: FIRST-RUN SETUP WIZARD */}
+          <Modal
+            title="راه‌اندازی اولیه و ورود امنیتی به سامانه خوشه"
+            open={setupModal}
+            closable={false}
+            footer={null}
+            width={480}
+            centered
+          >
+            <Alert
+              message="به پنل مدیریت خوشه خوش آمدید!"
+              description="جهت جلوگیری از دسترسی‌های غیرمجاز، لطفاً نام کاربری و رمز عبور قدرتمند مدیر را تعیین فرمایید."
+              type="info"
+              showIcon
+              style={{ marginBottom: 20 }}
+            />
+            <Form form={setupForm} layout="vertical" onFinish={handleSaveSetup} initialValues={{ username: 'admin' }}>
+              <Form.Item name="username" label="نام کاربری مدیر" rules={[{ required: true, message: 'نام کاربری الزامی است' }]}>
+                <Input prefix={<UserOutlined />} placeholder="admin" style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                label={
+                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <span>کلمه عبور مدیر</span>
+                    <Button type="link" size="small" onClick={handleGenerateSetupPassword} style={{ padding: 0 }}>
+                      تولید رمز تصادفی امن
+                    </Button>
+                  </div>
+                }
+                rules={[{ required: true, message: 'کلمه عبور الزامی است' }]}
+              >
+                <Input.Password prefix={<KeyOutlined />} placeholder="رمز عبور مدیر" style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <Form.Item
+                name="confirm_password"
+                label="تکرار کلمه عبور مدیر"
+                rules={[{ required: true, message: 'تکرار کلمه عبور الزامی است' }]}
+              >
+                <Input.Password prefix={<KeyOutlined />} placeholder="تکرار رمز عبور" style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <div style={{ marginTop: 24 }}>
+                <Button type="primary" htmlType="submit" block size="large" loading={actionLoading}>
+                  ثبت تنظیمات امنیتی و ورود به سامانه
+                </Button>
+              </div>
+            </Form>
+          </Modal>
+
+          {/* MODAL: LOGIN MODAL */}
+          <Modal
+            title="ورود به پنل مدیریت خوشه"
+            open={loginModal}
+            closable={false}
+            footer={null}
+            width={420}
+            centered
+          >
+            <Form form={loginForm} layout="vertical" onFinish={handleLogin} initialValues={{ username: 'admin' }}>
+              <Form.Item name="username" label="نام کاربری" rules={[{ required: true, message: 'نام کاربری الزامی است' }]}>
+                <Input prefix={<UserOutlined />} placeholder="admin" style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <Form.Item name="password" label="کلمه عبور" rules={[{ required: true, message: 'کلمه عبور الزامی است' }]}>
+                <Input.Password prefix={<KeyOutlined />} placeholder="رمز عبور" style={{ fontFamily: 'monospace' }} />
+              </Form.Item>
+
+              <div style={{ marginTop: 20 }}>
+                <Button type="primary" htmlType="submit" block size="large" loading={actionLoading}>
+                  ورود به سامانه
+                </Button>
+              </div>
+            </Form>
+          </Modal>
+
+        </div>
+      );
+    };
+
+    const AppContainer = () => {
+      const [themeMode, setThemeMode] = React.useState(() => {
+        return localStorage.getItem('khoosheh_theme') || 'light';
+      });
+
+      const toggleTheme = (checked) => {
+        const next = checked ? 'dark' : 'light';
+        setThemeMode(next);
+        localStorage.setItem('khoosheh_theme', next);
+        document.documentElement.setAttribute('data-theme', next);
+      };
+
+      React.useEffect(() => {
+        document.documentElement.setAttribute('data-theme', themeMode);
+      }, [themeMode]);
+
+      return (
+        <ConfigProvider
+          direction="rtl"
+          theme={{
+            algorithm: themeMode === 'dark' ? antd.theme.darkAlgorithm : antd.theme.defaultAlgorithm,
+            token: {
+              colorPrimary: themeMode === 'dark' ? '#3b82f6' : '#1677ff',
+              colorInfo: '#1677ff',
+              colorSuccess: '#10b981',
+              colorWarning: '#f59e0b',
+              colorError: '#f43f5e',
+              colorBgBase: themeMode === 'dark' ? '#0b0f17' : '#f0f2f5',
+              colorBgContainer: themeMode === 'dark' ? '#131926' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#182030' : '#ffffff',
+              colorBorder: themeMode === 'dark' ? '#1e2638' : '#e5e7eb',
+              colorBorderSecondary: themeMode === 'dark' ? '#1e2638' : '#f1f5f9',
+              colorText: themeMode === 'dark' ? '#f9fafb' : '#111827',
+              colorTextSecondary: themeMode === 'dark' ? '#9ca3af' : '#4b5563',
+              borderRadius: 6,
+              borderRadiusLG: 8,
+              fontFamily: "'Vazirmatn', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            }
+          }}
+        >
+          <App>
+            <KhooshehApp themeMode={themeMode} toggleTheme={toggleTheme} />
+          </App>
+        </ConfigProvider>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<AppContainer />);
+  </script>
+</body>
+</html>

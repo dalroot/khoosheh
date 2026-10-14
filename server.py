@@ -4925,6 +4925,22 @@ HTML_PAGE = """<!DOCTYPE html>
 """
 
 
+def get_html_page():
+    candidate_paths = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "web", "index.html"),
+        "/opt/khoosheh/web/index.html",
+        "web/index.html"
+    ]
+    for cp in candidate_paths:
+        if os.path.exists(cp):
+            try:
+                with open(cp, "r", encoding="utf-8") as f:
+                    return f.read()
+            except Exception:
+                pass
+    return HTML_PAGE
+
+
 # ==================== WEB HANDLER ====================
 class KhooshehHandler(BaseHTTPRequestHandler):
     def do_HEAD(self):
@@ -4940,7 +4956,7 @@ class KhooshehHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
-            self.wfile.write(HTML_PAGE.encode("utf-8"))
+            self.wfile.write(get_html_page().encode("utf-8"))
             return
 
         if path == "/install.sh":
