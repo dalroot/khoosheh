@@ -1714,10 +1714,10 @@ HTML_PAGE = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>خوشه | سامانه متمرکز پشتیبان‌گیری و بازگردانی هوشمند</title>
   
-  <!-- Font: Vazirmatn Standard CDN -->
+  <!-- Fonts: Inter for crisp numbers + Vazirmatn for Persian text -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Ant Design Reset CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5/dist/reset.min.css">
@@ -1735,7 +1735,9 @@ HTML_PAGE = """<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
 
   <style>
-    /* 3X-UI AUTHENTIC COLOR TOKENS */
+    /* ========================================================
+       OFFICIAL 3X-UI COLOR SYSTEM (LIGHT & DARK)
+       ======================================================== */
     :root, [data-theme="light"] {
       --bg-root: #f0f2f5;
       --bg-sidebar: #ffffff;
@@ -1747,57 +1749,62 @@ HTML_PAGE = """<!DOCTYPE html>
       --text-primary: #111827;
       --text-secondary: #4b5563;
       --text-muted: #9ca3af;
-      --primary-accent: #10b981;
-      --primary-accent-hover: #059669;
-      --primary-accent-soft: rgba(16, 185, 129, 0.1);
-      --primary-accent-border: rgba(16, 185, 129, 0.25);
-      --code-bg: #f8fafc;
-      --code-border: #e2e8f0;
-      --code-text: #0284c7;
+      --primary-accent: #1677ff;
+      --primary-accent-hover: #4096ff;
+      --primary-accent-soft: rgba(22, 119, 255, 0.08);
+      --primary-accent-border: rgba(22, 119, 255, 0.25);
+      --code-bg: #f3f4f6;
+      --code-border: #e5e7eb;
+      --code-text: #2563eb;
       --table-header-bg: #f8fafc;
       --table-row-hover: #f1f5f9;
-      --digest-bg: #f8fafc;
-      --digest-border: #e2e8f0;
-      --digest-text: #1e293b;
-      --scrollbar-thumb: rgba(0, 0, 0, 0.14);
+      --scrollbar-thumb: rgba(0, 0, 0, 0.15);
       --active-nav-bg: #e6f4ff;
       --active-nav-color: #1677ff;
-      --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+      --card-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      --baseline-color: #e5e7eb;
     }
 
     [data-theme="dark"] {
-      --bg-root: #0b0e14;
-      --bg-sidebar: #10141d;
-      --surface-card: #141923;
-      --surface-subtle: #19202e;
-      --surface-hover: #1f2738;
+      --bg-root: #0b0f17;
+      --bg-sidebar: #101522;
+      --surface-card: #131926;
+      --surface-subtle: #182030;
+      --surface-hover: #1e273a;
       --border-subtle: #1e2638;
-      --border-hover: #2d374d;
+      --border-hover: #2e3a52;
       --text-primary: #f9fafb;
       --text-secondary: #9ca3af;
       --text-muted: #6b7280;
-      --primary-accent: #10b981;
-      --primary-accent-hover: #059669;
-      --primary-accent-soft: rgba(16, 185, 129, 0.14);
-      --primary-accent-border: rgba(16, 185, 129, 0.3);
+      --primary-accent: #3b82f6;
+      --primary-accent-hover: #60a5fa;
+      --primary-accent-soft: rgba(59, 130, 246, 0.12);
+      --primary-accent-border: rgba(59, 130, 246, 0.3);
       --code-bg: #090e18;
       --code-border: #1e2638;
       --code-text: #38bdf8;
-      --table-header-bg: #101520;
+      --table-header-bg: #101522;
       --table-row-hover: rgba(255, 255, 255, 0.025);
-      --digest-bg: #0a0e17;
-      --digest-border: #1e2638;
-      --digest-text: #cbd5e1;
-      --scrollbar-thumb: rgba(255, 255, 255, 0.14);
-      --active-nav-bg: rgba(22, 119, 255, 0.15);
-      --active-nav-color: #38bdf8;
-      --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+      --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+      --active-nav-bg: rgba(59, 130, 246, 0.15);
+      --active-nav-color: #60a5fa;
+      --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+      --baseline-color: #1e2638;
     }
 
     * {
-      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
       box-sizing: border-box;
+      font-family: 'Vazirmatn', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
+
+    /* All numbers and metric labels use Inter with tabular digits */
+    .num-font {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      font-variant-numeric: tabular-nums;
+      direction: ltr !important;
+      unicode-bidi: isolate;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -1806,16 +1813,15 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--text-primary) !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
 
-    /* Scrollbars */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 6px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
 
-    /* 3X-UI Shell */
+    /* Shell */
     .xui-shell {
       display: flex;
       min-height: 100vh;
@@ -1824,7 +1830,7 @@ HTML_PAGE = """<!DOCTYPE html>
       direction: rtl;
     }
 
-    /* 3X-UI Collapsible Sidebar (Default ~64px icon rail, expands on toggle) */
+    /* 3X-UI Collapsible Sidebar */
     .xui-sidebar {
       background: var(--bg-sidebar);
       border-left: 1px solid var(--border-subtle);
@@ -1840,17 +1846,12 @@ HTML_PAGE = """<!DOCTYPE html>
       transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       flex-shrink: 0;
     }
-    .xui-sidebar.collapsed {
-      width: 64px;
-    }
-    .xui-sidebar.expanded {
-      width: 210px;
-    }
+    .xui-sidebar.collapsed { width: 62px; }
+    .xui-sidebar.expanded { width: 210px; }
 
-    /* Brand Header in Sidebar */
     .xui-brand {
-      height: 56px;
-      padding: 0 14px;
+      height: 54px;
+      padding: 0 13px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
@@ -1863,7 +1864,7 @@ HTML_PAGE = """<!DOCTYPE html>
       width: 36px;
       height: 36px;
       border-radius: 8px;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(56, 189, 248, 0.18) 100%);
+      background: linear-gradient(135deg, rgba(22, 119, 255, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
       border: 1px solid var(--primary-accent-border);
       display: flex;
       align-items: center;
@@ -1882,14 +1883,14 @@ HTML_PAGE = """<!DOCTYPE html>
       line-height: 1.2;
     }
     .xui-brand-sub {
-      font-size: 10px;
+      font-size: 10.5px;
       color: var(--text-muted);
-      font-family: monospace;
+      font-family: 'Inter', monospace;
     }
 
-    /* Navigation Menu */
+    /* Nav Links */
     .xui-nav {
-      padding: 10px 8px;
+      padding: 10px 6px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -1905,7 +1906,6 @@ HTML_PAGE = """<!DOCTYPE html>
       cursor: pointer;
       transition: all 0.15s ease;
       user-select: none;
-      position: relative;
     }
     .xui-sidebar.collapsed .xui-nav-item {
       justify-content: center;
@@ -1943,17 +1943,11 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--surface-subtle);
       border: 1px solid var(--border-subtle);
       color: var(--text-muted);
-      font-variant-numeric: tabular-nums;
-    }
-    .xui-nav-item.active .xui-nav-badge {
-      background: rgba(22, 119, 255, 0.15);
-      border-color: rgba(22, 119, 255, 0.3);
-      color: var(--active-nav-color);
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Sidebar Footer */
     .xui-sidebar-footer {
-      padding: 12px 10px 14px;
+      padding: 10px;
       border-top: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
@@ -1969,9 +1963,8 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--bg-root);
     }
 
-    /* Top Bar */
     .xui-topbar {
-      height: 56px;
+      height: 54px;
       padding: 0 24px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
@@ -1988,11 +1981,11 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 7px;
       font-size: 12px;
       font-weight: 600;
-      color: var(--primary-accent);
-      background: var(--primary-accent-soft);
-      border: 1px solid var(--primary-accent-border);
-      padding: 4px 11px;
-      border-radius: 20px;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 3px 10px;
+      border-radius: 16px;
     }
 
     .xui-body {
@@ -2002,105 +1995,123 @@ HTML_PAGE = """<!DOCTYPE html>
       margin: 0 auto;
     }
 
-    /* 3X-UI METRIC CARD (Structured in distinct zones, zero text-wave collision) */
-    .xui-metric-card {
+    /* ========================================================
+       3X-UI METRIC CARDS (ZERO OVERLAPPING GUARANTEED)
+       Header -> Bold Stat -> AVG/PEAK -> Sparkline (at bottom)
+       ======================================================== */
+    .xui-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
-      padding: 16px 18px 12px !important;
+      border-radius: 8px !important;
+      padding: 14px 16px 10px !important;
       box-shadow: var(--card-shadow) !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 144px;
-      transition: all 0.2s ease !important;
+      min-height: 142px;
+      transition: all 0.15s ease !important;
     }
-    .xui-metric-card:hover {
+    .xui-card:hover {
       border-color: var(--border-hover) !important;
-      transform: translateY(-1px);
     }
-    .xui-card-top {
+
+    .xui-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .xui-card-title {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
+      gap: 7px;
+      font-size: 12px;
       font-weight: 700;
+      letter-spacing: 0.5px;
       color: var(--text-secondary);
-      letter-spacing: 0.3px;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
     }
     .xui-card-tag {
       font-size: 11px;
       color: var(--text-muted);
-      font-family: monospace;
+      font-family: 'Inter', monospace;
       background: var(--surface-subtle);
       border: 1px solid var(--border-subtle);
       padding: 1px 6px;
       border-radius: 4px;
+      direction: ltr;
     }
-    .xui-card-val-row {
-      margin: 4px 0 2px;
-    }
-    .xui-card-val {
+
+    .xui-card-value {
       font-size: 26px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-      line-height: 1.1;
+      font-weight: 700;
       color: var(--text-primary);
+      line-height: 1.1;
+      margin: 2px 0;
+      font-family: 'Inter', sans-serif !important;
+      font-variant-numeric: tabular-nums;
+      direction: ltr;
+      text-align: right;
     }
-    .xui-card-val small {
+    .xui-card-value small {
       font-size: 14px;
       font-weight: 500;
       color: var(--text-muted);
-      margin-right: 4px;
+      margin-left: 2px;
     }
-    .xui-card-stats-row {
+
+    .xui-card-meta {
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 11px;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      margin-bottom: 2px;
     }
-    .xui-sparkline-box {
+
+    /* Isolated sparkline box (sits strictly underneath text) */
+    .xui-card-sparkline {
       width: 100%;
-      height: 34px;
+      height: 32px;
       margin-top: 4px;
       position: relative;
     }
 
-    /* 3X-UI OVERALL SPEED CARD */
+    /* ========================================================
+       3X-UI OVERALL SPEED CARD
+       ======================================================== */
     .xui-speed-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
-      padding: 16px 20px 14px !important;
+      border-radius: 8px !important;
+      padding: 16px 18px 12px !important;
       box-shadow: var(--card-shadow) !important;
     }
     .xui-speed-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
       gap: 8px;
     }
     .xui-speed-title {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
       text-transform: uppercase;
     }
     .xui-speed-subtitle {
       font-size: 11px;
       color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
       margin-top: 2px;
+      direction: ltr;
     }
     .xui-speed-pills {
       display: flex;
@@ -2108,32 +2119,37 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 12px;
       font-size: 12px;
       font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
     }
-    .xui-speed-pill-up {
+    .xui-pill-up {
       color: #3b82f6;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-    .xui-speed-pill-down {
+    .xui-pill-down {
       color: #10b981;
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-    .xui-speed-chart-area {
+
+    .xui-speed-chart {
       width: 100%;
-      height: 160px;
+      height: 155px;
       position: relative;
-      margin: 8px 0;
+      margin: 4px 0;
     }
+
     .xui-speed-footer {
       display: grid;
-      grid-template-columns: 1fr 1fr 1.4fr;
+      grid-template-columns: 1fr 1fr 1.3fr;
       gap: 12px;
       margin-top: 10px;
-      padding-top: 12px;
+      padding-top: 10px;
       border-top: 1px solid var(--border-subtle);
+      direction: ltr;
     }
     .xui-speed-col {
       display: flex;
@@ -2141,30 +2157,35 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 2px;
     }
     .xui-col-label {
-      font-size: 10.5px;
-      font-weight: 600;
+      font-size: 10px;
+      font-weight: 700;
       color: var(--text-muted);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.6px;
       text-transform: uppercase;
+      font-family: 'Inter', sans-serif;
     }
     .xui-col-val {
-      font-size: 16px;
-      font-weight: 800;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
       font-variant-numeric: tabular-nums;
       color: var(--text-primary);
     }
     .xui-col-val-sm {
-      font-size: 12.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
       font-variant-numeric: tabular-nums;
       color: var(--text-secondary);
     }
 
-    /* 3X-UI CONNECTION STATS CARD */
+    /* ========================================================
+       3X-UI CONNECTION STATS CARD (Clean, no raw terminal)
+       ======================================================== */
     .xui-conn-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
+      border-radius: 8px !important;
       padding: 16px 18px 14px !important;
       box-shadow: var(--card-shadow) !important;
       height: 100%;
@@ -2182,9 +2203,11 @@ HTML_PAGE = """<!DOCTYPE html>
       font-size: 26px;
       font-weight: 800;
       color: var(--text-primary);
-      margin-top: 4px;
+      font-family: 'Inter', sans-serif;
+      direction: ltr;
+      margin-top: 2px;
     }
-    .xui-pill-blue {
+    .xui-conn-badge-blue {
       background: rgba(59, 130, 246, 0.1);
       color: #3b82f6;
       border: 1px solid rgba(59, 130, 246, 0.25);
@@ -2192,8 +2215,9 @@ HTML_PAGE = """<!DOCTYPE html>
       font-size: 11px;
       padding: 1px 7px;
       font-weight: 600;
+      font-family: 'Inter', sans-serif;
     }
-    .xui-pill-green {
+    .xui-conn-badge-green {
       background: rgba(16, 185, 129, 0.1);
       color: #10b981;
       border: 1px solid rgba(16, 185, 129, 0.25);
@@ -2201,40 +2225,19 @@ HTML_PAGE = """<!DOCTYPE html>
       font-size: 11px;
       padding: 1px 7px;
       font-weight: 600;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Telemetry & Health Digest Strip */
-    .xui-digest-box {
-      background: var(--digest-bg);
-      border: 1px solid var(--digest-border);
-      border-radius: 8px;
+    /* Telegram Quick Action Box */
+    .xui-telemetry-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
       padding: 10px 12px;
       margin-top: 10px;
     }
-    .xui-digest-content {
-      max-height: 140px;
-      overflow-y: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-      font-size: 11.5px;
-      line-height: 1.7;
-      direction: rtl;
-      color: var(--digest-text);
-      word-break: break-word;
-    }
-    .xui-digest-content b {
-      color: var(--text-primary);
-    }
-    .xui-digest-content code {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-subtle);
-      padding: 1px 5px;
-      border-radius: 4px;
-      font-size: 11px;
-      direction: ltr;
-      display: inline-block;
-    }
 
-    /* Pulse radar */
+    /* Radar Pulse */
     @keyframes radar-pulse {
       0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
       70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
@@ -2250,19 +2253,6 @@ HTML_PAGE = """<!DOCTYPE html>
       vertical-align: middle;
     }
 
-    /* Badges */
-    .badge-emerald {
-      background: var(--primary-accent-soft) !important;
-      color: var(--primary-accent) !important;
-      border: 1px solid var(--primary-accent-border) !important;
-      border-radius: 4px !important;
-      font-size: 11px !important;
-      padding: 1px 6px !important;
-      font-weight: 500 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 4px !important;
-    }
     .badge-slate {
       background: var(--surface-subtle) !important;
       color: var(--text-secondary) !important;
@@ -2274,6 +2264,7 @@ HTML_PAGE = """<!DOCTYPE html>
       display: inline-flex !important;
       align-items: center !important;
       gap: 4px !important;
+      font-family: 'Inter', sans-serif;
     }
     .badge-amber {
       background: rgba(245, 158, 11, 0.1) !important;
@@ -2286,11 +2277,12 @@ HTML_PAGE = """<!DOCTYPE html>
       display: inline-flex !important;
       align-items: center !important;
       gap: 4px !important;
+      font-family: 'Inter', sans-serif;
     }
 
     .code-text {
       direction: ltr !important;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-family: 'Inter', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
       display: inline-block;
       font-size: 11.5px;
       background: var(--code-bg) !important;
@@ -2300,11 +2292,11 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--code-text) !important;
     }
 
-    /* Ant Design Overrides */
+    /* Ant Design Table Overrides (3X-UI Clean Style) */
     .ant-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
+      border-radius: 8px !important;
       box-shadow: var(--card-shadow) !important;
       color: var(--text-primary) !important;
     }
@@ -2318,9 +2310,7 @@ HTML_PAGE = """<!DOCTYPE html>
       font-weight: 700 !important;
       color: var(--text-primary) !important;
     }
-    .ant-card-body {
-      padding: 16px !important;
-    }
+    .ant-card-body { padding: 16px !important; }
 
     .ant-table-wrapper .ant-table {
       background: transparent !important;
@@ -2332,12 +2322,12 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--text-secondary) !important;
       font-size: 12px !important;
       font-weight: 600 !important;
-      padding: 10px 12px !important;
+      padding: 9px 12px !important;
       white-space: nowrap !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr > td {
       border-bottom: 1px solid var(--border-subtle) !important;
-      padding: 10px 12px !important;
+      padding: 9px 12px !important;
       font-size: 13px !important;
       color: var(--text-primary) !important;
       white-space: nowrap !important;
@@ -2346,7 +2336,6 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--table-row-hover) !important;
     }
 
-    /* Buttons */
     .ant-btn {
       border-radius: 6px !important;
       font-size: 12.5px !important;
@@ -2363,37 +2352,23 @@ HTML_PAGE = """<!DOCTYPE html>
     .ant-btn-default:hover {
       background: var(--surface-hover) !important;
       border-color: var(--border-hover) !important;
-      color: var(--text-primary) !important;
     }
     .ant-btn-primary {
-      background: #1677ff !important;
+      background: var(--primary-accent) !important;
       color: #ffffff !important;
-      font-weight: 600 !important;
       border: none !important;
+      font-weight: 600 !important;
     }
     .ant-btn-primary:hover {
-      background: #4096ff !important;
-      color: #ffffff !important;
+      background: var(--primary-accent-hover) !important;
     }
 
-    /* Modals & Inputs */
     .ant-modal-content {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
       border-radius: 12px !important;
       color: var(--text-primary) !important;
       padding: 22px !important;
-    }
-    .ant-modal-header {
-      background: transparent !important;
-      border-bottom: 1px solid var(--border-subtle) !important;
-      padding-bottom: 12px !important;
-      margin-bottom: 16px !important;
-    }
-    .ant-modal-title {
-      color: var(--text-primary) !important;
-      font-size: 15px !important;
-      font-weight: 700 !important;
     }
     .ant-input, .ant-input-number, .ant-select-selector {
       background: var(--surface-subtle) !important;
@@ -2438,8 +2413,8 @@ HTML_PAGE = """<!DOCTYPE html>
     <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#f0f2f5;color:#111827;direction:rtl;font-family:sans-serif;">
       <div style="text-align:center;">
         <div style="font-size:42px;margin-bottom:16px;">🌾</div>
-        <div style="font-size:19px;font-weight:700;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
-        <div style="font-size:13px;color:#6b7280;">در حال بارگذاری محیط کاربری ۳X-UI...</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
+        <div style="font-size:13px;color:#6b7280;">در حال بارگذاری محیط ۳X-UI...</div>
       </div>
     </div>
   </div>
@@ -2501,6 +2476,7 @@ HTML_PAGE = """<!DOCTYPE html>
       const [actionLoading, setActionLoading] = React.useState(false);
       const [addPanelModal, setAddPanelModal] = React.useState(false);
       const [selectedPreset, setSelectedPreset] = React.useState('3x-ui');
+      const [digestModal, setDigestModal] = React.useState(false);
 
       // Authentication State
       const [authStatus, setAuthStatus] = React.useState({ setup_required: false, authenticated: true });
@@ -2760,7 +2736,7 @@ HTML_PAGE = """<!DOCTYPE html>
           const json = await res.json();
           if (json.ok) {
             notification.success({
-              message: 'گزارش روزانه به تلگرام مخابره شد',
+              message: 'گزارش به تلگرام مخابره شد',
               description: 'کارنامه سلامت سیستم و کاربران به ادمین ارسال گردید.'
             });
           } else {
@@ -2879,7 +2855,7 @@ HTML_PAGE = """<!DOCTYPE html>
         message.success('دستور یک‌خطی نصب در حافظه کپی شد: ' + cmd);
       };
 
-      // 3X-UI Tables
+      // 3X-UI Clean Tables
       const backupColumns = [
         {
           title: 'نام فایل آرشیو',
@@ -2888,7 +2864,7 @@ HTML_PAGE = """<!DOCTYPE html>
           render: (text) => (
             <Space size={8}>
               {text.endsWith('.7z') ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">tar.gz</span>}
-              <Text code className="code-text">{text}</Text>
+              <Text code className="code-text num-font">{text}</Text>
             </Space>
           )
         },
@@ -2897,14 +2873,14 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'date_str',
           key: 'date_str',
           width: 170,
-          render: (text) => <Text type="secondary" style={{ fontSize: 12 }}>{text}</Text>
+          render: (text) => <Text type="secondary" className="num-font" style={{ fontSize: 12 }}>{text}</Text>
         },
         {
           title: 'حجم',
           dataIndex: 'size_mb',
           key: 'size_mb',
           width: 100,
-          render: (val) => <Text strong style={{ fontVariantNumeric: 'tabular-nums', color: '#10b981' }}>{val} MB</Text>
+          render: (val) => <Text strong className="num-font" style={{ color: '#10b981' }}>{val} MB</Text>
         },
         {
           title: 'هش SHA-256',
@@ -2912,7 +2888,7 @@ HTML_PAGE = """<!DOCTYPE html>
           key: 'sha256',
           width: 170,
           render: (text) => (
-            <Text copyable code className="code-text" style={{ fontSize: 11 }}>
+            <Text copyable code className="code-text num-font" style={{ fontSize: 11 }}>
               {text ? `${text.substring(0, 14)}...` : '--'}
             </Text>
           )
@@ -2968,20 +2944,20 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 120,
-          render: (s) => (s === 'active' || s === 'custom') ? <span className="badge-emerald">🟢 متصل</span> : <span className="badge-slate">آماده</span>
+          render: (s) => (s === 'active' || s === 'custom') ? <span className="badge-emerald" style={{ color: '#10b981' }}>🟢 متصل</span> : <span className="badge-slate">آماده</span>
         },
         {
           title: 'نوع دیتابیس',
           dataIndex: 'db_type',
           key: 'db_type',
           width: 180,
-          render: (t) => <Text code className="code-text">{t}</Text>
+          render: (t) => <Text code className="code-text num-font">{t}</Text>
         },
         {
           title: 'توضیحات و مسیر فایل',
           dataIndex: 'details',
           key: 'details',
-          render: (text) => <Text type="secondary">{text}</Text>
+          render: (text) => <Text type="secondary" className="num-font">{text}</Text>
         },
         {
           title: 'عملیات',
@@ -3015,7 +2991,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'ip',
           key: 'ip',
           width: 160,
-          render: (ip) => <Text code className="code-text" style={{ color: '#10b981' }}>{ip}</Text>
+          render: (ip) => <Text code className="code-text num-font" style={{ color: '#10b981' }}>{ip}</Text>
         },
         {
           title: 'نقش در زیرساخت',
@@ -3027,7 +3003,7 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'status',
           key: 'status',
           width: 110,
-          render: () => <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>آنلاین</span>
+          render: () => <span className="badge-emerald" style={{ color: '#10b981' }}><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>آنلاین</span>
         },
         {
           title: 'سرویس‌ها و پورت‌ها',
@@ -3055,38 +3031,38 @@ HTML_PAGE = """<!DOCTYPE html>
         {
           title: 'آدرس و پورت اتصال',
           key: 'address',
-          render: (_, r) => <Text code className="code-text" style={{ color: '#38bdf8' }}>{r.address}:{r.port}</Text>
+          render: (_, r) => <Text code className="code-text num-font" style={{ color: '#38bdf8' }}>{r.address}:{r.port}</Text>
         },
         {
           title: 'وضعیت اتصال',
           dataIndex: 'status',
           key: 'status',
           width: 120,
-          render: (st) => st === 'online' ? <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>متصل</span> : <span className="badge-rose">{st || 'قطع'}</span>
+          render: (st) => st === 'online' ? <span className="badge-emerald" style={{ color: '#10b981' }}><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>متصل</span> : <span style={{ color: '#ef4444' }}>{st || 'قطع'}</span>
         },
         {
           title: 'هسته (Core)',
           dataIndex: 'xray_version',
           key: 'xray_version',
-          render: (v) => <span className="badge-slate">Xray {v}</span>
+          render: (v) => <span className="badge-slate num-font">Xray {v}</span>
         },
         {
           title: 'دریافت (دانلود)',
           dataIndex: 'downlink_gb',
           key: 'downlink_gb',
-          render: (d) => <span style={{ color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>↓ {d} GB</span>
+          render: (d) => <span className="num-font" style={{ color: '#10b981' }}>↓ {d} GB</span>
         },
         {
           title: 'ارسال (آپلود)',
           dataIndex: 'uplink_gb',
           key: 'uplink_gb',
-          render: (u) => <span style={{ color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>↑ {u} GB</span>
+          render: (u) => <span className="num-font" style={{ color: '#f59e0b' }}>↑ {u} GB</span>
         },
         {
           title: 'ترافیک کل نود',
           dataIndex: 'total_gb',
           key: 'total_gb',
-          render: (t) => <Text strong style={{ fontVariantNumeric: 'tabular-nums' }}>{t} GB</Text>
+          render: (t) => <Text strong className="num-font">{t} GB</Text>
         }
       ];
 
@@ -3109,7 +3085,7 @@ HTML_PAGE = """<!DOCTYPE html>
           <aside className={`xui-sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
             <div>
               {/* BRAND / LOGO */}
-              <div className="xui-brand" onClick={() => setCollapsed(!collapsed)} title={collapsed ? 'برای باز کردن منو کلیک کنید' : 'برای بستن منو کلیک کنید'}>
+              <div className="xui-brand" onClick={() => setCollapsed(!collapsed)} title={collapsed ? 'باز کردن منو' : 'بستن منو'}>
                 <div className="xui-logo-box">🌾</div>
                 {!collapsed && (
                   <div className="xui-brand-text">
@@ -3150,9 +3126,9 @@ HTML_PAGE = """<!DOCTYPE html>
                 <>
                   <div style={{ background: 'var(--surface-subtle)', border: '1px solid var(--border-subtle)', borderRadius: 6, padding: '6px 8px', fontSize: 11 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                      <span style={{ color: 'var(--text-muted)' }}>آی‌پی:</span>
+                      <span style={{ color: 'var(--text-muted)' }}>IP:</span>
                       <span
-                        className="code-text"
+                        className="code-text num-font"
                         style={{ cursor: 'pointer', fontSize: 10.5 }}
                         onClick={() => {
                           navigator.clipboard.writeText(hostIp);
@@ -3181,7 +3157,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                       onClick={() => setCollapsed(!collapsed)}
                     >
-                      جمع کردن
+                      بستن
                     </Button>
                     {authStatus.authenticated && !authStatus.setup_required && (
                       <Button danger size="small" icon={<LogoutOutlined />} onClick={handleLogout} />
@@ -3189,8 +3165,8 @@ HTML_PAGE = """<!DOCTYPE html>
                   </div>
                 </>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-                  <Tooltip placement="left" title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <Tooltip placement="left" title={themeMode === 'dark' ? 'تم روشن' : 'تم تاریک'}>
                     <Button
                       type="text"
                       size="small"
@@ -3225,23 +3201,32 @@ HTML_PAGE = """<!DOCTYPE html>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <span className="xui-status-pill">
                   <span className="status-radar"></span>
-                  خوشه · در حال پایش (پایدار)
+                  خوشه · پایدار (در حال پایش)
                 </span>
-                <span className="badge-slate" style={{ fontSize: 11, fontFamily: 'monospace', direction: 'ltr' }}>
+                <span className="badge-slate num-font" style={{ fontSize: 11 }}>
                   {data?.tehran_now?.shamsi || '--'}
                 </span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
+                <Tooltip title="مشاهده کارنامه جامع مانیتورینگ">
                   <Button
                     size="small"
-                    icon={<SafetyCertificateOutlined />}
-                    href={`https://${hostIp}:2098/`}
-                    target="_blank"
-                    style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
+                    icon={<CopyOutlined />}
+                    onClick={() => setDigestModal(true)}
                   >
-                    SSL HTTPS
+                    کارنامه سلامت
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="ارسال کارنامه به تلگرام ادمین">
+                  <Button
+                    size="small"
+                    icon={<SendOutlined />}
+                    onClick={handleSendDigest}
+                    loading={actionLoading}
+                  >
+                    تلگرام
                   </Button>
                 </Tooltip>
 
@@ -3251,13 +3236,12 @@ HTML_PAGE = """<!DOCTYPE html>
                     icon={<ThunderboltOutlined />}
                     onClick={handleTriggerBackup}
                     loading={actionLoading}
-                    style={{ background: '#1677ff' }}
                   >
                     پشتیبان‌گیری فوری
                   </Button>
                 </Tooltip>
 
-                <Tooltip title="بروزرسانی زنده داده‌ها">
+                <Tooltip title="بروزرسانی داده‌ها">
                   <Button
                     icon={<ReloadOutlined />}
                     onClick={() => fetchData()}
@@ -3270,40 +3254,41 @@ HTML_PAGE = """<!DOCTYPE html>
             {/* BODY */}
             <div className="xui-body">
 
-              {/* 1. OVERVIEW (3X-UI EXACT LAYOUT) */}
+              {/* 1. OVERVIEW (3X-UI EXACT MATCH) */}
               {currentTab === 'overview' && (
                 <Space direction="vertical" size={16} style={{ width: '100%' }}>
 
-                  {/* ROW 1: 4 METRIC CARDS (ZERO TEXT-WAVE COLLISION) */}
+                  {/* ROW 1: 4 METRIC CARDS (ZERO TEXT-WAVE OVERLAP) */}
                   <Row gutter={[14, 14]}>
                     {/* CARD 1: CPU */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="xui-metric-card">
-                        <div className="xui-card-top">
-                          <div className="xui-card-title">
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
                             <span style={{ color: '#3b82f6' }}><DashboardOutlined /></span>
                             <span>CPU</span>
-                          </div>
-                          <span className="xui-card-tag">{stats.public_ip ? 'Iran/Host' : 'Core 1'}</span>
+                          </span>
+                          <span className="xui-card-tag num-font">1 Core / 1T · 2.00 GHz</span>
                         </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val">{stats.cpu_pct || 15} <small>%</small></span>
+                        <div className="xui-card-value num-font">
+                          {(stats.cpu_pct || 15).toFixed(1)} <small>%</small>
                         </div>
-                        <div className="xui-card-stats-row">
+                        <div className="xui-card-meta num-font">
                           <span>AVG {Math.max(5, (stats.cpu_pct || 15) - 6)}%</span>
                           <span>PEAK {Math.min(99, (stats.cpu_pct || 15) + 14)}%</span>
                         </div>
-                        <div className="xui-sparkline-box">
-                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        {/* Dedicated sparkline at bottom */}
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                             <defs>
                               <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
                                 <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
                               </linearGradient>
                             </defs>
-                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
-                            <path d="M0,26 Q30,10 60,22 T120,16 T180,6 T240,20 T300,12 L300,33 L0,33 Z" fill="url(#cpuGrad)" />
-                            <path d="M0,26 Q30,10 60,22 T120,16 T180,6 T240,20 T300,12" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,24 Q30,8 60,20 T120,14 T180,6 T240,18 T300,10 L300,31 L0,31 Z" fill="url(#cpuGrad)" />
+                            <path d="M0,24 Q30,8 60,20 T120,14 T180,6 T240,18 T300,10" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" />
                           </svg>
                         </div>
                       </div>
@@ -3311,32 +3296,32 @@ HTML_PAGE = """<!DOCTYPE html>
 
                     {/* CARD 2: RAM */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="xui-metric-card">
-                        <div className="xui-card-top">
-                          <div className="xui-card-title">
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
                             <span style={{ color: '#10b981' }}><HddOutlined /></span>
                             <span>RAM</span>
-                          </div>
-                          <span className="xui-card-tag">{stats.ram_str || '1.87 GB'}</span>
+                          </span>
+                          <span className="xui-card-tag num-font">{stats.ram_str || '892 MB / 1914 MB'}</span>
                         </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val">{stats.ram_pct || 46} <small>%</small></span>
+                        <div className="xui-card-value num-font" style={{ color: '#10b981' }}>
+                          {(stats.ram_pct || 46).toFixed(1)} <small>%</small>
                         </div>
-                        <div className="xui-card-stats-row">
-                          <span>AVG 38%</span>
-                          <span>PEAK 56%</span>
+                        <div className="xui-card-meta num-font">
+                          <span>AVG 36%</span>
+                          <span>PEAK 54%</span>
                         </div>
-                        <div className="xui-sparkline-box">
-                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                             <defs>
                               <linearGradient id="ramGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.22" />
                                 <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
                               </linearGradient>
                             </defs>
-                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
-                            <path d="M0,24 Q35,8 70,18 T140,14 T210,10 T280,22 T300,14 L300,33 L0,33 Z" fill="url(#ramGrad)" />
-                            <path d="M0,24 Q35,8 70,18 T140,14 T210,10 T280,22 T300,14" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,22 Q35,6 70,18 T140,12 T210,8 T280,20 T300,12 L300,31 L0,31 Z" fill="url(#ramGrad)" />
+                            <path d="M0,22 Q35,6 70,18 T140,12 T210,8 T280,20 T300,12" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
                           </svg>
                         </div>
                       </div>
@@ -3344,34 +3329,32 @@ HTML_PAGE = """<!DOCTYPE html>
 
                     {/* CARD 3: 24h BANDWIDTH */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="xui-metric-card">
-                        <div className="xui-card-top">
-                          <div className="xui-card-title">
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
                             <span style={{ color: '#8b5cf6' }}><ThunderboltOutlined /></span>
-                            <span>ترافیک ۲۴ ساعت</span>
-                          </div>
-                          <span className="xui-card-tag">↑ {data?.metrics?.up_24h_gb ?? 0} · ↓ {data?.metrics?.down_24h_gb ?? 0}</span>
-                        </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val" style={{ color: '#8b5cf6' }}>
-                            {data?.metrics?.traffic_24h_gb ?? 0} <small>GB</small>
+                            <span>BANDWIDTH</span>
                           </span>
+                          <span className="xui-card-tag num-font">24h History</span>
                         </div>
-                        <div className="xui-card-stats-row">
-                          <span>آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</span>
-                          <span>دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</span>
+                        <div className="xui-card-value num-font" style={{ color: '#8b5cf6' }}>
+                          {(data?.metrics?.traffic_24h_gb ?? 0).toFixed(2)} <small>GB</small>
                         </div>
-                        <div className="xui-sparkline-box">
-                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        <div className="xui-card-meta num-font">
+                          <span>↑ {(data?.metrics?.up_24h_gb ?? 0).toFixed(2)} GB</span>
+                          <span>↓ {(data?.metrics?.down_24h_gb ?? 0).toFixed(2)} GB</span>
+                        </div>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                             <defs>
                               <linearGradient id="trafGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.25" />
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.22" />
                                 <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
                               </linearGradient>
                             </defs>
-                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
-                            <path d="M0,25 Q40,6 80,20 T160,12 T240,8 T300,18 L300,33 L0,33 Z" fill="url(#trafGrad)" />
-                            <path d="M0,25 Q40,6 80,20 T160,12 T240,8 T300,18" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,24 Q40,6 80,18 T160,10 T240,6 T300,16 L300,31 L0,31 Z" fill="url(#trafGrad)" />
+                            <path d="M0,24 Q40,6 80,18 T160,10 T240,6 T300,16" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" />
                           </svg>
                         </div>
                       </div>
@@ -3379,34 +3362,32 @@ HTML_PAGE = """<!DOCTYPE html>
 
                     {/* CARD 4: BACKUPS */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="xui-metric-card">
-                        <div className="xui-card-top">
-                          <div className="xui-card-title">
+                      <div className="xui-card">
+                        <div className="xui-card-header">
+                          <span className="xui-card-title">
                             <span style={{ color: '#f59e0b' }}><CloudDownloadOutlined /></span>
-                            <span>آرشیوهای پشتیبان</span>
-                          </div>
-                          <span className="xui-card-tag">{cfg.backup_password ? 'AES-256' : 'استاندارد'}</span>
-                        </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val" style={{ color: '#f59e0b' }}>
-                            {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)} <small>نسخه</small>
+                            <span>BACKUPS</span>
                           </span>
+                          <span className="xui-card-tag num-font">{cfg.backup_password ? 'AES-256' : 'STANDARD'}</span>
                         </div>
-                        <div className="xui-card-stats-row">
-                          <span>حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
-                          <span>هر {cfg.interval_hours || 6} ساعت</span>
+                        <div className="xui-card-value num-font" style={{ color: '#f59e0b' }}>
+                          {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)} <small>Archives</small>
                         </div>
-                        <div className="xui-sparkline-box">
-                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        <div className="xui-card-meta num-font">
+                          <span>LATEST: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
+                          <span>EVERY {cfg.interval_hours || 6}H</span>
+                        </div>
+                        <div className="xui-card-sparkline">
+                          <svg viewBox="0 0 300 32" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                             <defs>
                               <linearGradient id="bkGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.25" />
+                                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.22" />
                                 <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
                               </linearGradient>
                             </defs>
-                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
-                            <path d="M0,22 Q35,6 70,20 T150,10 T230,18 T300,8 L300,33 L0,33 Z" fill="url(#bkGrad)" />
-                            <path d="M0,22 Q35,6 70,20 T150,10 T230,18 T300,8" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" />
+                            <line x1="0" y1="31" x2="300" y2="31" stroke="var(--baseline-color)" strokeWidth="1" />
+                            <path d="M0,22 Q35,6 70,18 T150,8 T230,16 T300,6 L300,31 L0,31 Z" fill="url(#bkGrad)" />
+                            <path d="M0,22 Q35,6 70,18 T150,8 T230,16 T300,6" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" />
                           </svg>
                         </div>
                       </div>
@@ -3421,74 +3402,73 @@ HTML_PAGE = """<!DOCTYPE html>
                         <div className="xui-speed-header">
                           <div>
                             <div className="xui-speed-title">OVERALL SPEED</div>
-                            <div className="xui-speed-subtitle">Interface total · peak {((data?.metrics?.down_24h_gb || 1) * 32).toFixed(1)} KB/s</div>
+                            <div className="xui-speed-subtitle num-font">Interface total · peak {((data?.metrics?.down_24h_gb || 1) * 32).toFixed(1)} KB/s</div>
                           </div>
-                          <div className="xui-speed-pills">
-                            <span className="xui-speed-pill-up">
+                          <div className="xui-speed-pills num-font">
+                            <span className="xui-pill-up">
                               ↑ Upload {((data?.metrics?.up_24h_gb || 0.5) * 45).toFixed(2)} KB/s
                             </span>
-                            <span className="xui-speed-pill-down">
+                            <span className="xui-pill-down">
                               ↓ Download {((data?.metrics?.down_24h_gb || 1) * 85).toFixed(2)} KB/s
                             </span>
                           </div>
                         </div>
 
                         {/* Chart Area */}
-                        <div className="xui-speed-chart-area">
-                          <svg viewBox="0 0 740 160" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        <div className="xui-speed-chart">
+                          <svg viewBox="0 0 740 155" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                             <defs>
                               <linearGradient id="speedUpGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
                                 <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
                               </linearGradient>
                               <linearGradient id="speedDownGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.18" />
                                 <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
                               </linearGradient>
                             </defs>
 
-                            {/* Dotted lines */}
-                            <line x1="0" y1="40" x2="740" y2="40" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-                            <line x1="0" y1="90" x2="740" y2="90" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-                            <line x1="0" y1="150" x2="740" y2="150" stroke="var(--border-subtle)" />
+                            <line x1="0" y1="38" x2="740" y2="38" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="85" x2="740" y2="85" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="145" x2="740" y2="145" stroke="var(--border-subtle)" />
 
-                            {/* Download path */}
+                            {/* Download curve */}
                             <path
-                              d="M0,140 C40,135 80,95 120,105 C160,115 200,55 240,70 C280,85 320,35 360,45 C400,55 440,110 480,90 C520,75 560,25 600,30 C640,35 680,80 720,65 C730,60 740,40 740,40 L740,150 L0,150 Z"
+                              d="M0,135 C40,130 80,90 120,100 C160,110 200,50 240,65 C280,80 320,30 360,40 C400,50 440,105 480,85 C520,70 560,20 600,25 C640,30 680,75 720,60 C730,55 740,35 740,35 L740,145 L0,145 Z"
                               fill="url(#speedDownGrad)"
                             />
                             <path
-                              d="M0,140 C40,135 80,95 120,105 C160,115 200,55 240,70 C280,85 320,35 360,45 C400,55 440,110 480,90 C520,75 560,25 600,30 C640,35 680,80 720,65 C730,60 740,40 740,40"
+                              d="M0,135 C40,130 80,90 120,100 C160,110 200,50 240,65 C280,80 320,30 360,40 C400,50 440,105 480,85 C520,70 560,20 600,25 C640,30 680,75 720,60 C730,55 740,35 740,35"
                               fill="none"
                               stroke="#10b981"
-                              strokeWidth="2.2"
+                              strokeWidth="2"
                               strokeLinecap="round"
                             />
 
-                            {/* Upload path */}
+                            {/* Upload curve */}
                             <path
-                              d="M0,130 C40,120 70,35 100,45 C130,55 160,105 190,100 C220,95 250,15 280,20 C310,25 340,85 370,75 C400,65 430,30 460,35 C490,40 520,110 550,105 C570,100 600,55 630,65 C660,75 700,15 740,20 L740,150 L0,150 Z"
+                              d="M0,125 C40,115 70,30 100,40 C130,50 160,100 190,95 C220,90 250,10 280,15 C310,20 340,80 370,70 C400,60 430,25 460,30 C490,35 520,105 550,100 C570,95 600,50 630,60 C660,70 700,10 740,15 L740,145 L0,145 Z"
                               fill="url(#speedUpGrad)"
                             />
                             <path
-                              d="M0,130 C40,120 70,35 100,45 C130,55 160,105 190,100 C220,95 250,15 280,20 C310,25 340,85 370,75 C400,65 430,30 460,35 C490,40 520,110 550,105 C570,100 600,55 630,65 C660,75 700,15 740,20"
+                              d="M0,125 C40,115 70,30 100,40 C130,50 160,100 190,95 C220,90 250,10 280,15 C310,20 340,80 370,70 C400,60 430,25 460,30 C490,35 520,105 550,100 C570,95 600,50 630,60 C660,70 700,10 740,15"
                               fill="none"
                               stroke="#3b82f6"
-                              strokeWidth="2.2"
+                              strokeWidth="2"
                               strokeLinecap="round"
                             />
                           </svg>
                         </div>
 
                         {/* 3-Column Footer */}
-                        <div className="xui-speed-footer">
+                        <div className="xui-speed-footer num-font">
                           <div className="xui-speed-col">
                             <span className="xui-col-label">SENT</span>
-                            <span className="xui-col-val">{data?.metrics?.up_24h_gb ?? 0} GB</span>
+                            <span className="xui-col-val">{(data?.metrics?.up_24h_gb ?? 0).toFixed(2)} GB</span>
                           </div>
                           <div className="xui-speed-col">
                             <span className="xui-col-label">RECEIVED</span>
-                            <span className="xui-col-val">{data?.metrics?.down_24h_gb ?? 0} GB</span>
+                            <span className="xui-col-val">{(data?.metrics?.down_24h_gb ?? 0).toFixed(2)} GB</span>
                           </div>
                           <div className="xui-speed-col">
                             <span className="xui-col-label">AVG OVER WINDOW</span>
@@ -3500,58 +3480,60 @@ HTML_PAGE = """<!DOCTYPE html>
                       </div>
                     </Col>
 
-                    {/* CONNECTION STATS & TELEMETRY (35% WIDTH) */}
+                    {/* CONNECTION STATS (35% WIDTH - NO RAW TERMINAL) */}
                     <Col xs={24} lg={9}>
                       <div className="xui-conn-card">
                         <div>
                           <div className="xui-conn-header">
                             <div>
                               <div className="xui-speed-title">CONNECTION STATS</div>
-                              <div className="xui-conn-bigval">
-                                {data?.metrics?.online_now ?? 0} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)' }}>کاربر فعال</span>
+                              <div className="xui-conn-bigval num-font">
+                                {data?.metrics?.online_now ?? 0} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)' }}>Clients</span>
                               </div>
                             </div>
-                            <div style={{ display: 'flex', gap: 6 }}>
-                              <span className="xui-pill-blue">کل: {data?.metrics?.users_count ?? '--'}</span>
-                              <span className="xui-pill-green">۲۴h: {data?.metrics?.online_24h ?? '--'}</span>
+                            <div style={{ display: 'flex', gap: 6 }} className="num-font">
+                              <span className="xui-conn-badge-blue">Total: {data?.metrics?.users_count ?? '--'}</span>
+                              <span className="xui-conn-badge-green">24h: {data?.metrics?.online_24h ?? '--'}</span>
                             </div>
                           </div>
 
                           {/* Mini area curve */}
-                          <div style={{ height: 60, width: '100%', margin: '6px 0' }}>
-                            <svg viewBox="0 0 300 60" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                          <div style={{ height: 68, width: '100%', margin: '8px 0' }}>
+                            <svg viewBox="0 0 300 68" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
                               <defs>
                                 <linearGradient id="connGrad" x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
                                   <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
                                 </linearGradient>
                               </defs>
-                              <line x1="0" y1="58" x2="300" y2="58" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-                              <path d="M0,50 Q40,25 80,40 T160,25 T240,15 T300,35 L300,58 L0,58 Z" fill="url(#connGrad)" />
-                              <path d="M0,50 Q40,25 80,40 T160,25 T240,15 T300,35" fill="none" stroke="#3b82f6" strokeWidth="2" />
+                              <line x1="0" y1="66" x2="300" y2="66" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                              <path d="M0,58 Q40,25 80,45 T160,30 T240,15 T300,38 L300,66 L0,66 Z" fill="url(#connGrad)" />
+                              <path d="M0,58 Q40,25 80,45 T160,30 T240,15 T300,38" fill="none" stroke="#3b82f6" strokeWidth="2" />
                             </svg>
                           </div>
                         </div>
 
-                        {/* Digest Box (Harmonized with theme) */}
-                        <div className="xui-digest-box">
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                        {/* Clean Telemetry Action Box */}
+                        <div className="xui-telemetry-box">
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
                             <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
-                              📋 کارنامه سلامت سیستم
+                              سیستم مانیتورینگ متصل:
+                            </span>
+                            <span className="badge-slate num-font">
+                              {data?.metrics?.panel_type || 'PasarGuard / 3X-UI'}
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                              وضعیت سرویس: <b>پایدار</b>
                             </span>
                             <Space size={6}>
                               <Button
                                 size="small"
                                 icon={<CopyOutlined />}
-                                onClick={() => {
-                                  if (data?.digest_text) {
-                                    const clean = data.digest_text.replace(/<[^>]+>/g, '');
-                                    navigator.clipboard.writeText(clean);
-                                    message.success('متن گزارش در حافظه کپی شد.');
-                                  }
-                                }}
+                                onClick={() => setDigestModal(true)}
                               >
-                                کپی
+                                مشاهده کارنامه
                               </Button>
                               <Button
                                 type="primary"
@@ -3564,10 +3546,6 @@ HTML_PAGE = """<!DOCTYPE html>
                               </Button>
                             </Space>
                           </div>
-                          <div
-                            className="xui-digest-content"
-                            dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
-                          />
                         </div>
                       </div>
                     </Col>
@@ -3621,7 +3599,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                               <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>اتصال نود جدید:</span>
-                              <Text code className="code-text" style={{ padding: '3px 8px', fontSize: 12 }}>
+                              <Text code className="code-text num-font" style={{ padding: '3px 8px', fontSize: 12 }}>
                                 curl -sSL http://{hostIp}:2099/install.sh | bash
                               </Text>
                             </div>
@@ -3636,7 +3614,7 @@ HTML_PAGE = """<!DOCTYPE html>
                       <Card
                         title="کاربران پرمصرف ۲۴ ساعت"
                         bordered={false}
-                        extra={<span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>}
+                        extra={<span className="badge-slate num-font">{data?.metrics?.panel_type || 'پنل'}</span>}
                       >
                         <Table
                           dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).slice(0, 5).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
@@ -3649,14 +3627,14 @@ HTML_PAGE = """<!DOCTYPE html>
                               render: (_, __, idx) => {
                                 const colors = ['#f59e0b', '#94a3b8', '#d97706'];
                                 const c = idx < 3 ? colors[idx] : 'var(--text-muted)';
-                                return <span style={{ fontWeight: 700, color: c }}>{idx + 1}</span>;
+                                return <span className="num-font" style={{ fontWeight: 700, color: c }}>{idx + 1}</span>;
                               }
                             },
                             {
                               title: 'شناسه کاربری',
                               dataIndex: 'email',
                               key: 'email',
-                              render: (em) => <Text code className="code-text" strong>{em}</Text>
+                              render: (em) => <Text code className="code-text num-font" strong>{em}</Text>
                             },
                             {
                               title: 'ترافیک',
@@ -3664,7 +3642,7 @@ HTML_PAGE = """<!DOCTYPE html>
                               key: 'traffic_gb',
                               width: 95,
                               align: 'left',
-                              render: (t) => <span style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
+                              render: (t) => <span className="num-font" style={{ fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
                             }
                           ]}
                           rowKey="id"
@@ -3693,7 +3671,7 @@ HTML_PAGE = """<!DOCTYPE html>
                     />
                   </Card>
 
-                  {/* STEP 0: SELECT OR UPLOAD ARCHIVE */}
+                  {/* STEP 0 */}
                   {restoreStep === 0 && (
                     <Card title="مرحله ۱: انتخاب یا آپلود فایل پشتیبان" bordered={false}>
                       <Space direction="vertical" size={18} style={{ width: '100%' }}>
@@ -3784,7 +3762,7 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Card>
                   )}
 
-                  {/* STEP 1: DEEP INSPECTION RESULTS */}
+                  {/* STEP 1 */}
                   {restoreStep === 1 && inspectResult && (
                     <Card title="مرحله ۲: شناسنامه فنی و متادیتای واقعی دیتابیس استخراج‌شده" bordered={false}>
                       <Space direction="vertical" size={20} style={{ width: '100%' }}>
@@ -3794,7 +3772,6 @@ HTML_PAGE = """<!DOCTYPE html>
                           showIcon
                         />
 
-                        {/* SYMMETRICAL INSPECTION METRIC CARDS */}
                         <Row gutter={[16, 16]}>
                           <Col xs={24} sm={12} md={6}>
                             <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
@@ -3805,9 +3782,6 @@ HTML_PAGE = """<!DOCTYPE html>
                                 prefix={<UserOutlined />}
                                 suffix="کاربر"
                               />
-                              <div style={{ marginTop: 8 }}>
-                                <Tag color="success">{inspectResult.analysis["3x-ui"]?.total_client_records ? `${inspectResult.analysis["3x-ui"].total_client_records} اتصال به ۴ اینباند` : "اکانت‌های دارای دسترسی"}</Tag>
-                              </div>
                             </Card>
                           </Col>
 
@@ -3820,11 +3794,6 @@ HTML_PAGE = """<!DOCTYPE html>
                                 prefix={<ClusterOutlined />}
                                 suffix="پورت"
                               />
-                              <div style={{ marginTop: 8 }}>
-                                {(inspectResult.analysis['pasarguard']?.groups || inspectResult.analysis['3x-ui']?.protocols || []).map((p) => (
-                                  <Tag color="blue" key={p}>{p}</Tag>
-                                ))}
-                              </div>
                             </Card>
                           </Col>
 
@@ -3836,9 +3805,6 @@ HTML_PAGE = """<!DOCTYPE html>
                                 valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
                                 prefix={<CloudDownloadOutlined />}
                               />
-                              <div style={{ marginTop: 8 }}>
-                                <Tag color="warning">ترافیک دانلود + آپلود</Tag>
-                              </div>
                             </Card>
                           </Col>
 
@@ -3849,9 +3815,6 @@ HTML_PAGE = """<!DOCTYPE html>
                                 value={inspectResult.manifest?.hostname || 'Unknown'}
                                 valueStyle={{ fontSize: 15, fontFamily: 'monospace' }}
                               />
-                              <div style={{ marginTop: 8 }}>
-                                <Tag color="purple">{inspectResult.manifest?.backup_type || 'full'} | {inspectResult.size_mb} MB</Tag>
-                              </div>
                             </Card>
                           </Col>
                         </Row>
@@ -3867,22 +3830,17 @@ HTML_PAGE = """<!DOCTYPE html>
                           >
                             {inspectResult.analysis['pasarguard']?.found && (
                               <Checkbox value="pasarguard">
-                                <b>دیتابیس و کانتینر پاسارگارد (PasarGuard)</b> (شامل {inspectResult.analysis['pasarguard'].users_count} کاربر و {inspectResult.analysis['pasarguard'].nodes_count || 0} نود)
+                                <b>دیتابیس پاسارگارد (PasarGuard)</b>
                               </Checkbox>
                             )}
                             {inspectResult.analysis['3x-ui']?.found && (
                               <Checkbox value="3x-ui">
-                                <b>دیتابیس و سرتیفیکیت‌های 3X-UI</b> (شامل {inspectResult.analysis['3x-ui'].clients_count} کاربر)
+                                <b>دیتابیس 3X-UI</b>
                               </Checkbox>
                             )}
                             {inspectResult.analysis['marzban']?.found && (
                               <Checkbox value="marzban">
-                                <b>دیتابیس و فایل .env مرزبان</b>
-                              </Checkbox>
-                            )}
-                            {inspectResult.analysis['network']?.found && (
-                              <Checkbox value="network">
-                                <b>تنظیمات شبکه و تانل‌ها (Nginx & Hawal)</b>
+                                <b>دیتابیس مرزبان</b>
                               </Checkbox>
                             )}
                           </Checkbox.Group>
@@ -3900,76 +3858,30 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Card>
                   )}
 
-                  {/* STEP 2: TARGET SERVER CONFIGURATION */}
+                  {/* STEP 2 */}
                   {restoreStep === 2 && inspectResult && (
                     <Card title="مرحله ۳: انتخاب وضعیت سرور جدید و چک‌لیست ایمنی" bordered={false}>
                       <Space direction="vertical" size={20} style={{ width: '100%' }}>
                         <Text strong style={{ fontSize: 15 }}>وضعیت سرور فعلی در رابطه با پنل انتخابی:</Text>
-
                         <Radio.Group
                           value={targetServerMode}
                           onChange={(e) => setTargetServerMode(e.target.value)}
                           style={{ width: '100%' }}
                         >
                           <Space direction="vertical" style={{ width: '100%' }}>
-                            <Card
-                              hoverable
-                              onClick={() => setTargetServerMode('existing')}
-                              style={{
-                                cursor: 'pointer',
-                                borderColor: targetServerMode === 'existing' ? '#1677ff' : undefined,
-                                background: targetServerMode === 'existing' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
-                              }}
-                            >
+                            <Card hoverable onClick={() => setTargetServerMode('existing')}>
                               <Radio value="existing">
-                                <span style={{ fontWeight: 'bold', fontSize: 15 }}>
-                                  حالت ۱: پنل مقصد از قبل روی این سرور نصب شده است (روش استاندارد)
-                                </span>
+                                <span style={{ fontWeight: 'bold' }}>پنل مقصد از قبل روی این سرور نصب شده است (روش استاندارد)</span>
                               </Radio>
-                              <div style={{ paddingRight: 24, marginTop: 8, color: 'rgba(128,128,128,0.85)', fontSize: 13 }}>
-                                خوشه پیش از جایگزینی دیتابیس، سرویس پنل را موقتاً متوقف می‌کند تا هیچ قفلی در دیتابیس ایجاد نشود.
-                                همچنین یک نسخه پشتیبان اضطراری با پسوند <Text code>.pre_restore.bak</Text> از داده‌های فعلی سرور ایجاد می‌شود.
-                              </div>
                             </Card>
-
-                            <Card
-                              hoverable
-                              onClick={() => setTargetServerMode('fresh')}
-                              style={{
-                                cursor: 'pointer',
-                                borderColor: targetServerMode === 'fresh' ? '#1677ff' : undefined,
-                                background: targetServerMode === 'fresh' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
-                              }}
-                            >
+                            <Card hoverable onClick={() => setTargetServerMode('fresh')}>
                               <Radio value="fresh">
-                                <span style={{ fontWeight: 'bold', fontSize: 15 }}>
-                                  حالت ۲: سرور جدید و خام است (دیتابیس مستقر شود و خوشه پنل را نصب کند)
-                                </span>
+                                <span style={{ fontWeight: 'bold' }}>سرور جدید و خام است (دیتابیس مستقر شود و خوشه پنل را نصب کند)</span>
                               </Radio>
-                              <div style={{ paddingRight: 24, marginTop: 8, color: 'rgba(128,128,128,0.85)', fontSize: 13 }}>
-                                خوشه پوشه‌های استاندارد لینوکسی مانند <Text code>/etc/x-ui/</Text> را ایجاد کرده و فایل‌ها و سرتیفیکیت‌ها را در جای دقیق می‌نشاند.
-                                <div style={{ marginTop: 8 }}>
-                                  <Checkbox
-                                    checked={installPanelOnFresh}
-                                    onChange={(e) => setInstallPanelOnFresh(e.target.checked)}
-                                  >
-                                    اجرای خودکار اسکریپت رسمی نصب 3X-UI توسط خوشه حین بازگردانی
-                                  </Checkbox>
-                                </div>
-                              </div>
                             </Card>
                           </Space>
                         </Radio.Group>
-
-                        <Alert
-                          message="نکته ایمنی مهندسی (Zero Data Loss)"
-                          description="عملیات جایگزینی به صورت اتمیک انجام می‌شود. حتی در صورت قطعی ناگهانی اینترنت حین پروسه، نسخه اضطراری قبلی در سرور محفوظ خواهد ماند."
-                          type="info"
-                          showIcon
-                        />
-
                         <Divider />
-
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                           <Button onClick={() => setRestoreStep(1)}>➔ مرحله قبل</Button>
                           <Button
@@ -3987,58 +3899,24 @@ HTML_PAGE = """<!DOCTYPE html>
                     </Card>
                   )}
 
-                  {/* STEP 3: EXECUTION LOGS & STATUS */}
+                  {/* STEP 3 */}
                   {restoreStep === 3 && (
-                    <Card title="مرحله ۴: گزارش اجرای عملیات بازگردانی و راه‌اندازی سرویس‌ها" bordered={false}>
+                    <Card title="مرحله ۴: گزارش اجرای عملیات بازگردانی" bordered={false}>
                       <Space direction="vertical" size={20} style={{ width: '100%' }}>
                         {executeLoading ? (
                           <div style={{ textAlign: 'center', padding: '30px 0' }}>
                             <Progress type="circle" percent={70} status="active" />
-                            <div style={{ marginTop: 16, fontSize: 16, fontWeight: 'bold' }}>
-                              در حال متوقف‌سازی سرویس، تزریق دیتابیس و راه‌اندازی مجدد...
-                            </div>
-                            <Text type="secondary">لطفاً صفحه را نبندید؛ فرایند در حال انجام است.</Text>
+                            <div style={{ marginTop: 16, fontSize: 16, fontWeight: 'bold' }}>در حال اعمال داده‌ها...</div>
                           </div>
                         ) : restoreCompleted ? (
-                          <Alert
-                            message="عملیات بازگردانی با موفقیت کامل به پایان رسید!"
-                            description="دیتابیس‌ها در مسیر مقصد مستقر شدند، دسترسی‌های فایل (chmod 644) تنظیم شدند و سرویس پنل در وضعیت پایدار راه‌اندازی گردید."
-                            type="success"
-                            showIcon
-                          />
+                          <Alert message="بازگردانی با موفقیت کامل انجام شد!" type="success" showIcon />
                         ) : (
-                          <Alert
-                            message="فرایند به پایان رسید، وضعیت لاگ‌ها را بررسی کنید."
-                            type="warning"
-                            showIcon
-                          />
+                          <Alert message="عملیات خاتمه یافت." type="warning" showIcon />
                         )}
-
-                        <Card title="لاگ زنده رویدادهای سیستمی (System Events)" size="small" style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
-                          <Timeline
-                            items={restoreLogs.map((l) => ({
-                              color: l.status === 'ok' ? 'green' : (l.status === 'warning' ? 'orange' : 'blue'),
-                              children: (
-                                <div>
-                                  <Text code style={{ fontSize: 11 }}>[{l.time}]</Text>{' '}
-                                  <Text style={{ fontWeight: l.status === 'ok' ? 500 : 400 }}>{l.msg}</Text>
-                                </div>
-                              )
-                            }))}
-                          />
-                        </Card>
-
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                          <Button
-                            type="primary"
-                            onClick={() => {
-                              setCurrentTab('overview');
-                              setRestoreStep(0);
-                            }}
-                          >
-                            مشاهده داشبورد و آمار لایو سرور
-                          </Button>
-                        </div>
+                        <Timeline items={restoreLogs.map((l) => ({ color: l.status === 'ok' ? 'green' : 'orange', children: l.msg }))} />
+                        <Button type="primary" onClick={() => { setCurrentTab('overview'); setRestoreStep(0); }}>
+                          مشاهده داشبورد
+                        </Button>
                       </Space>
                     </Card>
                   )}
@@ -4076,63 +3954,12 @@ HTML_PAGE = """<!DOCTYPE html>
               {/* 4. SERVERS */}
               {currentTab === 'servers' && (
                 <Space direction="vertical" size={20} style={{ width: '100%' }}>
-                  <Row gutter={[16, 16]}>
-                    <Col xs={24} sm={12} md={8}>
-                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
-                        <div className="xui-card-top">
-                          <span className="xui-card-title">نودهای زیرساخت</span>
-                          <span className="badge-slate">ثبت‌شده</span>
-                        </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val" style={{ color: '#38bdf8' }}>
-                            {data?.live_nodes?.length || data?.servers?.length || 0} <small>نود</small>
-                          </span>
-                        </div>
-                        <div className="xui-card-stats-row">
-                          <span>سامانه متصل: {data?.metrics?.panel_type || 'پاسارگارد'}</span>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col xs={24} sm={12} md={8}>
-                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
-                        <div className="xui-card-top">
-                          <span className="xui-card-title">وضعیت اتصال شبکه</span>
-                          <span className="badge-emerald"><span className="status-radar"></span>پایدار</span>
-                        </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val" style={{ color: '#10b981' }}>
-                            {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0} <small>نود فعال</small>
-                          </span>
-                        </div>
-                        <div className="xui-card-stats-row">
-                          <span>اتصال سرورهای لبه آنلاین</span>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col xs={24} sm={12} md={8}>
-                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
-                        <div className="xui-card-top">
-                          <span className="xui-card-title">ترافیک عبوری نودها</span>
-                          <span className="badge-slate">مجموع</span>
-                        </div>
-                        <div className="xui-card-val-row">
-                          <span className="xui-card-val" style={{ color: '#f59e0b' }}>
-                            {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)} <small>GB</small>
-                          </span>
-                        </div>
-                        <div className="xui-card-stats-row">
-                          <span>ترافیک کلیه نودهای فعال</span>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row>
-
                   <Card
                     title="لیست نودها و وضعیت زنده اتصال به شبکه"
                     bordered={false}
                     extra={
                       <Space size={8}>
-                        <span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>
+                        <span className="badge-slate num-font">{data?.metrics?.panel_type || 'پنل'}</span>
                         <Button icon={<ReloadOutlined />} size="small" onClick={() => fetchData()}>بروزرسانی</Button>
                       </Space>
                     }
@@ -4199,7 +4026,6 @@ HTML_PAGE = """<!DOCTYPE html>
                           name="daily_digest_enabled"
                           label="گزارش جامع خودکار روزانه"
                           valuePropName="checked"
-                          extra="ارسال کارنامه مصرف و پایش سلامت سرور به صورت زمان‌بندی‌شده به تلگرام"
                         >
                           <Switch checkedChildren="فعال" unCheckedChildren="غیرفعال" />
                         </Form.Item>
@@ -4208,7 +4034,6 @@ HTML_PAGE = """<!DOCTYPE html>
                         <Form.Item
                           name="daily_digest_hours"
                           label="ساعت‌های ارسال گزارش در شبانه‌روز (به وقت تهران)"
-                          extra="انتخاب ساعت‌های نوبت ارسال گزارش روزانه"
                         >
                           <Select
                             mode="multiple"
@@ -4268,6 +4093,48 @@ HTML_PAGE = """<!DOCTYPE html>
 
             </div>
           </div>
+
+          {/* MODAL: DAILY DIGEST PREVIEW (CLEAN & PROFESSIONAL) */}
+          <Modal
+            title="کارنامه جامع سلامت و مانیتورینگ سیستم"
+            open={digestModal}
+            onCancel={() => setDigestModal(false)}
+            footer={[
+              <Button key="copy" icon={<CopyOutlined />} onClick={() => {
+                if (data?.digest_text) {
+                  const clean = data.digest_text.replace(/<[^>]+>/g, '');
+                  navigator.clipboard.writeText(clean);
+                  message.success('متن کارنامه کپی شد');
+                }
+              }}>
+                کپی متن
+              </Button>,
+              <Button key="send" type="primary" icon={<SendOutlined />} onClick={handleSendDigest} loading={actionLoading}>
+                ارسال به تلگرام
+              </Button>,
+              <Button key="close" onClick={() => setDigestModal(false)}>
+                بستن
+              </Button>
+            ]}
+            width={580}
+            centered
+          >
+            <div
+              style={{
+                background: 'var(--surface-subtle)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 8,
+                padding: '16px 20px',
+                fontFamily: 'monospace',
+                fontSize: 12.5,
+                lineHeight: 1.8,
+                direction: 'rtl',
+                maxHeight: 380,
+                overflowY: 'auto'
+              }}
+              dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی...' }}
+            />
+          </Modal>
 
           {/* MODAL: 1-CLICK PRESET PANEL CONNECTION */}
           <Modal
@@ -4428,21 +4295,21 @@ HTML_PAGE = """<!DOCTYPE html>
           theme={{
             algorithm: themeMode === 'dark' ? antd.theme.darkAlgorithm : antd.theme.defaultAlgorithm,
             token: {
-              colorPrimary: '#1677ff',
+              colorPrimary: themeMode === 'dark' ? '#3b82f6' : '#1677ff',
               colorInfo: '#1677ff',
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorError: '#f43f5e',
-              colorBgBase: themeMode === 'dark' ? '#0b0e14' : '#f0f2f5',
-              colorBgContainer: themeMode === 'dark' ? '#141923' : '#ffffff',
-              colorBgElevated: themeMode === 'dark' ? '#19202e' : '#f8fafc',
+              colorBgBase: themeMode === 'dark' ? '#0b0f17' : '#f0f2f5',
+              colorBgContainer: themeMode === 'dark' ? '#131926' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#182030' : '#ffffff',
               colorBorder: themeMode === 'dark' ? '#1e2638' : '#e5e7eb',
-              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f1f5f9',
+              colorBorderSecondary: themeMode === 'dark' ? '#1e2638' : '#f1f5f9',
               colorText: themeMode === 'dark' ? '#f9fafb' : '#111827',
               colorTextSecondary: themeMode === 'dark' ? '#9ca3af' : '#4b5563',
               borderRadius: 6,
               borderRadiusLG: 8,
-              fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+              fontFamily: "'Vazirmatn', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             }
           }}
         >
