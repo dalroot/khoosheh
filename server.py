@@ -1743,8 +1743,8 @@ HTML_PAGE = """<!DOCTYPE html>
       margin: 0;
       padding: 0;
       min-height: 100%;
-      background-color: #080b11;
-      background-image: radial-gradient(circle at 50% 0%, #131c2e 0%, #080b11 65%, #04060a 100%) !important;
+      background-color: #09090b;
+      background-image: radial-gradient(circle at 50% -20%, #161a26 0%, #09090b 70%) !important;
       background-attachment: fixed !important;
       -webkit-font-smoothing: antialiased;
       color: #f1f5f9;
@@ -1776,32 +1776,90 @@ HTML_PAGE = """<!DOCTYPE html>
       color: #cbd5e1;
     }
 
-    /* Core Ant Design Overrides */
+    /* Top Navigation Bar (Vercel / Supabase Style) */
+    .top-navbar {
+      height: 62px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(12, 13, 17, 0.85) !important;
+      backdrop-filter: blur(18px) !important;
+      -webkit-backdrop-filter: blur(18px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .nav-tab-item {
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.65);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .nav-tab-item:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .nav-tab-item.active {
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.12);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .app-main-container {
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+      width: 100%;
+    }
+
+    /* Core Ant Design Overrides - Minimal Matte Surfaces */
     .ant-card {
-      background: rgba(15, 22, 36, 0.75) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
+      background: #111216 !important;
       border: 1px solid rgba(255, 255, 255, 0.07) !important;
       border-radius: 14px !important;
-      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35) !important;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4) !important;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .ant-card-head {
       border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
       padding: 0 20px !important;
-      min-height: 50px !important;
+      min-height: 48px !important;
     }
     .ant-card-head-title {
-      font-size: 14px !important;
+      font-size: 13.5px !important;
       font-weight: 600 !important;
       color: #f8fafc !important;
     }
 
-    /* Hero KPI Cards (Tier 1) */
+    /* Hero KPI Cards (Tier 1) - Single Accent Focus */
     .hero-kpi-card {
-      background: linear-gradient(135deg, rgba(17, 26, 44, 0.85) 0%, rgba(13, 20, 34, 0.75) 100%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
-      border-radius: 16px !important;
+      background: #111216 !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
+      border-radius: 14px !important;
       padding: 20px 22px !important;
       position: relative;
       overflow: hidden;
@@ -1809,8 +1867,8 @@ HTML_PAGE = """<!DOCTYPE html>
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      min-height: 155px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      min-height: 148px;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .hero-kpi-card::after {
       content: '';
@@ -1819,19 +1877,19 @@ HTML_PAGE = """<!DOCTYPE html>
       right: 0;
       left: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.6), transparent);
-      opacity: 0.7;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+      opacity: 0.8;
     }
     .hero-kpi-card:hover {
-      border-color: rgba(16, 185, 129, 0.35) !important;
+      border-color: rgba(16, 185, 129, 0.3) !important;
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.6), 0 0 24px rgba(16, 185, 129, 0.1) !important;
+      box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.5), 0 0 16px rgba(16, 185, 129, 0.08) !important;
     }
     .hero-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .hero-title {
       font-size: 13px;
@@ -1845,7 +1903,7 @@ HTML_PAGE = """<!DOCTYPE html>
       letter-spacing: -0.5px;
       line-height: 1.15;
       color: #ffffff;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .hero-sub {
       display: flex;
@@ -1858,16 +1916,15 @@ HTML_PAGE = """<!DOCTYPE html>
 
     /* System Vitals Strip (Tier 2) */
     .vitals-strip {
-      background: rgba(15, 22, 36, 0.65) !important;
-      backdrop-filter: blur(14px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.06) !important;
+      background: #111216 !important;
+      border: 1px solid rgba(255, 255, 255, 0.07) !important;
       border-radius: 14px !important;
-      padding: 14px 20px !important;
+      padding: 16px 22px !important;
     }
     .vital-col {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
     }
     .vital-title-row {
       display: flex;
@@ -1885,11 +1942,11 @@ HTML_PAGE = """<!DOCTYPE html>
       text-align: left;
     }
 
-    /* Status Badges Design System */
+    /* Status Badges - Desaturated, Clean Tokens */
     .badge-emerald {
-      background: rgba(16, 185, 129, 0.12) !important;
+      background: rgba(16, 185, 129, 0.1) !important;
       color: #10b981 !important;
-      border: 1px solid rgba(16, 185, 129, 0.28) !important;
+      border: 1px solid rgba(16, 185, 129, 0.25) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
       padding: 2px 8px !important;
@@ -1899,9 +1956,9 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 4px !important;
     }
     .badge-slate {
-      background: rgba(255, 255, 255, 0.05) !important;
+      background: rgba(255, 255, 255, 0.04) !important;
       color: #94a3b8 !important;
-      border: 1px solid rgba(255, 255, 255, 0.09) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
       padding: 2px 8px !important;
@@ -1911,9 +1968,9 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 4px !important;
     }
     .badge-amber {
-      background: rgba(245, 158, 11, 0.12) !important;
+      background: rgba(245, 158, 11, 0.1) !important;
       color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.28) !important;
+      border: 1px solid rgba(245, 158, 11, 0.25) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
       padding: 2px 8px !important;
@@ -1923,9 +1980,9 @@ HTML_PAGE = """<!DOCTYPE html>
       gap: 4px !important;
     }
     .badge-rose {
-      background: rgba(239, 68, 68, 0.12) !important;
+      background: rgba(239, 68, 68, 0.1) !important;
       color: #ef4444 !important;
-      border: 1px solid rgba(239, 68, 68, 0.28) !important;
+      border: 1px solid rgba(239, 68, 68, 0.25) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
       padding: 2px 8px !important;
@@ -1938,7 +1995,7 @@ HTML_PAGE = """<!DOCTYPE html>
     /* Radar Pulsing Indicator */
     @keyframes radar-pulse {
       0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
     .status-radar {
@@ -1952,56 +2009,31 @@ HTML_PAGE = """<!DOCTYPE html>
       vertical-align: middle;
     }
 
-    /* Modern Glassmorphism Sider & Header */
-    .ant-layout-sider {
-      background: rgba(10, 14, 23, 0.92) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      border-left: 1px solid rgba(255, 255, 255, 0.07) !important;
-    }
-    .ant-layout-header {
-      background: rgba(10, 14, 23, 0.8) !important;
-      backdrop-filter: blur(20px) !important;
-      -webkit-backdrop-filter: blur(20px) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-    }
-    .ant-menu {
-      background: transparent !important;
-    }
-    .ant-menu-item {
-      border-radius: 10px !important;
-      margin: 4px 10px !important;
-      width: calc(100% - 20px) !important;
-      transition: all 0.2s ease !important;
-      font-weight: 500 !important;
-      color: rgba(255, 255, 255, 0.7) !important;
-    }
-    .ant-menu-item-selected {
-      background: rgba(16, 185, 129, 0.12) !important;
-      color: #10b981 !important;
-      font-weight: 600 !important;
-      border-right: 3px solid #10b981 !important;
-    }
+    /* Physical Click Physics on Buttons */
     .ant-btn {
       border-radius: 8px !important;
       font-weight: 500 !important;
-      transition: all 0.2s ease !important;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .ant-btn:active {
+      transform: scale(0.97) !important;
     }
     .ant-btn-primary {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      background: #10b981 !important;
       border: none !important;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25) !important;
     }
     .ant-btn-primary:hover {
-      background: linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
-      transform: translateY(-1px);
+      background: #059669 !important;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4) !important;
     }
+
+    /* Tables */
     .ant-table-wrapper .ant-table {
       background: transparent !important;
     }
     .ant-table-wrapper .ant-table-thead > tr > th {
-      background: rgba(255, 255, 255, 0.03) !important;
+      background: rgba(255, 255, 255, 0.02) !important;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
       color: rgba(255, 255, 255, 0.6) !important;
       font-size: 12px !important;
@@ -2013,7 +2045,7 @@ HTML_PAGE = """<!DOCTYPE html>
       padding: 10px 14px !important;
     }
     .ant-table-wrapper .ant-table-tbody > tr:hover > td {
-      background: rgba(255, 255, 255, 0.04) !important;
+      background: rgba(255, 255, 255, 0.03) !important;
     }
     .ant-tag {
       border-radius: 6px !important;
@@ -2029,10 +2061,10 @@ HTML_PAGE = """<!DOCTYPE html>
       font-size: 11px;
       font-weight: 700;
     }
-    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-    .rank-2 { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.4); }
-    .rank-3 { background: rgba(180, 83, 9, 0.2); color: #f97316; border: 1px solid rgba(180, 83, 9, 0.4); }
-    .rank-other { background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
+    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .rank-2 { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .rank-3 { background: rgba(180, 83, 9, 0.18); color: #f97316; border: 1px solid rgba(180, 83, 9, 0.35); }
+    .rank-other { background: rgba(255, 255, 255, 0.04); color: #94a3b8; }
   </style>
 
   <script>
@@ -2713,116 +2745,56 @@ HTML_PAGE = """<!DOCTYPE html>
       const hostIp = stats.public_ip || window.location.hostname;
 
       return (
-        <Layout style={{ minHeight: '100vh' }}>
-          {/* SIDEBAR NAVIGATION */}
-          <Sider
-            collapsible
-            collapsed={collapsed}
-            onCollapse={setCollapsed}
-            width={240}
-            theme={themeMode}
-            style={{
-              position: 'sticky',
-              top: 0,
-              height: '100vh',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              borderLeft: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0'
-            }}
-          >
-            <div>
-              <div style={{
-                height: 64,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #f0f0f0',
-                padding: '0 16px'
-              }}>
-                <span style={{ fontSize: 22, marginLeft: 8 }}>🌾</span>
-                {!collapsed && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-0.3px' }}>
-                      خوشه
-                    </span>
-                    <Tag style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: 11, padding: '0 6px', margin: 0, borderRadius: 6 }}>
-                      v{data?.version || '2.4'}
-                    </Tag>
-                  </div>
-                )}
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+          {/* MODERN TOP NAVIGATION BAR (TASTE-SKILL / VERCEL STYLE) */}
+          <header className="top-navbar">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+              {/* BRAND / LOGO */}
+              <div className="nav-brand" onClick={() => setCurrentTab('overview')}>
+                <span style={{ fontSize: 22, lineHeight: 1 }}>🌾</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-0.3px', color: '#fff' }}>
+                    خوشه
+                  </span>
+                  <span className="badge-slate" style={{ fontSize: 11, padding: '1px 6px' }}>
+                    v{data?.version || '2.4'}
+                  </span>
+                  <span className="badge-emerald" style={{ padding: '2px 8px' }}>
+                    <span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>
+                    پایدار
+                  </span>
+                </div>
               </div>
 
-              <Menu
-                theme={themeMode}
-                mode="inline"
-                selectedKeys={[currentTab]}
-                onClick={({ key }) => setCurrentTab(key)}
-                items={[
+              {/* HORIZONTAL TAB NAVIGATION */}
+              <nav className="nav-tabs">
+                {[
                   { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد و وضعیت' },
                   { key: 'restore', icon: <SyncOutlined />, label: 'بازگردانی و مهاجرت' },
                   { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌ها و دیتابیس‌ها' },
                   { key: 'servers', icon: <ClusterOutlined />, label: 'سرورها و نودها' },
                   { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات ربات و امنیت' },
                   { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان' },
-                ]}
-                style={{ marginTop: 12 }}
-              />
+                ].map((item) => (
+                  <div
+                    key={item.key}
+                    className={`nav-tab-item ${currentTab === item.key ? 'active' : ''}`}
+                    onClick={() => setCurrentTab(item.key)}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                ))}
+              </nav>
             </div>
 
-            {!collapsed && (
-              <div style={{
-                padding: '12px 14px',
-                margin: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: 12,
-                border: '1px solid rgba(255, 255, 255, 0.06)'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <Text type="secondary" style={{ fontSize: 12 }}>وضعیت سرور:</Text>
-                  <span style={{ display: 'flex', alignItems: 'center', color: '#10b981', fontSize: 12, fontWeight: 600 }}>
-                    <span className="status-radar"></span>
-                    پایدار 🟢
-                  </span>
-                </div>
-                <div style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: 11, fontFamily: 'monospace', direction: 'ltr', textAlign: 'left' }}>
-                  {data?.tehran_now?.shamsi || '--'}
-                </div>
-              </div>
-            )}
-          </Sider>
+            {/* QUICK ACTIONS & SYSTEM STATUS */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span className="badge-slate" style={{ fontSize: 11, fontFamily: 'monospace', direction: 'ltr' }}>
+                {data?.tehran_now?.shamsi || '--'}
+              </span>
 
-          {/* MAIN LAYOUT */}
-          <Layout>
-            <Header style={{
-              padding: '0 24px',
-              background: themeMode === 'dark' ? 'rgba(10, 14, 23, 0.85)' : '#ffffff',
-              backdropFilter: 'blur(16px)',
-              borderBottom: themeMode === 'dark' ? '1px solid rgba(255, 255, 255, 0.07)' : '1px solid #f0f0f0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              height: 64,
-              position: 'sticky',
-              top: 0,
-              zIndex: 10
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span className="badge-emerald" style={{ padding: '4px 10px', fontSize: 12 }}>
-                  <span className="status-radar" style={{ margin: 0, marginLeft: 6 }}></span>
-                  خوشه • پایدار و ایمن
-                </span>
-                <Text type="secondary" style={{ fontSize: 13 }}>
-                  {currentTab === 'overview' && 'داشبورد جامع و وضعیت لحظه‌ای'}
-                  {currentTab === 'restore' && 'جادوگر هوشمند بازگردانی و مهاجرت دیتابیس'}
-                  {currentTab === 'panels' && 'مدیریت و اتصال پنل‌های تحت پوشش'}
-                  {currentTab === 'servers' && 'نودهای متصل به زیرساخت'}
-                  {currentTab === 'settings' && 'تنظیمات ربات تلگرام و حفاظت امنیتی'}
-                  {currentTab === 'backups' && 'لیست آرشیوهای پشتیبان'}
-                </Text>
-              </div>
-
-              <Space size={10} wrap>
+              <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
                 <Button
                   size="small"
                   icon={<SafetyCertificateOutlined />}
@@ -2830,39 +2802,43 @@ HTML_PAGE = """<!DOCTYPE html>
                   target="_blank"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
                 >
-                  🔒 HTTPS :2098
+                  🔒 HTTPS
                 </Button>
+              </Tooltip>
 
+              <Tooltip title="کپی دستور نصب یک‌خطی خوشه روی سرورهای دیگر">
                 <Button size="small" icon={<CopyOutlined />} onClick={handleCopyInstaller}>
-                  اسکریپت نصب سرور
+                  نصب سرور
                 </Button>
+              </Tooltip>
 
-                <Tooltip title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
-                  <Switch
-                    checkedChildren="🌙"
-                    unCheckedChildren="☀️"
-                    checked={themeMode === 'dark'}
-                    onChange={toggleTheme}
-                    size="small"
-                  />
-                </Tooltip>
-
-                <Button
+              <Tooltip title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
+                <Switch
+                  checkedChildren="🌙"
+                  unCheckedChildren="☀️"
+                  checked={themeMode === 'dark'}
+                  onChange={toggleTheme}
                   size="small"
-                  icon={<ReloadOutlined />}
-                  onClick={() => fetchData()}
-                  loading={loading}
-                >
-                  بروزرسانی
-                </Button>
+                />
+              </Tooltip>
 
-                {authStatus.authenticated && !authStatus.setup_required && (
-                  <Button size="small" danger onClick={handleLogout}>خروج</Button>
-                )}
-              </Space>
-            </Header>
+              <Button
+                size="small"
+                icon={<ReloadOutlined />}
+                onClick={() => fetchData()}
+                loading={loading}
+              >
+                بروزرسانی
+              </Button>
 
-            <Content style={{ margin: '24px 24px 0', minHeight: 300 }}>
+              {authStatus.authenticated && !authStatus.setup_required && (
+                <Button size="small" danger onClick={handleLogout}>خروج</Button>
+              )}
+            </div>
+          </header>
+
+          {/* MAIN CENTERED CONTAINER (TASTE-SKILL STANDARD) */}
+          <main className="app-main-container">
 
               {/* 1. OVERVIEW */}
               {currentTab === 'overview' && (
@@ -3754,12 +3730,17 @@ HTML_PAGE = """<!DOCTYPE html>
                 </Card>
               )}
 
-            </Content>
+          </main>
 
-            <Footer style={{ textAlign: 'center', color: 'rgba(128, 128, 128, 0.65)', fontSize: 12 }}>
-              سامانه «خوشه» — پلتفرم متمرکز پشتیبان‌گیری و بازگردانی هوشمند چندپنله
-            </Footer>
-          </Layout>
+          <footer style={{
+            textAlign: 'center',
+            padding: '28px 0 24px',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+            color: 'rgba(255, 255, 255, 0.35)',
+            fontSize: 12
+          }}>
+            سامانه «خوشه» — پلتفرم متمرکز پشتیبان‌گیری و بازگردانی هوشمند چندپنله
+          </footer>
 
           {/* MODAL: 1-CLICK PRESET PANEL CONNECTION */}
           <Modal
@@ -3894,7 +3875,7 @@ HTML_PAGE = """<!DOCTYPE html>
             </Form>
           </Modal>
 
-        </Layout>
+        </div>
       );
     };
 
@@ -3920,11 +3901,11 @@ HTML_PAGE = """<!DOCTYPE html>
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorError: '#ef4444',
-              colorBgBase: themeMode === 'dark' ? '#080b11' : '#f8fafc',
-              colorBgContainer: themeMode === 'dark' ? '#0f1624' : '#ffffff',
-              colorBgElevated: themeMode === 'dark' ? '#162032' : '#ffffff',
-              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.07)' : '#e2e8f0',
-              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f1f5f9',
+              colorBgBase: themeMode === 'dark' ? '#09090b' : '#fafafa',
+              colorBgContainer: themeMode === 'dark' ? '#111216' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#18191f' : '#ffffff',
+              colorBorder: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.07)' : '#e4e4e7',
+              colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f4f4f5',
               borderRadius: 10,
               borderRadiusLG: 14,
               fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
