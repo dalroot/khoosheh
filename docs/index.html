@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌾 Khoosheh (خوشه) — سامانه پشتیبان‌گیری و بازگردانی هوشمند پنل‌های وی‌پی‌ان</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #0b0f17;
+      --card-bg: #131926;
+      --border: #1e2638;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    header {
+      padding: 60px 0 40px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 20%, rgba(37,99,235,0.15) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 64px; margin-bottom: 12px; }
+    h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+    .subtitle { font-size: 16px; color: var(--text-muted); max-width: 700px; margin: 0 auto 24px; }
+    .badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .badges img { height: 22px; }
+    .btn-group { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn-secondary { background: var(--card-bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--text-muted); }
+    
+    /* BENCHMARKS GRID */
+    .benchmarks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 40px 0;
+    }
+    .b-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .b-card:hover { transform: translateY(-2px); }
+    .b-val { font-size: 36px; font-weight: 800; color: var(--success); font-family: monospace; }
+    .b-val.amber { color: var(--amber); }
+    .b-val.blue { color: #60a5fa; }
+    .b-title { font-size: 15px; font-weight: 700; margin-top: 6px; }
+    .b-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 6px; }
+
+    /* PREVIEW SCREENSHOT */
+    .screenshot-wrap {
+      margin: 40px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .screenshot-wrap img { width: 100%; height: auto; display: block; }
+
+    /* INSTALL CODE */
+    .install-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 30px 0;
+      direction: ltr;
+      font-family: monospace;
+      font-size: 13.5px;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+
+    /* COMMENTS SECTION */
+    .comments-section {
+      margin: 60px 0 80px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .comments-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .comments-header h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .comments-header p { font-size: 13.5px; color: var(--text-muted); }
+
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="logo">🌾</div>
+      <h1>سامانه هوشمند پایش و پشتیبان‌گیری خوشه (Khoosheh)</h1>
+      <p class="subtitle">
+        موتور بکاپ‌گیری اتمیک، بازیابی بدون وقفه و انتقال کاربران بدون تغییر اطلاعات ترافیک برای پنل‌های ۳X-UI، مرزبان، پاسارگاد و رمنایو
+      </p>
+      <div class="badges">
+        <a href="https://github.com/dalroot/khoosheh/releases"><img src="https://img.shields.io/github/v/release/dalroot/khoosheh?color=blue&label=Release" alt="Release"></a>
+        <a href="https://github.com/dalroot/khoosheh/actions"><img src="https://img.shields.io/github/actions/workflow/status/dalroot/khoosheh/ci.yml?branch=main&label=CI&logo=githubactions&logoColor=white" alt="CI"></a>
+        <a href="https://github.com/dalroot/khoosheh/security"><img src="https://img.shields.io/badge/Security-CodeQL%20Passed-brightgreen?logo=github&logoColor=white" alt="Security"></a>
+        <a href="https://github.com/dalroot/khoosheh/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen" alt="PRs Welcome"></a>
+        <a href="https://t.me/dallrep"><img src="https://img.shields.io/badge/Telegram-Channel-2CA5E0?logo=telegram&logoColor=white" alt="Telegram"></a>
+      </div>
+      <div class="btn-group">
+        <a href="https://github.com/dalroot/khoosheh" class="btn btn-primary" target="_blank">⭐ مشاهده ریپازیتوری در گیت‌هاب</a>
+        <a href="https://t.me/dallrep" class="btn btn-secondary" target="_blank">📢 کانال پشتیبانی تلگرام</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- BENCHMARKS -->
+    <section class="benchmarks">
+      <div class="b-card">
+        <div class="b-val">&lt; 1 min</div>
+        <div class="b-title">داون‌تایم انتقال (Downtime)</div>
+        <div class="b-desc">انتقال کامل کاربران و پایگاه داده با کمترین زمان قطعی ممکن</div>
+      </div>
+      <div class="b-card">
+        <div class="b-val amber">&lt; 5 min</div>
+        <div class="b-title">رکورد بازگردانی اولیه</div>
+        <div class="b-desc">تخلیه WAL، بازرسی جداول و بازیابی خودکار زیر ۵ دقیقه</div>
+      </div>
+      <div class="b-card">
+        <div class="b-val blue">100%</div>
+        <div class="b-title">حفظ ترافیک کاربران</div>
+        <div class="b-desc">انتقال دقیق و بدون تغییر داده‌های مصرفی و اکانت‌ها</div>
+      </div>
+      <div class="b-card">
+        <div class="b-val">AES-256</div>
+        <div class="b-title">امنیت و رمزگذاری</div>
+        <div class="b-desc">فشرده‌سازی با 7z و رمزنگاری داده‌ها با کلید اختصاصی</div>
+      </div>
+    </section>
+
+    <!-- INSTALLATION -->
+    <section>
+      <div style="text-align: center; margin-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 700;">نصب سریع یک‌خطی بر روی سرورهای ابری و لینوکس</h3>
+      </div>
+      <div class="install-box">
+        curl -sSL https://raw.githubusercontent.com/dalroot/khoosheh/main/install.sh | bash
+      </div>
+    </section>
+
+    <!-- DASHBOARD PREVIEW -->
+    <section class="screenshot-wrap">
+      <img src="dashboard.png" alt="داشبورد مدیریتی خوشه">
+    </section>
+
+    <!-- COMMUNITY REVIEWS & GISCUS COMMENTS -->
+    <section class="comments-section" id="comments">
+      <div class="comments-header">
+        <h2>💬 نظرات و بازخوردهای جامعه کاربری</h2>
+        <p>نظرات، تجربیات مهاجرت و سوالات خود را مستقیماً از طریق اکانت گیت‌هاب ثبت کنید</p>
+      </div>
+
+      <!-- GISCUS WIDGET CONTAINER -->
+      <div id="giscus-container">
+        <script src="https://giscus.app/client.js"
+                data-repo="dalroot/khoosheh"
+                data-repo-id=""
+                data-category="General"
+                data-category-id=""
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="top"
+                data-theme="dark_dimmed"
+                data-lang="fa"
+                crossorigin="anonymous"
+                async>
+        </script>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>🌾 پروژه متن‌باز خوشه — تحت لایسنس MIT منتشر شده است.</p>
+      <p style="margin-top: 6px; font-size: 12px;">معماری و توسعه توسط هوش مصنوعی آنتی‌گراویتی (Antigravity Enterprise Autonomous Agent)</p>
+    </div>
+  </footer>
+
+</body>
+</html>

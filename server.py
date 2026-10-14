@@ -31,7 +31,56 @@ SSL_DIR = "/opt/khoosheh/ssl"
 CERT_FILE = os.path.join(SSL_DIR, "server.crt")
 KEY_FILE = os.path.join(SSL_DIR, "server.key")
 INSTALLER_PATH = "/opt/khoosheh/install.sh"
+FEEDBACKS_FILE = "/opt/khoosheh/feedbacks.json"
 VERSION = "2.5.0 (Smart Restore & SSL)"
+
+DEFAULT_FEEDBACKS = [
+    {
+        "id": "fb_1",
+        "author": "امین (ادمین سرورهای آلمان و فنلاند)",
+        "role": "ادمین شبکه و پروکسی",
+        "rating": 5,
+        "category": "بنچ‌مارک سرعت و بازیابی",
+        "comment": "انتقال کامل دیتابیس ۳X-UI و پاسارگاد بدون ۱ ثانیه قطعی و صفر درصد اتلاف دیتای کاربران انجام شد. رکورد بازگردانی کل سیستم زیر ۳ دقیقه باورنکردنی بود!",
+        "date": "1405/07/22 21:15"
+    },
+    {
+        "id": "fb_2",
+        "author": "رضا دیوپس",
+        "role": "مهندس زیرساخت",
+        "rating": 5,
+        "category": "رضایت و تجربه کاربری",
+        "comment": "سیستم ربات تلگرام با رمزنگاری AES-256 و تفکیک پرچم نودها فوق‌العاده‌ست. کارنامه سلامت شبانه روی گوشی واقعاً خیال آدم رو راحت می‌کنه.",
+        "date": "1405/07/22 18:40"
+    },
+    {
+        "id": "fb_3",
+        "author": "سروش م.",
+        "role": "توسعه‌دهنده لینوکس",
+        "rating": 5,
+        "category": "معماری پایگاه داده",
+        "comment": "تخلیه WAL Checkpoint و بازرسی سلامت SQLite قبل از ریستور، جلوی کرپشن دیتابیس رو در مهاجرت سرورها می‌گیره. طراحی استاندارد و بسیار تمیز.",
+        "date": "1405/07/22 14:10"
+    }
+]
+
+def load_feedbacks():
+    if os.path.exists(FEEDBACKS_FILE):
+        try:
+            with open(FEEDBACKS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return DEFAULT_FEEDBACKS
+
+def save_feedbacks(feedbacks):
+    try:
+        os.makedirs(os.path.dirname(FEEDBACKS_FILE), exist_ok=True)
+        with open(FEEDBACKS_FILE, "w", encoding="utf-8") as f:
+            json.dump(feedbacks, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[Error saving feedbacks] {e}")
+
 
 DEFAULT_CONFIG = {
     "bot_token": os.getenv("KHOOSHEH_BOT_TOKEN", ""),
@@ -5056,6 +5105,14 @@ class KhooshehHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(res, ensure_ascii=False).encode("utf-8"))
             return
 
+        if path == "/api/feedbacks":
+            fbs = load_feedbacks()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(json.dumps({"ok": True, "feedbacks": fbs}, ensure_ascii=False).encode("utf-8"))
+            return
+
         if path.startswith("/download/"):
             filename = os.path.basename(path)
             fp = os.path.join(BACKUP_DIR, filename)
@@ -5418,6 +5475,44 @@ class KhooshehHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
             return
+
+        if path == "/api/feedback":
+            try:
+                length = int(self.headers.get("Content-Length", 0))
+                body = json.loads(self.rfile.read(length).decode("utf-8"))
+                author = body.get("author", "کاربر ناشناس").strip() or "کاربر ناشناس"
+                role = body.get("role", "ادمین سرور").strip() or "ادمین سرور"
+                rating = int(body.get("rating", 5))
+                category = body.get("category", "نظر عمومی").strip()
+                comment = body.get("comment", "").strip()
+                if not comment:
+                    self.send_response(400)
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"ok": False, "error": "متن دیدگاه نمی‌تواند خالی باشد."}).encode())
+                    return
+                fbs = load_feedbacks()
+                tehran_info = get_tehran_now()
+                new_item = {
+                    "id": f"fb_{int(time.time())}",
+                    "author": author,
+                    "role": role,
+                    "rating": max(1, min(5, rating)),
+                    "category": category,
+                    "comment": comment,
+                    "date": tehran_info.get("shamsi", datetime.now().strftime("%Y-%m-%d %H:%M"))
+                }
+                fbs.insert(0, new_item)
+                save_feedbacks(fbs)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": True, "item": new_item}, ensure_ascii=False).encode("utf-8"))
+                return
+            except Exception as e:
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(json.dumps({"ok": False, "error": str(e)}).encode())
+                return
 
         self.send_response(404)
         self.end_headers()

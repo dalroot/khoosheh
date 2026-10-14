@@ -715,7 +715,7 @@
       ConfigProvider, App, Layout, Menu, Card, Row, Col, Statistic,
       Table, Button, Form, Input, InputNumber, Select, Tag, Space,
       Badge, Typography, Divider, Switch, Modal, Popconfirm, Progress, Radio, Tooltip,
-      Steps, Upload, Alert, Timeline, Checkbox
+      Steps, Upload, Alert, Timeline, Checkbox, Rate, Avatar, List
     } = antd;
     const { Text } = Typography;
 
@@ -747,6 +747,9 @@
     const MenuFoldOutlined = icons.MenuFoldOutlined || (() => <span>◀</span>);
     const MenuUnfoldOutlined = icons.MenuUnfoldOutlined || (() => <span>▶</span>);
     const LogoutOutlined = icons.LogoutOutlined || (() => <span>🚪</span>);
+    const MessageOutlined = icons.MessageOutlined || (() => <span>💬</span>);
+    const StarFilled = icons.StarFilled || (() => <span>⭐</span>);
+    const LikeOutlined = icons.LikeOutlined || (() => <span>👍</span>);
 
     const PRESETS = [
       { id: '3x-ui', name: '3X-UI (Sanaei / Alireza)', desc: 'دیتابیس کاربران و کانفیگ‌ها', default_path: '/etc/x-ui/x-ui.db', type: 'sqlite' },
@@ -793,14 +796,33 @@
       const [panelForm] = Form.useForm();
       const [setupForm] = Form.useForm();
       const [loginForm] = Form.useForm();
+      const [feedbackForm] = Form.useForm();
+
+      // Feedback State
+      const [feedbacks, setFeedbacks] = React.useState([]);
+      const [feedbackLoading, setFeedbackLoading] = React.useState(false);
 
       const getAuthHeader = () => {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlToken = urlParams.get('token');
+          if (urlToken && !localStorage.getItem('khoosheh_auth_token')) {
+            localStorage.setItem('khoosheh_auth_token', urlToken);
+          }
+        } catch (e) {}
         const token = localStorage.getItem('khoosheh_auth_token');
         return token ? { 'X-Khoosheh-Token': token } : {};
       };
 
       const checkAuth = async () => {
         try {
+          try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlToken = urlParams.get('token');
+            if (urlToken) {
+              localStorage.setItem('khoosheh_auth_token', urlToken);
+            }
+          } catch (e) {}
           const res = await fetch('/api/auth/status', { headers: getAuthHeader() });
           const json = await res.json();
           setAuthStatus(json);
@@ -811,6 +833,41 @@
           }
         } catch (e) {
           console.error(e);
+        }
+      };
+
+      const fetchFeedbacks = async () => {
+        try {
+          const res = await fetch('/api/feedbacks', { headers: getAuthHeader() });
+          const json = await res.json();
+          if (json.ok) {
+            setFeedbacks(json.feedbacks || []);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const handleSendFeedback = async (values) => {
+        setFeedbackLoading(true);
+        try {
+          const res = await fetch('/api/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+            body: JSON.stringify(values)
+          });
+          const json = await res.json();
+          if (json.ok) {
+            message.success('دیدگاه ارزشمند شما با موفقیت ثبت گردید.');
+            feedbackForm.resetFields();
+            fetchFeedbacks();
+          } else {
+            message.error(json.error || 'خطا در ثبت دیدگاه');
+          }
+        } catch (e) {
+          message.error('خطای ارتباط با سرور');
+        } finally {
+          setFeedbackLoading(false);
         }
       };
 
@@ -843,6 +900,7 @@
       React.useEffect(() => {
         checkAuth();
         fetchData();
+        fetchFeedbacks();
         const timer = setInterval(() => fetchData(true), 30000);
         return () => clearInterval(timer);
       }, []);
@@ -1370,6 +1428,7 @@
         { key: 'panels', icon: <AppstoreOutlined />, label: 'پایگاه‌های داده' },
         { key: 'servers', icon: <ClusterOutlined />, label: 'نودها و سرورها', badge: data?.live_nodes?.length },
         { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
+        { key: 'feedback', icon: <MessageOutlined />, label: 'نظرات و بازخوردها', badge: feedbacks?.length },
       ];
 
       return (
@@ -2414,6 +2473,140 @@
                     scroll={{ x: 680 }}
                   />
                 </Card>
+              )}
+
+              {/* 7. FEEDBACK & COMMUNITY REVIEWS */}
+              {currentTab === 'feedback' && (
+                <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                  <Card bordered={false} className="welcome-banner">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
+                          💬 نظرات، تجربیات و بنچ‌مارک‌های جامعه کاربری خوشه
+                        </div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+                          ثبت تجربیات عملیاتی مهاجرت، سنجش سرعت بازگردانی و ثبت پیشنهادات توسعه متن‌باز
+                        </div>
+                      </div>
+                      <Space size={8}>
+                        <Tag color="processing">GitHub Pages Ready</Tag>
+                        <Tag color="success">Giscus / Discussions</Tag>
+                        <Tag color="gold">امتیاز ۵ از ۵</Tag>
+                      </Space>
+                    </div>
+                  </Card>
+
+                  <Row gutter={[16, 16]}>
+                    {/* FEEDBACK LIST */}
+                    <Col xs={24} lg={14}>
+                      <Card
+                        title="دیدگاه‌های ثبت‌شده مدیران سرور"
+                        bordered={false}
+                        extra={
+                          <Button size="small" icon={<ReloadOutlined />} onClick={fetchFeedbacks}>
+                            بروزرسانی نظرات
+                          </Button>
+                        }
+                      >
+                        <List
+                          itemLayout="vertical"
+                          dataSource={feedbacks}
+                          locale={{ emptyText: 'هنوز دیدگاهی ثبت نشده است. اولین نظر را شما بنویسید!' }}
+                          renderItem={(item) => (
+                            <List.Item
+                              key={item.id}
+                              style={{
+                                padding: '14px 16px',
+                                marginBottom: 12,
+                                borderRadius: 8,
+                                background: 'var(--surface-subtle)',
+                                border: '1px solid var(--border-subtle)'
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8, flexWrap: 'wrap', gap: 6 }}>
+                                <Space size={8}>
+                                  <Avatar style={{ backgroundColor: '#2563eb', verticalAlign: 'middle' }}>
+                                    {item.author ? item.author.charAt(0) : 'ک'}
+                                  </Avatar>
+                                  <div>
+                                    <Text strong style={{ fontSize: 13.5 }}>{item.author}</Text>
+                                    <span style={{ margin: '0 6px', color: 'var(--text-secondary)' }}>•</span>
+                                    <Tag color="blue" style={{ fontSize: 11, margin: 0 }}>{item.role || 'کاربر'}</Tag>
+                                  </div>
+                                </Space>
+                                <Space size={6}>
+                                  <Rate disabled defaultValue={item.rating || 5} style={{ fontSize: 12 }} />
+                                  <Tag color="cyan" style={{ fontSize: 11 }}>{item.category}</Tag>
+                                </Space>
+                              </div>
+
+                              <p style={{ margin: '8px 0', fontSize: 13, lineHeight: '1.8', color: 'var(--text-primary)' }}>
+                                {item.comment}
+                              </p>
+
+                              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <Text type="secondary" className="num-font" style={{ fontSize: 11.5 }}>
+                                  {item.date}
+                                </Text>
+                              </div>
+                            </List.Item>
+                          )}
+                        />
+                      </Card>
+                    </Col>
+
+                    {/* NEW FEEDBACK FORM & GH-PAGES CARD */}
+                    <Col xs={24} lg={10}>
+                      <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                        <Card title="ثبت دیدگاه یا پیشنهاد جدید" bordered={false}>
+                          <Form form={feedbackForm} layout="vertical" onFinish={handleSendFeedback} initialValues={{ rating: 5, category: 'بنچ‌مارک سرعت و بازیابی' }}>
+                            <Form.Item name="author" label="نام یا نام کاربری تلگرام" rules={[{ required: true, message: 'نام الزامی است' }]}>
+                              <Input placeholder="مثال: @admin_tunnel یا علی" />
+                            </Form.Item>
+
+                            <Form.Item name="role" label="نقش / تخصص">
+                              <Input placeholder="مثال: ادمین سرور، مهندس شبکه، دیوپس" />
+                            </Form.Item>
+
+                            <Form.Item name="rating" label="امتیاز شما به سامانه خوشه">
+                              <Rate defaultValue={5} />
+                            </Form.Item>
+
+                            <Form.Item name="category" label="موضوع دیدگاه">
+                              <Select>
+                                <Select.Option value="بنچ‌مارک سرعت و بازیابی">⚡ بنچ‌مارک سرعت و بازیابی</Select.Option>
+                                <Select.Option value="رضایت و تجربه کاربری">⭐️ رضایت و تجربه کاربری</Select.Option>
+                                <Select.Option value="پیشنهاد قابلیت جدید">💡 پیشنهاد قابلیت جدید</Select.Option>
+                                <Select.Option value="گزارش باگ یا بهبود">🛠 گزارش باگ یا بهبود</Select.Option>
+                              </Select>
+                            </Form.Item>
+
+                            <Form.Item name="comment" label="متن دیدگاه یا بررسی شما" rules={[{ required: true, message: 'متن دیدگاه نمی‌تواند خالی باشد' }]}>
+                              <Input.TextArea rows={4} placeholder="تجربه خود از سرعت بازگردانی، حفظ ترافیک کاربران یا پشتیبان‌گیری خودکار را بنویسید..." />
+                            </Form.Item>
+
+                            <Button type="primary" htmlType="submit" block loading={feedbackLoading} icon={<SendOutlined />}>
+                              ثبت و ارسال دیدگاه
+                            </Button>
+                          </Form>
+                        </Card>
+
+                        <Card title="اتصال به GitHub Pages و Discussions" bordered={false}>
+                          <p style={{ fontSize: 12.5, lineHeight: 1.7, color: 'var(--text-secondary)', margin: 0 }}>
+                            سامانه خوشه به صورت کاملاً متن‌باز طراحی شده و دیدگاه‌های عمومی می‌تواند مستقیماً با سرویس <b>Giscus (GitHub Discussions)</b> روی صفحه گیت‌هاب پروژه همگام‌سازی شود.
+                          </p>
+                          <Divider style={{ margin: '12px 0' }} />
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>مخزن رسمی:</span>
+                            <Button type="link" size="small" href="https://github.com/dalroot/khoosheh" target="_blank">
+                              dalroot/khoosheh
+                            </Button>
+                          </div>
+                        </Card>
+                      </Space>
+                    </Col>
+                  </Row>
+                </Space>
               )}
 
             </div>
