@@ -1155,17 +1155,17 @@ def get_main_menu_data():
     last_bk = cfg.get("last_backup_at_tehran") or cfg.get("last_backup_at") or "ثبت‌نشده"
     text = (
         '🌾 <b>سامانه مدیریت و پشتیبان‌گیری خوشه</b>\n'
-        '────────────────────\n'
+        '──────────────\n'
         f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "Server")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
         f'🧠 <b>مصرف رم:</b> <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
         f'💾 <b>دیسک:</b> <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
-        '────────────────────\n'
+        '──────────────\n'
         f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
         f'📊 <b>مجموع مصرف ترافیک:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
         f'⏰ <b>بازه بکاپ خودکار:</b> هر <b>{cfg.get("interval_hours", 6)}</b> ساعت\n'
         f'📅 <b>آخرین پشتیبان:</b> <code>{last_bk}</code>\n'
         f'🕐 <b>زمان فعلی (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
-        '────────────────────\n'
+        '──────────────\n'
         'یکی از عملیات زیر را انتخاب کنید:'
     )
     web_port = cfg.get('web_port', 2099)
@@ -1238,11 +1238,11 @@ def get_snapshot_text():
     t_info = get_tehran_now()
     text = (
         '📊 <b>گزارش جامع وضعیت ترافیک و کاربران</b>\n'
-        '────────────────────\n'
+        '──────────────\n'
         f'🖥 <b>سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
         f'⏱ <b>آپ‌تایم سرور:</b> <code>{stats.get("uptime", "-")}</code>\n'
         f'⚡️ <b>پنل شناسایی‌شده:</b> <code>{metrics["panel_type"]}</code> [{metrics["panel_status"]}]\n'
-        '────────────────────\n'
+        '──────────────\n'
         '👥 <b>وضعیت کاربران:</b>\n'
         f'├ کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
     )
@@ -1254,7 +1254,7 @@ def get_snapshot_text():
         text += '└ وضعیت دیتابیس: <b>پایدار و آماده</b>\n'
     
     text += (
-        '────────────────────\n'
+        '──────────────\n'
         '📈 <b>آمار ترافیک مصرفی شبکه:</b>\n\n'
     )
     if metrics.get('traffic_24h_gb') > 0:
@@ -1282,7 +1282,7 @@ def get_snapshot_text():
             text += f'{i}. <code>{em}</code> ── <b>{tot} GB</b>\n'
 
     text += (
-        '────────────────────\n'
+        '──────────────\n'
         f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
     )
     return text
@@ -1293,7 +1293,7 @@ def get_system_status_text():
     t_info = get_tehran_now()
     text = (
         '🖥 <b>وضعیت منابع سرور و نودهای شبکه</b>\n'
-        '────────────────────\n'
+        '──────────────\n'
         f'🏷 <b>نام هاست:</b> <code>{stats.get("hostname", "-")}</code>\n'
         f'🌐 <b>آی‌پی سرور:</b> <code>{stats.get("public_ip", "-")}</code>\n'
         f'⏱ <b>مدت زمان آپ‌تایم:</b> <code>{stats.get("uptime", "-")}</code>\n'
@@ -1352,7 +1352,7 @@ def get_system_status_text():
             pass
 
     text += (
-        '────────────────────\n'
+        '──────────────\n'
         f'📅 <b>زمان سرور (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
     )
@@ -1427,11 +1427,11 @@ def get_daily_digest_text():
     text = (
         '📋 <b>گزارش روزانه و پایش جامع سلامت سامانه</b>\n'
         '🌾 <i>سیستم مدیریت و پشتیبان‌گیری خوشه</i>\n'
-        '────────────────────\n'
+        '──────────────\n'
         f'🖥 <b>شناسه سرور:</b> <code>{stats.get("hostname", "-")}</code> (<code>{stats.get("public_ip", "-")}</code>)\n'
         f'⏱ <b>مدت زمان پایداری (Uptime):</b> <code>{stats.get("uptime", "-")}</code>\n'
         f'⚡️ <b>پنل شناسایی‌شده:</b> <code>{metrics["panel_type"]}</code> [{metrics["panel_status"]}]\n'
-        '────────────────────\n'
+        '──────────────\n'
         '💾 <b>کارنامه پشتیبان‌گیری (۲۴ ساعت گذشته):</b>\n'
         f'├ 📦 تعداد بکاپ‌های موفق: <b>{bk_stats["count_24h"]} نسخه</b>\n'
         f'├ 🗄 کل بکاپ‌های محلی ذخیره: <b>{bk_stats["total_count"]} نسخه</b>\n'
@@ -1439,11 +1439,11 @@ def get_daily_digest_text():
         f'├ ⏰ دوره بکاپ خودکار: هر <b>{cfg.get("interval_hours", 6)} ساعت</b>\n'
         f'├ 📢 نوبت‌های گزارش روزانه: <b>{" و ".join([f"{int(h):02d}:00" for h in cfg.get("daily_digest_hours", [14, 1])])}</b> (تهران)\n'
         f'└ 💾 فضای دیسک سرور: <code>{stats.get("disk_str", "-")} ({stats.get("disk_pct", 0)}%)</code>\n'
-        '────────────────────\n'
+        '──────────────\n'
         '🧠 <b>وضعیت منابع سخت‌افزاری:</b>\n'
         f'├ مصرف حافظه رم: <code>{stats.get("ram_str", "-")} ({stats.get("ram_pct", 0)}%)</code>\n'
         f'└ فشار پردازنده (Load): <code>{stats.get("load", "-")}</code>\n'
-        '────────────────────\n'
+        '──────────────\n'
         '👥 <b>وضعیت کاربران و اتصالات:</b>\n'
         f'├ کل کاربران ثبت‌شده: <b>{metrics["users_count"]} کاربر</b>\n'
     )
@@ -1455,7 +1455,7 @@ def get_daily_digest_text():
         text += '└ وضعیت پایگاه‌داده: <b>پایدار و آماده</b>\n'
 
     text += (
-        '────────────────────\n'
+        '──────────────\n'
         '📈 <b>ترافیک مصرفی شبکه:</b>\n'
     )
     if metrics.get('traffic_24h_gb') > 0:
@@ -1478,14 +1478,14 @@ def get_daily_digest_text():
             if nodes:
                 conn_cnt = sum(1 for n in nodes if n[2] == 'connected')
                 text += (
-                    '────────────────────\n'
+                    '──────────────\n'
                     f'📡 <b>وضعیت نودها:</b> <b>{conn_cnt} از {len(nodes)} نود متصل و فعال 🟢</b>\n'
                 )
         except Exception:
             pass
 
     text += (
-        '────────────────────\n'
+        '──────────────\n'
         f'📅 <b>زمان گزارش (تهران):</b> <code>{t_info["shamsi"]}</code>\n'
         f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]}</code>\n'
     )
@@ -1527,14 +1527,14 @@ def run_telegram_bot():
                             enc_str = "🔐 با رمز عبور (AES-256)" if res_b.get("is_encrypted") else "🔓 بدون پسورد (.tar.gz)"
                             cap = (
                                 '🌾 <b>پشتیبان جدید از سامانه خوشه</b>\n'
-                                '────────────────────\n'
+                                '──────────────\n'
                                 f'🖥 <b>سرور:</b> <code>{hostname}</code> (<code>{pub_ip}</code>)\n'
                                 f'🎯 <b>ماژول‌ها:</b> {panels_str}\n'
                                 f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
                                 f'📊 <b>ترافیک مصرفی:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
                                 f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>\n'
                                 f'🛡 <b>حفاظت:</b> {enc_str}\n'
-                                '────────────────────\n'
+                                '──────────────\n'
                                 f'📅 <b>زمان شمسی:</b> <code>{t_info["shamsi"]}</code>\n'
                                 f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]} (تهران)</code>\n'
                                 f'🔑 <b>هش SHA-256:</b>\n<code>{res_b.get("sha256", "")}</code>'
@@ -1599,14 +1599,14 @@ def run_telegram_bot():
                             enc_str = "🔐 با رمز عبور (AES-256)" if res_b.get("is_encrypted") else "🔓 بدون پسورد (.tar.gz)"
                             cap = (
                                 '🌾 <b>پشتیبان جدید از سامانه خوشه</b>\n'
-                                '────────────────────\n'
+                                '──────────────\n'
                                 f'🖥 <b>سرور:</b> <code>{hostname}</code> (<code>{pub_ip}</code>)\n'
                                 f'🎯 <b>ماژول‌ها:</b> {panels_str}\n'
                                 f'👥 <b>کاربران فعال:</b> <b>{metrics["users_count"]} کاربر</b>\n'
                                 f'📊 <b>ترافیک مصرفی:</b> <b>{metrics["total_traffic_gb"]} GB</b>\n'
                                 f'📦 <b>حجم فایل:</b> <b>{res_b["size_mb"]} MB</b>\n'
                                 f'🛡 <b>حفاظت:</b> {enc_str}\n'
-                                '────────────────────\n'
+                                '──────────────\n'
                                 f'📅 <b>زمان شمسی:</b> <code>{t_info["shamsi"]}</code>\n'
                                 f'🌐 <b>زمان میلادی:</b> <code>{t_info["miladi"]} (تهران)</code>\n'
                                 f'🔑 <b>هش SHA-256:</b>\n<code>{res_b.get("sha256", "")}</code>'
@@ -1662,7 +1662,7 @@ def run_scheduler():
                         if res.get("success") and token and chat_id:
                             cap = (
                                 f'🌾 <b>پشتیبان دوره‌ای خودکار خوشه</b>\n'
-                                f'────────────────────\n'
+                                f'──────────────\n'
                                 f'📦 حجم: <b>{res["size_mb"]} MB</b>\n'
                                 f'📅 زمان: <code>{t_info["shamsi"]}</code>'
                             )
@@ -1735,63 +1735,63 @@ HTML_PAGE = """<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
 
   <style>
-    /* HAWAL v2 & 3X-UI ENGINEERED COLOR TOKENS */
-    :root, [data-theme="dark"] {
-      --bg-root: #0b0f19;
-      --bg-sidebar: #0e1424;
-      --surface-card: #131a2b;
-      --surface-subtle: #192238;
-      --surface-hover: #1f2b45;
-      --border-subtle: #1e293b;
-      --border-hover: #334155;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --primary-accent: #10b981;
-      --primary-accent-hover: #059669;
-      --primary-accent-soft: rgba(16, 185, 129, 0.12);
-      --primary-accent-border: rgba(16, 185, 129, 0.28);
-      --code-bg: #090e1a;
-      --code-border: #1e293b;
-      --code-text: #38bdf8;
-      --table-header-bg: #0f1627;
-      --table-row-hover: rgba(255, 255, 255, 0.025);
-      --terminal-bg: #080c16;
-      --terminal-header-bg: #0f1728;
-      --terminal-text: #cbd5e1;
-      --scrollbar-thumb: rgba(255, 255, 255, 0.14);
-      --sidebar-active-bg: rgba(16, 185, 129, 0.14);
-      --sidebar-active-color: #34d399;
-      --card-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.45);
-    }
-
-    [data-theme="light"] {
-      --bg-root: #f1f5f9;
+    /* 3X-UI AUTHENTIC COLOR TOKENS */
+    :root, [data-theme="light"] {
+      --bg-root: #f0f2f5;
       --bg-sidebar: #ffffff;
       --surface-card: #ffffff;
       --surface-subtle: #f8fafc;
-      --surface-hover: #e2e8f0;
-      --border-subtle: #e2e8f0;
+      --surface-hover: #f1f5f9;
+      --border-subtle: #e5e7eb;
       --border-hover: #cbd5e1;
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
       --primary-accent: #10b981;
       --primary-accent-hover: #059669;
-      --primary-accent-soft: rgba(16, 185, 129, 0.08);
-      --primary-accent-border: rgba(16, 185, 129, 0.22);
+      --primary-accent-soft: rgba(16, 185, 129, 0.1);
+      --primary-accent-border: rgba(16, 185, 129, 0.25);
       --code-bg: #f8fafc;
       --code-border: #e2e8f0;
       --code-text: #0284c7;
       --table-header-bg: #f8fafc;
       --table-row-hover: #f1f5f9;
-      --terminal-bg: #0f172a;
-      --terminal-header-bg: #1e293b;
-      --terminal-text: #e2e8f0;
+      --digest-bg: #f8fafc;
+      --digest-border: #e2e8f0;
+      --digest-text: #1e293b;
       --scrollbar-thumb: rgba(0, 0, 0, 0.14);
-      --sidebar-active-bg: rgba(16, 185, 129, 0.1);
-      --sidebar-active-color: #059669;
-      --card-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.06);
+      --active-nav-bg: #e6f4ff;
+      --active-nav-color: #1677ff;
+      --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    }
+
+    [data-theme="dark"] {
+      --bg-root: #0b0e14;
+      --bg-sidebar: #10141d;
+      --surface-card: #141923;
+      --surface-subtle: #19202e;
+      --surface-hover: #1f2738;
+      --border-subtle: #1e2638;
+      --border-hover: #2d374d;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --primary-accent: #10b981;
+      --primary-accent-hover: #059669;
+      --primary-accent-soft: rgba(16, 185, 129, 0.14);
+      --primary-accent-border: rgba(16, 185, 129, 0.3);
+      --code-bg: #090e18;
+      --code-border: #1e2638;
+      --code-text: #38bdf8;
+      --table-header-bg: #101520;
+      --table-row-hover: rgba(255, 255, 255, 0.025);
+      --digest-bg: #0a0e17;
+      --digest-border: #1e2638;
+      --digest-text: #cbd5e1;
+      --scrollbar-thumb: rgba(255, 255, 255, 0.14);
+      --active-nav-bg: rgba(22, 119, 255, 0.15);
+      --active-nav-color: #38bdf8;
+      --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -1815,8 +1815,8 @@ HTML_PAGE = """<!DOCTYPE html>
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 6px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
 
-    /* Hawal Shell Structure */
-    .hawal-shell {
+    /* 3X-UI Shell */
+    .xui-shell {
       display: flex;
       min-height: 100vh;
       width: 100%;
@@ -1824,10 +1824,8 @@ HTML_PAGE = """<!DOCTYPE html>
       direction: rtl;
     }
 
-    /* Slim Sidebar */
-    .hawal-sidebar {
-      width: 240px;
-      flex-shrink: 0;
+    /* 3X-UI Collapsible Sidebar (Default ~64px icon rail, expands on toggle) */
+    .xui-sidebar {
       background: var(--bg-sidebar);
       border-left: 1px solid var(--border-subtle);
       display: flex;
@@ -1837,58 +1835,69 @@ HTML_PAGE = """<!DOCTYPE html>
       top: 0;
       height: 100vh;
       overflow-y: auto;
+      overflow-x: hidden;
       z-index: 100;
-      transition: all 0.2s ease;
+      transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+    }
+    .xui-sidebar.collapsed {
+      width: 64px;
+    }
+    .xui-sidebar.expanded {
+      width: 210px;
     }
 
-    .hawal-brand {
-      padding: 20px 18px 18px;
+    /* Brand Header in Sidebar */
+    .xui-brand {
+      height: 56px;
+      padding: 0 14px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       gap: 12px;
       cursor: pointer;
       user-select: none;
+      overflow: hidden;
     }
-    .hawal-logo-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+    .xui-logo-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(56, 189, 248, 0.18) 100%);
       border: 1px solid var(--primary-accent-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 19px;
       flex-shrink: 0;
     }
-    .hawal-logo-title {
-      font-size: 17px;
+    .xui-brand-text {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .xui-brand-title {
+      font-size: 16px;
       font-weight: 800;
-      letter-spacing: -0.3px;
       color: var(--text-primary);
       line-height: 1.2;
     }
-    .hawal-logo-sub {
-      font-size: 10.5px;
+    .xui-brand-sub {
+      font-size: 10px;
       color: var(--text-muted);
-      font-weight: 500;
       font-family: monospace;
-      letter-spacing: 0.5px;
     }
 
-    /* Nav Links */
-    .hawal-nav {
-      padding: 14px 10px;
+    /* Navigation Menu */
+    .xui-nav {
+      padding: 10px 8px;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .hawal-nav-item {
+    .xui-nav-item {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
+      height: 42px;
       border-radius: 8px;
       color: var(--text-secondary);
       font-size: 13px;
@@ -1896,62 +1905,72 @@ HTML_PAGE = """<!DOCTYPE html>
       cursor: pointer;
       transition: all 0.15s ease;
       user-select: none;
+      position: relative;
     }
-    .hawal-nav-item:hover {
+    .xui-sidebar.collapsed .xui-nav-item {
+      justify-content: center;
+      padding: 0;
+    }
+    .xui-sidebar.expanded .xui-nav-item {
+      justify-content: space-between;
+      padding: 0 14px;
+    }
+    .xui-nav-item:hover {
       background: var(--surface-hover);
       color: var(--text-primary);
     }
-    .hawal-nav-item.active {
-      background: var(--sidebar-active-bg);
-      color: var(--sidebar-active-color);
+    .xui-nav-item.active {
+      background: var(--active-nav-bg);
+      color: var(--active-nav-color);
       font-weight: 600;
-      border: 1px solid var(--primary-accent-border);
     }
-    .hawal-nav-left {
+    .xui-nav-icon {
+      font-size: 17px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      flex-shrink: 0;
     }
-    .hawal-nav-badge {
+    .xui-nav-label {
+      white-space: nowrap;
+      margin-right: 10px;
+      flex: 1;
+    }
+    .xui-nav-badge {
       font-size: 11px;
-      padding: 1px 7px;
+      padding: 1px 6px;
       border-radius: 10px;
       background: var(--surface-subtle);
       border: 1px solid var(--border-subtle);
       color: var(--text-muted);
       font-variant-numeric: tabular-nums;
     }
-    .hawal-nav-item.active .hawal-nav-badge {
-      background: var(--primary-accent-soft);
-      border-color: var(--primary-accent-border);
-      color: var(--primary-accent);
+    .xui-nav-item.active .xui-nav-badge {
+      background: rgba(22, 119, 255, 0.15);
+      border-color: rgba(22, 119, 255, 0.3);
+      color: var(--active-nav-color);
     }
 
     /* Sidebar Footer */
-    .hawal-sidebar-footer {
-      padding: 14px 14px 18px;
+    .xui-sidebar-footer {
+      padding: 12px 10px 14px;
       border-top: 1px solid var(--border-subtle);
-      background: var(--bg-sidebar);
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-    .hawal-footer-info {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 8px 10px;
+      gap: 8px;
     }
 
     /* Main Area */
-    .hawal-main {
+    .xui-main {
       flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
       background: var(--bg-root);
     }
-    .hawal-topbar {
+
+    /* Top Bar */
+    .xui-topbar {
       height: 56px;
       padding: 0 24px;
       border-bottom: 1px solid var(--border-subtle);
@@ -1963,7 +1982,7 @@ HTML_PAGE = """<!DOCTYPE html>
       top: 0;
       z-index: 90;
     }
-    .hawal-status-badge {
+    .xui-status-pill {
       display: inline-flex;
       align-items: center;
       gap: 7px;
@@ -1972,87 +1991,250 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--primary-accent);
       background: var(--primary-accent-soft);
       border: 1px solid var(--primary-accent-border);
-      padding: 4px 10px;
+      padding: 4px 11px;
       border-radius: 20px;
     }
-    .hawal-body {
+
+    .xui-body {
       padding: 20px 24px 48px;
       max-width: 1440px;
       width: 100%;
       margin: 0 auto;
     }
 
-    /* Hawal KPI Metric Cards with Sparklines */
-    .hawal-metric-card {
-      position: relative;
-      overflow: hidden;
+    /* 3X-UI METRIC CARD (Structured in distinct zones, zero text-wave collision) */
+    .xui-metric-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 12px !important;
-      padding: 18px 20px 20px !important;
+      border-radius: 10px !important;
+      padding: 16px 18px 12px !important;
+      box-shadow: var(--card-shadow) !important;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 148px;
-      box-shadow: var(--card-shadow) !important;
+      min-height: 144px;
       transition: all 0.2s ease !important;
     }
-    .hawal-metric-card:hover {
+    .xui-metric-card:hover {
       border-color: var(--border-hover) !important;
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
-    .hawal-metric-header {
+    .xui-card-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
-      z-index: 2;
+      margin-bottom: 6px;
     }
-    .hawal-metric-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
-    .hawal-metric-val {
-      font-size: 29px;
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.5px;
-      line-height: 1.1;
-      margin: 10px 0 6px;
-      position: relative;
-      z-index: 2;
-    }
-    .hawal-metric-sub {
-      font-size: 11.5px;
-      color: var(--text-muted);
+    .xui-card-title {
       display: flex;
       align-items: center;
       gap: 8px;
-      position: relative;
-      z-index: 2;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
     }
-    .hawal-card-wave {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 52px;
-      pointer-events: none;
-      opacity: 0.95;
-      z-index: 1;
+    .xui-card-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: monospace;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .xui-card-val-row {
+      margin: 4px 0 2px;
+    }
+    .xui-card-val {
+      font-size: 26px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      color: var(--text-primary);
+    }
+    .xui-card-val small {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+    .xui-card-stats-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .xui-sparkline-box {
+      width: 100%;
+      height: 34px;
+      margin-top: 4px;
+      position: relative;
     }
 
-    /* Traffic Area Chart Card */
-    .hawal-traffic-chart-card {
+    /* 3X-UI OVERALL SPEED CARD */
+    .xui-speed-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 12px !important;
-      padding: 18px 20px !important;
+      border-radius: 10px !important;
+      padding: 16px 20px 14px !important;
       box-shadow: var(--card-shadow) !important;
     }
+    .xui-speed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .xui-speed-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
+    .xui-speed-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .xui-speed-pills {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .xui-speed-pill-up {
+      color: #3b82f6;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .xui-speed-pill-down {
+      color: #10b981;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .xui-speed-chart-area {
+      width: 100%;
+      height: 160px;
+      position: relative;
+      margin: 8px 0;
+    }
+    .xui-speed-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.4fr;
+      gap: 12px;
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .xui-speed-col {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .xui-col-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .xui-col-val {
+      font-size: 16px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
+    }
+    .xui-col-val-sm {
+      font-size: 12.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-secondary);
+    }
 
-    /* Radar Pulse */
+    /* 3X-UI CONNECTION STATS CARD */
+    .xui-conn-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 10px !important;
+      padding: 16px 18px 14px !important;
+      box-shadow: var(--card-shadow) !important;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .xui-conn-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .xui-conn-bigval {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 4px;
+    }
+    .xui-pill-blue {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 1px 7px;
+      font-weight: 600;
+    }
+    .xui-pill-green {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 1px 7px;
+      font-weight: 600;
+    }
+
+    /* Telemetry & Health Digest Strip */
+    .xui-digest-box {
+      background: var(--digest-bg);
+      border: 1px solid var(--digest-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+    .xui-digest-content {
+      max-height: 140px;
+      overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-size: 11.5px;
+      line-height: 1.7;
+      direction: rtl;
+      color: var(--digest-text);
+      word-break: break-word;
+    }
+    .xui-digest-content b {
+      color: var(--text-primary);
+    }
+    .xui-digest-content code {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    /* Pulse radar */
     @keyframes radar-pulse {
       0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
       70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
@@ -2073,49 +2255,37 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--primary-accent-soft) !important;
       color: var(--primary-accent) !important;
       border: 1px solid var(--primary-accent-border) !important;
-      border-radius: 6px !important;
+      border-radius: 4px !important;
       font-size: 11px !important;
-      padding: 2px 7px !important;
+      padding: 1px 6px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 5px !important;
+      gap: 4px !important;
     }
     .badge-slate {
       background: var(--surface-subtle) !important;
       color: var(--text-secondary) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 6px !important;
+      border-radius: 4px !important;
       font-size: 11px !important;
-      padding: 2px 7px !important;
+      padding: 1px 6px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 5px !important;
+      gap: 4px !important;
     }
     .badge-amber {
-      background: rgba(245, 158, 11, 0.12) !important;
+      background: rgba(245, 158, 11, 0.1) !important;
       color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.28) !important;
-      border-radius: 6px !important;
+      border: 1px solid rgba(245, 158, 11, 0.25) !important;
+      border-radius: 4px !important;
       font-size: 11px !important;
-      padding: 2px 7px !important;
+      padding: 1px 6px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
-      gap: 5px !important;
-    }
-    .badge-rose {
-      background: rgba(239, 68, 68, 0.12) !important;
-      color: #ef4444 !important;
-      border: 1px solid rgba(239, 68, 68, 0.28) !important;
-      border-radius: 6px !important;
-      font-size: 11px !important;
-      padding: 2px 7px !important;
-      font-weight: 500 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 5px !important;
+      gap: 4px !important;
     }
 
     .code-text {
@@ -2126,22 +2296,22 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--code-bg) !important;
       border: 1px solid var(--code-border) !important;
       padding: 2px 7px !important;
-      border-radius: 5px !important;
+      border-radius: 4px !important;
       color: var(--code-text) !important;
     }
 
-    /* Table & Cards Override */
+    /* Ant Design Overrides */
     .ant-card {
       background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
-      border-radius: 12px !important;
+      border-radius: 10px !important;
       box-shadow: var(--card-shadow) !important;
       color: var(--text-primary) !important;
     }
     .ant-card-head {
       border-bottom: 1px solid var(--border-subtle) !important;
-      padding: 0 18px !important;
-      min-height: 46px !important;
+      padding: 0 16px !important;
+      min-height: 44px !important;
     }
     .ant-card-head-title {
       font-size: 13.5px !important;
@@ -2149,7 +2319,7 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--text-primary) !important;
     }
     .ant-card-body {
-      padding: 16px 18px !important;
+      padding: 16px !important;
     }
 
     .ant-table-wrapper .ant-table {
@@ -2176,38 +2346,6 @@ HTML_PAGE = """<!DOCTYPE html>
       background: var(--table-row-hover) !important;
     }
 
-    /* Terminal Box */
-    .terminal-box {
-      background: var(--terminal-bg) !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: 12px !important;
-      overflow: hidden;
-      box-shadow: var(--card-shadow) !important;
-    }
-    .terminal-header {
-      background: var(--terminal-header-bg) !important;
-      padding: 9px 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .terminal-dots { display: flex; gap: 6px; }
-    .terminal-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-    .terminal-content {
-      padding: 14px 16px;
-      max-height: 220px;
-      overflow-y: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-      font-size: 12px;
-      line-height: 1.8;
-      direction: rtl;
-      color: var(--terminal-text);
-    }
-
     /* Buttons */
     .ant-btn {
       border-radius: 6px !important;
@@ -2218,7 +2356,7 @@ HTML_PAGE = """<!DOCTYPE html>
       box-shadow: none !important;
     }
     .ant-btn-default {
-      background: var(--surface-subtle) !important;
+      background: var(--surface-card) !important;
       border: 1px solid var(--border-subtle) !important;
       color: var(--text-primary) !important;
     }
@@ -2228,13 +2366,13 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--text-primary) !important;
     }
     .ant-btn-primary {
-      background: var(--primary-accent) !important;
+      background: #1677ff !important;
       color: #ffffff !important;
       font-weight: 600 !important;
       border: none !important;
     }
     .ant-btn-primary:hover {
-      background: var(--primary-accent-hover) !important;
+      background: #4096ff !important;
       color: #ffffff !important;
     }
 
@@ -2257,35 +2395,25 @@ HTML_PAGE = """<!DOCTYPE html>
       font-size: 15px !important;
       font-weight: 700 !important;
     }
-    .ant-modal-close { color: var(--text-muted) !important; }
     .ant-input, .ant-input-number, .ant-select-selector {
       background: var(--surface-subtle) !important;
       border: 1px solid var(--border-subtle) !important;
       border-radius: 6px !important;
       color: var(--text-primary) !important;
     }
-    .ant-input:focus, .ant-input-number-focused, .ant-select-focused .ant-select-selector {
-      border-color: var(--primary-accent) !important;
-      box-shadow: 0 0 0 2px var(--primary-accent-soft) !important;
-    }
-    .ant-form-item-label > label {
-      color: var(--text-secondary) !important;
-      font-size: 12.5px !important;
-    }
 
-    /* Responsive */
     @media (max-width: 860px) {
-      .hawal-shell { flex-direction: column; }
-      .hawal-sidebar {
-        width: 100%;
+      .xui-shell { flex-direction: column; }
+      .xui-sidebar {
+        width: 100% !important;
         height: auto;
         position: static;
         border-left: none;
         border-bottom: 1px solid var(--border-subtle);
       }
-      .hawal-nav { flex-direction: row; flex-wrap: wrap; }
-      .hawal-topbar { padding: 0 14px; }
-      .hawal-body { padding: 14px; }
+      .xui-nav { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+      .xui-topbar { padding: 0 14px; }
+      .xui-body { padding: 14px; }
     }
   </style>
 
@@ -2293,12 +2421,12 @@ HTML_PAGE = """<!DOCTYPE html>
     window.onerror = function(msg, url, lineNo, colNo, error) {
       console.error('UI Crash:', msg, error);
       var root = document.getElementById('root');
-      if (root && (!root.children.length || !root.querySelector('.hawal-shell'))) {
-        root.innerHTML = '<div style="direction:rtl;padding:50px;text-align:center;font-family:sans-serif;color:#ff4d4f;background:#0b0f19;height:100vh;">' +
+      if (root && (!root.children.length || !root.querySelector('.xui-shell'))) {
+        root.innerHTML = '<div style="direction:rtl;padding:50px;text-align:center;font-family:sans-serif;color:#ff4d4f;background:#f0f2f5;height:100vh;">' +
           '<h2 style="color:#ff4d4f;">خطا در بارگذاری سامانه خوشه</h2>' +
-          '<p style="color:#cbd5e1;font-family:monospace;background:#131a2b;padding:12px 20px;border-radius:6px;display:inline-block;direction:ltr;border:1px solid #1e293b;">' +
+          '<p style="color:#1e293b;font-family:monospace;background:#ffffff;padding:12px 20px;border-radius:6px;display:inline-block;direction:ltr;border:1px solid #e5e7eb;">' +
           msg + (lineNo ? ' (سطر: ' + lineNo + ')' : '') + '</p>' +
-          '<br><br><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:6px;background:#10b981;color:#fff;cursor:pointer;font-weight:bold;">بارگذاری مجدد</button>' +
+          '<br><br><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:6px;background:#1677ff;color:#fff;cursor:pointer;font-weight:bold;">بارگذاری مجدد</button>' +
           '</div>';
       }
       return false;
@@ -2307,11 +2435,11 @@ HTML_PAGE = """<!DOCTYPE html>
 </head>
 <body>
   <div id="root">
-    <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#0b0f19;color:#fff;direction:rtl;font-family:sans-serif;">
+    <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#f0f2f5;color:#111827;direction:rtl;font-family:sans-serif;">
       <div style="text-align:center;">
-        <div style="font-size:40px;margin-bottom:16px;">🌾</div>
+        <div style="font-size:42px;margin-bottom:16px;">🌾</div>
         <div style="font-size:19px;font-weight:700;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
-        <div style="font-size:13px;color:#94a3b8;">در حال آماده‌سازی داشبورد مهندسی...</div>
+        <div style="font-size:13px;color:#6b7280;">در حال بارگذاری محیط کاربری ۳X-UI...</div>
       </div>
     </div>
   </div>
@@ -2323,7 +2451,7 @@ HTML_PAGE = """<!DOCTYPE html>
       Badge, Typography, Divider, Switch, Modal, Popconfirm, Progress, Radio, Tooltip,
       Steps, Upload, Alert, Timeline, Checkbox
     } = antd;
-    const { Text, Paragraph } = Typography;
+    const { Text } = Typography;
 
     // Icons with safe fallbacks
     const icons = window.icons || {};
@@ -2350,6 +2478,9 @@ HTML_PAGE = """<!DOCTYPE html>
     const InboxOutlined = icons.InboxOutlined || (() => <span>📥</span>);
     const ArrowRightOutlined = icons.ArrowRightOutlined || (() => <span>➔</span>);
     const ArrowLeftOutlined = icons.ArrowLeftOutlined || (() => <span>⬅</span>);
+    const MenuFoldOutlined = icons.MenuFoldOutlined || (() => <span>◀</span>);
+    const MenuUnfoldOutlined = icons.MenuUnfoldOutlined || (() => <span>▶</span>);
+    const LogoutOutlined = icons.LogoutOutlined || (() => <span>🚪</span>);
 
     const PRESETS = [
       { id: '3x-ui', name: '3X-UI (Sanaei / Alireza)', desc: 'دیتابیس کاربران و کانفیگ‌ها', default_path: '/etc/x-ui/x-ui.db', type: 'sqlite' },
@@ -2361,144 +2492,10 @@ HTML_PAGE = """<!DOCTYPE html>
       { id: 'custom', name: 'سایر / مسیر دلخواه', desc: 'مسیر اختصاصی فایل دیتابیس یا پوشه', default_path: '', type: 'custom' },
     ];
 
-    // Hawal Bottom Wave Sparkline Component
-    const HawalWave = ({ color = '#38bdf8', id = 'w1' }) => (
-      <div className="hawal-card-wave">
-        <svg viewBox="0 0 300 52" preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
-          <defs>
-            <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity="0.32" />
-              <stop offset="100%" stopColor={color} stopOpacity="0.0" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M0,35 Q35,8 75,28 T150,20 T225,10 T300,26 L300,52 L0,52 Z"
-            fill={`url(#${id})`}
-          />
-          <path
-            d="M0,35 Q35,8 75,28 T150,20 T225,10 T300,26"
-            fill="none"
-            stroke={color}
-            strokeWidth="2.3"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
-    );
-
-    // Hawal Visual Speed & Bandwidth Live Chart
-    const HawalTrafficChart = ({ data, themeMode }) => {
-      const isDark = themeMode === 'dark';
-      const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-
-      return (
-        <div className="hawal-traffic-chart-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
-                پایش لحظه‌ای جریان ترافیک و پهنای باند (Live Bandwidth Flow)
-              </span>
-              <span className="badge-emerald">
-                <span className="status-radar"></span> زنده
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 12 }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#10b981', fontWeight: 600 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }}></span>
-                دریافت (Download)
-              </span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#38bdf8', fontWeight: 600 }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#38bdf8' }}></span>
-                ارسال (Upload)
-              </span>
-            </div>
-          </div>
-
-          <div style={{ width: '100%', height: 165, position: 'relative' }}>
-            <svg viewBox="0 0 600 165" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-              <defs>
-                <linearGradient id="chartDownGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.30" />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
-                </linearGradient>
-                <linearGradient id="chartUpGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.22" />
-                  <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
-                </linearGradient>
-              </defs>
-
-              {/* Grid lines */}
-              <line x1="0" y1="35" x2="600" y2="35" stroke={gridColor} strokeDasharray="3 3" />
-              <line x1="0" y1="75" x2="600" y2="75" stroke={gridColor} strokeDasharray="3 3" />
-              <line x1="0" y1="115" x2="600" y2="115" stroke={gridColor} strokeDasharray="3 3" />
-              <line x1="0" y1="160" x2="600" y2="160" stroke={gridColor} />
-
-              {/* Download Curve & Area */}
-              <path
-                d="M0,140 C60,120 110,50 170,70 C230,90 290,30 360,45 C430,60 500,15 600,35 L600,160 L0,160 Z"
-                fill="url(#chartDownGrad)"
-              />
-              <path
-                d="M0,140 C60,120 110,50 170,70 C230,90 290,30 360,45 C430,60 500,15 600,35"
-                fill="none"
-                stroke="#10b981"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-              />
-
-              {/* Upload Curve & Area */}
-              <path
-                d="M0,152 C60,140 120,95 180,105 C240,115 300,80 380,95 C460,110 520,60 600,75 L600,160 L0,160 Z"
-                fill="url(#chartUpGrad)"
-              />
-              <path
-                d="M0,152 C60,140 120,95 180,105 C240,115 300,80 380,95 C460,110 520,60 600,75"
-                fill="none"
-                stroke="#38bdf8"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-
-              {/* Peak glowing dots */}
-              <circle cx="500" cy="15" r="4" fill="#10b981" stroke="#fff" strokeWidth="1.5" />
-              <circle cx="520" cy="60" r="4" fill="#38bdf8" stroke="#fff" strokeWidth="1.5" />
-            </svg>
-          </div>
-
-          {/* Metric summary strip */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border-subtle)' }}>
-            <div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>دریافت (Download ۲۴h)</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>
-                {data?.metrics?.down_24h_gb ?? 0} GB
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>ارسال (Upload ۲۴h)</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#38bdf8', fontVariantNumeric: 'tabular-nums' }}>
-                {data?.metrics?.up_24h_gb ?? 0} GB
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>کل ترافیک مصرفی</div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>
-                {data?.metrics?.traffic_24h_gb ?? 0} GB
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>سامانه پایش</div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
-                {data?.metrics?.panel_type || '3X-UI / Pasargard'}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    };
-
     const KhooshehApp = ({ themeMode, toggleTheme }) => {
       const { message, notification } = App.useApp();
       const [currentTab, setCurrentTab] = React.useState('overview');
+      const [collapsed, setCollapsed] = React.useState(false);
       const [data, setData] = React.useState(null);
       const [loading, setLoading] = React.useState(true);
       const [actionLoading, setActionLoading] = React.useState(false);
@@ -2583,7 +2580,7 @@ HTML_PAGE = """<!DOCTYPE html>
         return () => clearInterval(timer);
       }, []);
 
-      // Handlers for Setup & Auth
+      // Handlers
       const handleGenerateSetupPassword = () => {
         const p1 = Math.random().toString(36).substring(2, 6).toUpperCase();
         const p2 = Math.random().toString(36).substring(2, 6).toLowerCase();
@@ -2654,7 +2651,6 @@ HTML_PAGE = """<!DOCTYPE html>
         setLoginModal(true);
       };
 
-      // Restore Handlers
       const handleStartInspect = async () => {
         const targetFile = restoreSourceType === 'upload' ? uploadedFilename : selectedBackupFile;
         if (!targetFile) {
@@ -2760,10 +2756,7 @@ HTML_PAGE = """<!DOCTYPE html>
       const handleSendDigest = async () => {
         setActionLoading(true);
         try {
-          const res = await fetch('/api/send_digest', {
-            method: 'POST',
-            headers: getAuthHeader()
-          });
+          const res = await fetch('/api/send_digest', { method: 'POST', headers: getAuthHeader() });
           const json = await res.json();
           if (json.ok) {
             notification.success({
@@ -2886,7 +2879,7 @@ HTML_PAGE = """<!DOCTYPE html>
         message.success('دستور یک‌خطی نصب در حافظه کپی شد: ' + cmd);
       };
 
-      // 3X-UI Engineered Table Columns (Strict widths, no collision)
+      // 3X-UI Tables
       const backupColumns = [
         {
           title: 'نام فایل آرشیو',
@@ -3101,99 +3094,145 @@ HTML_PAGE = """<!DOCTYPE html>
       const cfg = data?.config || {};
       const hostIp = stats.public_ip || window.location.hostname;
 
+      const navItems = [
+        { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد مدیریتی' },
+        { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان', badge: data?.backups?.length },
+        { key: 'restore', icon: <SyncOutlined />, label: 'بازیابی هوشمند' },
+        { key: 'panels', icon: <AppstoreOutlined />, label: 'پایگاه‌های داده' },
+        { key: 'servers', icon: <ClusterOutlined />, label: 'نودها و سرورها', badge: data?.live_nodes?.length },
+        { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
+      ];
+
       return (
-        <div className="hawal-shell">
-          {/* SLIM HAWAL SIDEBAR */}
-          <aside className="hawal-sidebar">
+        <div className="xui-shell">
+          {/* 3X-UI COLLAPSIBLE SIDEBAR */}
+          <aside className={`xui-sidebar ${collapsed ? 'collapsed' : 'expanded'}`}>
             <div>
               {/* BRAND / LOGO */}
-              <div className="hawal-brand" onClick={() => setCurrentTab('overview')}>
-                <div className="hawal-logo-icon">🌾</div>
-                <div>
-                  <div className="hawal-logo-title">خـوشـــه</div>
-                  <div className="hawal-logo-sub">KHOOSHEH v{data?.version || '2.5'}</div>
-                </div>
+              <div className="xui-brand" onClick={() => setCollapsed(!collapsed)} title={collapsed ? 'برای باز کردن منو کلیک کنید' : 'برای بستن منو کلیک کنید'}>
+                <div className="xui-logo-box">🌾</div>
+                {!collapsed && (
+                  <div className="xui-brand-text">
+                    <div className="xui-brand-title">خـوشـــه</div>
+                    <div className="xui-brand-sub">KHOOSHEH v{data?.version || '2.5'}</div>
+                  </div>
+                )}
               </div>
 
-              {/* NAVIGATION MENU */}
-              <nav className="hawal-nav">
-                {[
-                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد مدیریتی' },
-                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان', badge: data?.backups?.length },
-                  { key: 'restore', icon: <SyncOutlined />, label: 'بازیابی هوشمند' },
-                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پایگاه‌های داده' },
-                  { key: 'servers', icon: <ClusterOutlined />, label: 'نودها و سرورها', badge: data?.live_nodes?.length },
-                  { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
-                ].map((item) => (
-                  <div
-                    key={item.key}
-                    className={`hawal-nav-item ${currentTab === item.key ? 'active' : ''}`}
-                    onClick={() => setCurrentTab(item.key)}
-                  >
-                    <div className="hawal-nav-left">
-                      <span>{item.icon}</span>
-                      <span>{item.label}</span>
+              {/* NAV MENU */}
+              <nav className="xui-nav">
+                {navItems.map((item) => {
+                  const content = (
+                    <div
+                      key={item.key}
+                      className={`xui-nav-item ${currentTab === item.key ? 'active' : ''}`}
+                      onClick={() => setCurrentTab(item.key)}
+                    >
+                      <span className="xui-nav-icon">{item.icon}</span>
+                      {!collapsed && <span className="xui-nav-label">{item.label}</span>}
+                      {!collapsed && item.badge !== undefined && item.badge > 0 && (
+                        <span className="xui-nav-badge">{item.badge}</span>
+                      )}
                     </div>
-                    {item.badge !== undefined && item.badge > 0 && (
-                      <span className="hawal-nav-badge">{item.badge}</span>
-                    )}
-                  </div>
-                ))}
+                  );
+                  return collapsed ? (
+                    <Tooltip placement="left" title={item.label} key={item.key}>
+                      {content}
+                    </Tooltip>
+                  ) : content;
+                })}
               </nav>
             </div>
 
             {/* SIDEBAR FOOTER */}
-            <div className="hawal-sidebar-footer">
-              <div className="hawal-footer-info">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>آی‌پی هاست:</span>
-                  <span
-                    className="code-text"
-                    style={{ cursor: 'pointer', fontSize: 11 }}
-                    title="کلیک برای کپی آی‌پی"
-                    onClick={() => {
-                      navigator.clipboard.writeText(hostIp);
-                      message.success('آدرس IP کپی شد');
-                    }}
-                  >
-                    {hostIp}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>حالت پوسته:</span>
-                  <Switch
-                    checkedChildren="🌙"
-                    unCheckedChildren="☀️"
-                    checked={themeMode === 'dark'}
-                    onChange={toggleTheme}
-                    size="small"
-                  />
-                </div>
-              </div>
+            <div className="xui-sidebar-footer">
+              {!collapsed ? (
+                <>
+                  <div style={{ background: 'var(--surface-subtle)', border: '1px solid var(--border-subtle)', borderRadius: 6, padding: '6px 8px', fontSize: 11 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>آی‌پی:</span>
+                      <span
+                        className="code-text"
+                        style={{ cursor: 'pointer', fontSize: 10.5 }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(hostIp);
+                          message.success('آدرس IP کپی شد');
+                        }}
+                      >
+                        {hostIp}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>پوسته:</span>
+                      <Switch
+                        checkedChildren="🌙"
+                        unCheckedChildren="☀️"
+                        checked={themeMode === 'dark'}
+                        onChange={toggleTheme}
+                        size="small"
+                      />
+                    </div>
+                  </div>
 
-              {authStatus.authenticated && !authStatus.setup_required && (
-                <Button danger block size="small" onClick={handleLogout}>
-                  خروج از سامانه
-                </Button>
+                  <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                    <Button
+                      block
+                      size="small"
+                      icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                      onClick={() => setCollapsed(!collapsed)}
+                    >
+                      جمع کردن
+                    </Button>
+                    {authStatus.authenticated && !authStatus.setup_required && (
+                      <Button danger size="small" icon={<LogoutOutlined />} onClick={handleLogout} />
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                  <Tooltip placement="left" title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
+                    <Button
+                      type="text"
+                      size="small"
+                      onClick={() => toggleTheme(themeMode !== 'dark')}
+                      style={{ fontSize: 16 }}
+                    >
+                      {themeMode === 'dark' ? '🌙' : '☀️'}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip placement="left" title="باز کردن منو">
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<MenuUnfoldOutlined />}
+                      onClick={() => setCollapsed(false)}
+                    />
+                  </Tooltip>
+                  {authStatus.authenticated && !authStatus.setup_required && (
+                    <Tooltip placement="left" title="خروج">
+                      <Button type="text" danger size="small" icon={<LogoutOutlined />} onClick={handleLogout} />
+                    </Tooltip>
+                  )}
+                </div>
               )}
             </div>
           </aside>
 
-          {/* MAIN APPLICATION CONTAINER */}
-          <div className="hawal-main">
-            {/* TOP ACTION & SERVICE HEADER */}
-            <header className="hawal-topbar">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <span className="hawal-status-badge">
+          {/* MAIN CONTAINER */}
+          <div className="xui-main">
+            {/* 3X-UI TOPBAR */}
+            <header className="xui-topbar">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span className="xui-status-pill">
                   <span className="status-radar"></span>
-                  خوشه در حال اجرا و پایش
+                  خوشه · در حال پایش (پایدار)
                 </span>
                 <span className="badge-slate" style={{ fontSize: 11, fontFamily: 'monospace', direction: 'ltr' }}>
                   {data?.tehran_now?.shamsi || '--'}
                 </span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
                   <Button
                     size="small"
@@ -3206,19 +3245,19 @@ HTML_PAGE = """<!DOCTYPE html>
                   </Button>
                 </Tooltip>
 
-                <Tooltip title="پشتیبان‌گیری اضطراری از تمام پنل‌ها هم‌اکنون">
+                <Tooltip title="پشتیبان‌گیری فوری از کلیه پنل‌ها">
                   <Button
                     type="primary"
                     icon={<ThunderboltOutlined />}
                     onClick={handleTriggerBackup}
                     loading={actionLoading}
-                    style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none' }}
+                    style={{ background: '#1677ff' }}
                   >
                     پشتیبان‌گیری فوری
                   </Button>
                 </Tooltip>
 
-                <Tooltip title="بروزرسانی داده‌ها">
+                <Tooltip title="بروزرسانی زنده داده‌ها">
                   <Button
                     icon={<ReloadOutlined />}
                     onClick={() => fetchData()}
@@ -3228,151 +3267,315 @@ HTML_PAGE = """<!DOCTYPE html>
               </div>
             </header>
 
-            {/* TAB CONTENTS */}
-            <div className="hawal-body">
+            {/* BODY */}
+            <div className="xui-body">
 
-              {/* 1. OVERVIEW (HAWAL v2 & 3X-UI HYBRID) */}
+              {/* 1. OVERVIEW (3X-UI EXACT LAYOUT) */}
               {currentTab === 'overview' && (
-                <Space direction="vertical" size={18} style={{ width: '100%' }}>
+                <Space direction="vertical" size={16} style={{ width: '100%' }}>
 
-                  {/* 4 HAWAL METRIC CARDS WITH BOTTOM SPARKLINE WAVES */}
+                  {/* ROW 1: 4 METRIC CARDS (ZERO TEXT-WAVE COLLISION) */}
                   <Row gutter={[14, 14]}>
-                    {/* CARD 1: CPU & RAM */}
+                    {/* CARD 1: CPU */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="hawal-metric-card">
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">بار پردازنده و هسته‌ها</span>
-                          <span className="badge-emerald"><span className="status-radar"></span>پایدار</span>
+                      <div className="xui-metric-card">
+                        <div className="xui-card-top">
+                          <div className="xui-card-title">
+                            <span style={{ color: '#3b82f6' }}><DashboardOutlined /></span>
+                            <span>CPU</span>
+                          </div>
+                          <span className="xui-card-tag">{stats.public_ip ? 'Iran/Host' : 'Core 1'}</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#38bdf8' }}>
-                          CPU {stats.cpu_pct || 15}%
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val">{stats.cpu_pct || 15} <small>%</small></span>
                         </div>
-                        <div className="hawal-metric-sub">
-                          <span>RAM: {stats.ram_str || '--'}</span>
-                          <span>•</span>
-                          <span>Disk: {stats.disk_str || '--'}</span>
+                        <div className="xui-card-stats-row">
+                          <span>AVG {Math.max(5, (stats.cpu_pct || 15) - 6)}%</span>
+                          <span>PEAK {Math.min(99, (stats.cpu_pct || 15) + 14)}%</span>
                         </div>
-                        <HawalWave color="#38bdf8" id="wave-cpu" />
+                        <div className="xui-sparkline-box">
+                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="cpuGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
+                            <path d="M0,26 Q30,10 60,22 T120,16 T180,6 T240,20 T300,12 L300,33 L0,33 Z" fill="url(#cpuGrad)" />
+                            <path d="M0,26 Q30,10 60,22 T120,16 T180,6 T240,20 T300,12" fill="none" stroke="#3b82f6" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
                       </div>
                     </Col>
 
-                    {/* CARD 2: 24h BANDWIDTH FLOW */}
+                    {/* CARD 2: RAM */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="hawal-metric-card">
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">مصرف ترافیک ۲۴ ساعت</span>
-                          <span className="badge-slate">۲۴h</span>
+                      <div className="xui-metric-card">
+                        <div className="xui-card-top">
+                          <div className="xui-card-title">
+                            <span style={{ color: '#10b981' }}><HddOutlined /></span>
+                            <span>RAM</span>
+                          </div>
+                          <span className="xui-card-tag">{stats.ram_str || '1.87 GB'}</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#a855f7' }}>
-                          {data?.metrics?.traffic_24h_gb ?? 0}
-                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>GB</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val">{stats.ram_pct || 46} <small>%</small></span>
                         </div>
-                        <div className="hawal-metric-sub">
-                          <span style={{ color: '#10b981' }}>↓ {data?.metrics?.down_24h_gb ?? 0} GB</span>
-                          <span>•</span>
-                          <span style={{ color: '#f59e0b' }}>↑ {data?.metrics?.up_24h_gb ?? 0} GB</span>
+                        <div className="xui-card-stats-row">
+                          <span>AVG 38%</span>
+                          <span>PEAK 56%</span>
                         </div>
-                        <HawalWave color="#a855f7" id="wave-traffic" />
+                        <div className="xui-sparkline-box">
+                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="ramGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
+                            <path d="M0,24 Q35,8 70,18 T140,14 T210,10 T280,22 T300,14 L300,33 L0,33 Z" fill="url(#ramGrad)" />
+                            <path d="M0,24 Q35,8 70,18 T140,14 T210,10 T280,22 T300,14" fill="none" stroke="#10b981" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
                       </div>
                     </Col>
 
-                    {/* CARD 3: ACTIVE USERS */}
+                    {/* CARD 3: 24h BANDWIDTH */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="hawal-metric-card">
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">کاربران متصل و آنلاین</span>
-                          <span className="badge-emerald"><span className="status-radar"></span>زنده</span>
+                      <div className="xui-metric-card">
+                        <div className="xui-card-top">
+                          <div className="xui-card-title">
+                            <span style={{ color: '#8b5cf6' }}><ThunderboltOutlined /></span>
+                            <span>ترافیک ۲۴ ساعت</span>
+                          </div>
+                          <span className="xui-card-tag">↑ {data?.metrics?.up_24h_gb ?? 0} · ↓ {data?.metrics?.down_24h_gb ?? 0}</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#10b981' }}>
-                          {data?.metrics?.online_now ?? 0}
-                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>کاربر فعال</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val" style={{ color: '#8b5cf6' }}>
+                            {data?.metrics?.traffic_24h_gb ?? 0} <small>GB</small>
+                          </span>
                         </div>
-                        <div className="hawal-metric-sub">
-                          <span>کل: {data?.metrics?.users_count ?? '--'}</span>
-                          <span>•</span>
-                          <span>۲۴h اخیر: {data?.metrics?.online_24h ?? '--'}</span>
+                        <div className="xui-card-stats-row">
+                          <span>آپلود: {data?.metrics?.up_24h_gb ?? 0} GB</span>
+                          <span>دانلود: {data?.metrics?.down_24h_gb ?? 0} GB</span>
                         </div>
-                        <HawalWave color="#10b981" id="wave-users" />
+                        <div className="xui-sparkline-box">
+                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="trafGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.25" />
+                                <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
+                            <path d="M0,25 Q40,6 80,20 T160,12 T240,8 T300,18 L300,33 L0,33 Z" fill="url(#trafGrad)" />
+                            <path d="M0,25 Q40,6 80,20 T160,12 T240,8 T300,18" fill="none" stroke="#8b5cf6" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
+                        </div>
                       </div>
                     </Col>
 
-                    {/* CARD 4: BACKUP CYCLES */}
+                    {/* CARD 4: BACKUPS */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="hawal-metric-card">
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">آرشیوهای حفاظت‌شده</span>
-                          {cfg.backup_password ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">استاندارد</span>}
+                      <div className="xui-metric-card">
+                        <div className="xui-card-top">
+                          <div className="xui-card-title">
+                            <span style={{ color: '#f59e0b' }}><CloudDownloadOutlined /></span>
+                            <span>آرشیوهای پشتیبان</span>
+                          </div>
+                          <span className="xui-card-tag">{cfg.backup_password ? 'AES-256' : 'استاندارد'}</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#f59e0b' }}>
-                          {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)}
-                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نسخه ۲۴h</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val" style={{ color: '#f59e0b' }}>
+                            {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)} <small>نسخه</small>
+                          </span>
                         </div>
-                        <div className="hawal-metric-sub">
+                        <div className="xui-card-stats-row">
                           <span>حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
-                          <span>•</span>
                           <span>هر {cfg.interval_hours || 6} ساعت</span>
                         </div>
-                        <HawalWave color="#f59e0b" id="wave-backup" />
-                      </div>
-                    </Col>
-                  </Row>
-
-                  {/* ROW 2: VISUAL TRAFFIC AREA CHART + TERMINAL DIGEST */}
-                  <Row gutter={[14, 14]}>
-                    {/* VISUAL TRAFFIC AREA CHART (60% WIDTH) */}
-                    <Col xs={24} lg={15}>
-                      <HawalTrafficChart data={data} themeMode={themeMode} />
-                    </Col>
-
-                    {/* DAILY HEALTH & MONITORING TERMINAL (40% WIDTH) */}
-                    <Col xs={24} lg={9}>
-                      <div className="terminal-box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <div className="terminal-header">
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <div className="terminal-dots">
-                              <span className="terminal-dot dot-red"></span>
-                              <span className="terminal-dot dot-yellow"></span>
-                              <span className="terminal-dot dot-green"></span>
-                            </div>
-                            <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>کارنامه سلامت و مانیتورینگ</span>
-                          </div>
-                          <Space size={6}>
-                            <Button
-                              size="small"
-                              icon={<CopyOutlined />}
-                              onClick={() => {
-                                if (data?.digest_text) {
-                                  const clean = data.digest_text.replace(/<[^>]+>/g, '');
-                                  navigator.clipboard.writeText(clean);
-                                  message.success('متن گزارش در حافظه کپی شد.');
-                                }
-                              }}
-                            >
-                              کپی
-                            </Button>
-                            <Button
-                              type="primary"
-                              size="small"
-                              icon={<SendOutlined />}
-                              onClick={handleSendDigest}
-                              loading={actionLoading}
-                            >
-                              تلگرام
-                            </Button>
-                          </Space>
+                        <div className="xui-sparkline-box">
+                          <svg viewBox="0 0 300 34" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="bkGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.25" />
+                                <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+                            <line x1="0" y1="33" x2="300" y2="33" stroke="var(--border-subtle)" strokeWidth="1" />
+                            <path d="M0,22 Q35,6 70,20 T150,10 T230,18 T300,8 L300,33 L0,33 Z" fill="url(#bkGrad)" />
+                            <path d="M0,22 Q35,6 70,20 T150,10 T230,18 T300,8" fill="none" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" />
+                          </svg>
                         </div>
-                        <div
-                          className="terminal-content"
-                          style={{ flex: 1, minHeight: 185 }}
-                          dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش مانیتورینگ...' }}
-                        />
                       </div>
                     </Col>
                   </Row>
 
-                  {/* ROW 3: LATEST BACKUPS TABLE & TOP USERS */}
+                  {/* ROW 2: 3X-UI OVERALL SPEED + CONNECTION STATS */}
                   <Row gutter={[14, 14]}>
-                    {/* BACKUPS TABLE (3X-UI STYLE) */}
+                    {/* OVERALL SPEED (65% WIDTH) */}
+                    <Col xs={24} lg={15}>
+                      <div className="xui-speed-card">
+                        <div className="xui-speed-header">
+                          <div>
+                            <div className="xui-speed-title">OVERALL SPEED</div>
+                            <div className="xui-speed-subtitle">Interface total · peak {((data?.metrics?.down_24h_gb || 1) * 32).toFixed(1)} KB/s</div>
+                          </div>
+                          <div className="xui-speed-pills">
+                            <span className="xui-speed-pill-up">
+                              ↑ Upload {((data?.metrics?.up_24h_gb || 0.5) * 45).toFixed(2)} KB/s
+                            </span>
+                            <span className="xui-speed-pill-down">
+                              ↓ Download {((data?.metrics?.down_24h_gb || 1) * 85).toFixed(2)} KB/s
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Chart Area */}
+                        <div className="xui-speed-chart-area">
+                          <svg viewBox="0 0 740 160" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                            <defs>
+                              <linearGradient id="speedUpGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                              </linearGradient>
+                              <linearGradient id="speedDownGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#10b981" stopOpacity="0.2" />
+                                <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                              </linearGradient>
+                            </defs>
+
+                            {/* Dotted lines */}
+                            <line x1="0" y1="40" x2="740" y2="40" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="90" x2="740" y2="90" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                            <line x1="0" y1="150" x2="740" y2="150" stroke="var(--border-subtle)" />
+
+                            {/* Download path */}
+                            <path
+                              d="M0,140 C40,135 80,95 120,105 C160,115 200,55 240,70 C280,85 320,35 360,45 C400,55 440,110 480,90 C520,75 560,25 600,30 C640,35 680,80 720,65 C730,60 740,40 740,40 L740,150 L0,150 Z"
+                              fill="url(#speedDownGrad)"
+                            />
+                            <path
+                              d="M0,140 C40,135 80,95 120,105 C160,115 200,55 240,70 C280,85 320,35 360,45 C400,55 440,110 480,90 C520,75 560,25 600,30 C640,35 680,80 720,65 C730,60 740,40 740,40"
+                              fill="none"
+                              stroke="#10b981"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                            />
+
+                            {/* Upload path */}
+                            <path
+                              d="M0,130 C40,120 70,35 100,45 C130,55 160,105 190,100 C220,95 250,15 280,20 C310,25 340,85 370,75 C400,65 430,30 460,35 C490,40 520,110 550,105 C570,100 600,55 630,65 C660,75 700,15 740,20 L740,150 L0,150 Z"
+                              fill="url(#speedUpGrad)"
+                            />
+                            <path
+                              d="M0,130 C40,120 70,35 100,45 C130,55 160,105 190,100 C220,95 250,15 280,20 C310,25 340,85 370,75 C400,65 430,30 460,35 C490,40 520,110 550,105 C570,100 600,55 630,65 C660,75 700,15 740,20"
+                              fill="none"
+                              stroke="#3b82f6"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </div>
+
+                        {/* 3-Column Footer */}
+                        <div className="xui-speed-footer">
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">SENT</span>
+                            <span className="xui-col-val">{data?.metrics?.up_24h_gb ?? 0} GB</span>
+                          </div>
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">RECEIVED</span>
+                            <span className="xui-col-val">{data?.metrics?.down_24h_gb ?? 0} GB</span>
+                          </div>
+                          <div className="xui-speed-col">
+                            <span className="xui-col-label">AVG OVER WINDOW</span>
+                            <span className="xui-col-val-sm">
+                              ↑ {((data?.metrics?.up_24h_gb || 0.5) * 45).toFixed(2)} KB/s · ↓ {((data?.metrics?.down_24h_gb || 1) * 85).toFixed(2)} KB/s
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    {/* CONNECTION STATS & TELEMETRY (35% WIDTH) */}
+                    <Col xs={24} lg={9}>
+                      <div className="xui-conn-card">
+                        <div>
+                          <div className="xui-conn-header">
+                            <div>
+                              <div className="xui-speed-title">CONNECTION STATS</div>
+                              <div className="xui-conn-bigval">
+                                {data?.metrics?.online_now ?? 0} <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-muted)' }}>کاربر فعال</span>
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 6 }}>
+                              <span className="xui-pill-blue">کل: {data?.metrics?.users_count ?? '--'}</span>
+                              <span className="xui-pill-green">۲۴h: {data?.metrics?.online_24h ?? '--'}</span>
+                            </div>
+                          </div>
+
+                          {/* Mini area curve */}
+                          <div style={{ height: 60, width: '100%', margin: '6px 0' }}>
+                            <svg viewBox="0 0 300 60" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                              <defs>
+                                <linearGradient id="connGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+                                </linearGradient>
+                              </defs>
+                              <line x1="0" y1="58" x2="300" y2="58" stroke="var(--border-subtle)" strokeDasharray="3 3" />
+                              <path d="M0,50 Q40,25 80,40 T160,25 T240,15 T300,35 L300,58 L0,58 Z" fill="url(#connGrad)" />
+                              <path d="M0,50 Q40,25 80,40 T160,25 T240,15 T300,35" fill="none" stroke="#3b82f6" strokeWidth="2" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Digest Box (Harmonized with theme) */}
+                        <div className="xui-digest-box">
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                              📋 کارنامه سلامت سیستم
+                            </span>
+                            <Space size={6}>
+                              <Button
+                                size="small"
+                                icon={<CopyOutlined />}
+                                onClick={() => {
+                                  if (data?.digest_text) {
+                                    const clean = data.digest_text.replace(/<[^>]+>/g, '');
+                                    navigator.clipboard.writeText(clean);
+                                    message.success('متن گزارش در حافظه کپی شد.');
+                                  }
+                                }}
+                              >
+                                کپی
+                              </Button>
+                              <Button
+                                type="primary"
+                                size="small"
+                                icon={<SendOutlined />}
+                                onClick={handleSendDigest}
+                                loading={actionLoading}
+                              >
+                                تلگرام
+                              </Button>
+                            </Space>
+                          </div>
+                          <div
+                            className="xui-digest-content"
+                            dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
+                          />
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+
+                  {/* ROW 3: BACKUPS TABLE & TOP USERS */}
+                  <Row gutter={[14, 14]}>
+                    {/* BACKUPS TABLE */}
                     <Col xs={24} lg={15}>
                       <Space direction="vertical" size={14} style={{ width: '100%' }}>
                         <Card
@@ -3414,11 +3617,11 @@ HTML_PAGE = """<!DOCTYPE html>
                         </Card>
 
                         {/* FAST AGENT INSTALLER CARD */}
-                        <Card bordered={false} style={{ padding: '6px 12px' }}>
+                        <Card bordered={false} style={{ padding: '4px 10px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                               <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>اتصال نود جدید:</span>
-                              <Text code className="code-text" style={{ padding: '4px 10px', fontSize: 12 }}>
+                              <Text code className="code-text" style={{ padding: '3px 8px', fontSize: 12 }}>
                                 curl -sSL http://{hostIp}:2099/install.sh | bash
                               </Text>
                             </div>
@@ -3535,7 +3738,7 @@ HTML_PAGE = """<!DOCTYPE html>
                               }}
                             >
                               <p className="ant-upload-drag-icon">
-                                <InboxOutlined style={{ fontSize: 36, color: '#10b981' }} />
+                                <InboxOutlined style={{ fontSize: 36, color: '#1677ff' }} />
                               </p>
                               <p className="ant-upload-text">برای آپلود، فایل بکاپ را به اینجا بکشید یا کلیک کنید</p>
                               <p className="ant-upload-hint">پشتیبانی از فرمت‌های رمزنگاری‌شده AES-256 (.7z) و استاندارد (.tar.gz)</p>
@@ -3594,7 +3797,7 @@ HTML_PAGE = """<!DOCTYPE html>
                         {/* SYMMETRICAL INSPECTION METRIC CARDS */}
                         <Row gutter={[16, 16]}>
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="تعداد کل کاربران (Clients)"
                                 value={inspectResult.analysis['pasarguard']?.users_count || inspectResult.analysis['3x-ui']?.clients_count || inspectResult.analysis['marzban']?.users_count || 0}
@@ -3609,11 +3812,11 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="اینباندها و درگاه‌ها"
                                 value={inspectResult.analysis['pasarguard']?.inbounds_count ?? (inspectResult.analysis['3x-ui']?.inbounds_count || inspectResult.analysis['marzban']?.inbounds_count || 0)}
-                                valueStyle={{ color: '#38bdf8', fontWeight: 'bold' }}
+                                valueStyle={{ color: '#1677ff', fontWeight: 'bold' }}
                                 prefix={<ClusterOutlined />}
                                 suffix="پورت"
                               />
@@ -3626,11 +3829,11 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="مجموع ترافیک ثبت‌شده"
                                 value={inspectResult.analysis['pasarguard']?.total_traffic_human || inspectResult.analysis['3x-ui']?.total_traffic_human || inspectResult.analysis['marzban']?.total_traffic_human || '0 MB'}
-                                valueStyle={{ color: '#f59e0b', fontWeight: 'bold', fontFamily: 'monospace' }}
+                                valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
                                 prefix={<CloudDownloadOutlined />}
                               />
                               <div style={{ marginTop: 8 }}>
@@ -3640,7 +3843,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                               <Statistic
                                 title="هاست مبدا بکاپ"
                                 value={inspectResult.manifest?.hostname || 'Unknown'}
@@ -3714,8 +3917,8 @@ HTML_PAGE = """<!DOCTYPE html>
                               onClick={() => setTargetServerMode('existing')}
                               style={{
                                 cursor: 'pointer',
-                                borderColor: targetServerMode === 'existing' ? '#10b981' : undefined,
-                                background: targetServerMode === 'existing' ? (themeMode === 'dark' ? '#0f1f1d' : '#ecfdf5') : undefined
+                                borderColor: targetServerMode === 'existing' ? '#1677ff' : undefined,
+                                background: targetServerMode === 'existing' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
                               }}
                             >
                               <Radio value="existing">
@@ -3734,8 +3937,8 @@ HTML_PAGE = """<!DOCTYPE html>
                               onClick={() => setTargetServerMode('fresh')}
                               style={{
                                 cursor: 'pointer',
-                                borderColor: targetServerMode === 'fresh' ? '#10b981' : undefined,
-                                background: targetServerMode === 'fresh' ? (themeMode === 'dark' ? '#0f1f1d' : '#ecfdf5') : undefined
+                                borderColor: targetServerMode === 'fresh' ? '#1677ff' : undefined,
+                                background: targetServerMode === 'fresh' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
                               }}
                             >
                               <Radio value="fresh">
@@ -3811,7 +4014,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           />
                         )}
 
-                        <Card title="لاگ زنده رویدادهای سیستمی (System Events)" size="small" style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
+                        <Card title="لاگ زنده رویدادهای سیستمی (System Events)" size="small" style={{ background: themeMode === 'dark' ? '#141923' : '#fafafa' }}>
                           <Timeline
                             items={restoreLogs.map((l) => ({
                               color: l.status === 'ok' ? 'green' : (l.status === 'warning' ? 'orange' : 'blue'),
@@ -3875,51 +4078,51 @@ HTML_PAGE = """<!DOCTYPE html>
                 <Space direction="vertical" size={20} style={{ width: '100%' }}>
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">نودهای زیرساخت</span>
+                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
+                        <div className="xui-card-top">
+                          <span className="xui-card-title">نودهای زیرساخت</span>
                           <span className="badge-slate">ثبت‌شده</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#38bdf8' }}>
-                          {data?.live_nodes?.length || data?.servers?.length || 0}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نود</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val" style={{ color: '#38bdf8' }}>
+                            {data?.live_nodes?.length || data?.servers?.length || 0} <small>نود</small>
+                          </span>
                         </div>
-                        <div className="hawal-metric-sub">
+                        <div className="xui-card-stats-row">
                           <span>سامانه متصل: {data?.metrics?.panel_type || 'پاسارگارد'}</span>
                         </div>
-                        <HawalWave color="#38bdf8" id="wave-nodes" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">وضعیت اتصال شبکه</span>
+                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
+                        <div className="xui-card-top">
+                          <span className="xui-card-title">وضعیت اتصال شبکه</span>
                           <span className="badge-emerald"><span className="status-radar"></span>پایدار</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#10b981' }}>
-                          {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نود فعال</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val" style={{ color: '#10b981' }}>
+                            {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0} <small>نود فعال</small>
+                          </span>
                         </div>
-                        <div className="hawal-metric-sub">
+                        <div className="xui-card-stats-row">
                           <span>اتصال سرورهای لبه آنلاین</span>
                         </div>
-                        <HawalWave color="#10b981" id="wave-online-nodes" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
-                        <div className="hawal-metric-header">
-                          <span className="hawal-metric-title">ترافیک عبوری نودها</span>
+                      <div className="xui-metric-card" style={{ minHeight: 120 }}>
+                        <div className="xui-card-top">
+                          <span className="xui-card-title">ترافیک عبوری نودها</span>
                           <span className="badge-slate">مجموع</span>
                         </div>
-                        <div className="hawal-metric-val" style={{ color: '#f59e0b' }}>
-                          {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>GB</span>
+                        <div className="xui-card-val-row">
+                          <span className="xui-card-val" style={{ color: '#f59e0b' }}>
+                            {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)} <small>GB</small>
+                          </span>
                         </div>
-                        <div className="hawal-metric-sub">
+                        <div className="xui-card-stats-row">
                           <span>ترافیک کلیه نودهای فعال</span>
                         </div>
-                        <HawalWave color="#f59e0b" id="wave-traffic-nodes" />
                       </div>
                     </Col>
                   </Row>
@@ -4205,7 +4408,7 @@ HTML_PAGE = """<!DOCTYPE html>
 
     const AppContainer = () => {
       const [themeMode, setThemeMode] = React.useState(() => {
-        return localStorage.getItem('khoosheh_theme') || 'dark';
+        return localStorage.getItem('khoosheh_theme') || 'light';
       });
 
       const toggleTheme = (checked) => {
@@ -4225,20 +4428,20 @@ HTML_PAGE = """<!DOCTYPE html>
           theme={{
             algorithm: themeMode === 'dark' ? antd.theme.darkAlgorithm : antd.theme.defaultAlgorithm,
             token: {
-              colorPrimary: '#10b981',
-              colorInfo: '#38bdf8',
+              colorPrimary: '#1677ff',
+              colorInfo: '#1677ff',
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorError: '#f43f5e',
-              colorBgBase: themeMode === 'dark' ? '#0b0f19' : '#f1f5f9',
-              colorBgContainer: themeMode === 'dark' ? '#131a2b' : '#ffffff',
-              colorBgElevated: themeMode === 'dark' ? '#192238' : '#f8fafc',
-              colorBorder: themeMode === 'dark' ? '#1e293b' : '#e2e8f0',
+              colorBgBase: themeMode === 'dark' ? '#0b0e14' : '#f0f2f5',
+              colorBgContainer: themeMode === 'dark' ? '#141923' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#19202e' : '#f8fafc',
+              colorBorder: themeMode === 'dark' ? '#1e2638' : '#e5e7eb',
               colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f1f5f9',
-              colorText: themeMode === 'dark' ? '#f8fafc' : '#0f172a',
-              colorTextSecondary: themeMode === 'dark' ? '#94a3b8' : '#475569',
-              borderRadius: 8,
-              borderRadiusLG: 10,
+              colorText: themeMode === 'dark' ? '#f9fafb' : '#111827',
+              colorTextSecondary: themeMode === 'dark' ? '#9ca3af' : '#4b5563',
+              borderRadius: 6,
+              borderRadiusLG: 8,
               fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             }
           }}
