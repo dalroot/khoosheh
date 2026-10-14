@@ -1717,7 +1717,7 @@ HTML_PAGE = """<!DOCTYPE html>
   <!-- Font: Vazirmatn Standard CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Ant Design Reset CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5/dist/reset.min.css">
@@ -1735,49 +1735,52 @@ HTML_PAGE = """<!DOCTYPE html>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
 
   <style>
+    /* HAWAL v2 & 3X-UI ENGINEERED COLOR TOKENS */
     :root, [data-theme="dark"] {
-      --bg-root: #09090b;
-      --bg-gradient: radial-gradient(circle at 50% 0%, #13141a 0%, #09090b 70%);
-      --surface-card: #121316;
-      --surface-subtle: #18191e;
-      --surface-hover: #1e1f26;
-      --border-subtle: #27272a;
-      --border-hover: #3f3f46;
-      --text-primary: #f4f4f5;
-      --text-secondary: #a1a1aa;
-      --text-muted: #71717a;
+      --bg-root: #0b0f19;
+      --bg-sidebar: #0e1424;
+      --surface-card: #131a2b;
+      --surface-subtle: #192238;
+      --surface-hover: #1f2b45;
+      --border-subtle: #1e293b;
+      --border-hover: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
       --primary-accent: #10b981;
       --primary-accent-hover: #059669;
-      --primary-accent-soft: rgba(16, 185, 129, 0.1);
-      --primary-accent-border: rgba(16, 185, 129, 0.25);
-      --code-bg: #18181b;
-      --code-border: #27272a;
+      --primary-accent-soft: rgba(16, 185, 129, 0.12);
+      --primary-accent-border: rgba(16, 185, 129, 0.28);
+      --code-bg: #090e1a;
+      --code-border: #1e293b;
       --code-text: #38bdf8;
-      --table-header-bg: rgba(255, 255, 255, 0.02);
+      --table-header-bg: #0f1627;
       --table-row-hover: rgba(255, 255, 255, 0.025);
-      --terminal-bg: #090a0d;
-      --terminal-header-bg: #121318;
+      --terminal-bg: #080c16;
+      --terminal-header-bg: #0f1728;
       --terminal-text: #cbd5e1;
-      --scrollbar-thumb: rgba(255, 255, 255, 0.15);
-      --navbar-bg: rgba(9, 9, 11, 0.85);
+      --scrollbar-thumb: rgba(255, 255, 255, 0.14);
+      --sidebar-active-bg: rgba(16, 185, 129, 0.14);
+      --sidebar-active-color: #34d399;
+      --card-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.45);
     }
 
     [data-theme="light"] {
-      --bg-root: #f8fafc;
-      --bg-gradient: none;
+      --bg-root: #f1f5f9;
+      --bg-sidebar: #ffffff;
       --surface-card: #ffffff;
-      --surface-subtle: #f1f5f9;
+      --surface-subtle: #f8fafc;
       --surface-hover: #e2e8f0;
       --border-subtle: #e2e8f0;
       --border-hover: #cbd5e1;
       --text-primary: #0f172a;
       --text-secondary: #475569;
-      --text-muted: #64748b;
+      --text-muted: #94a3b8;
       --primary-accent: #10b981;
       --primary-accent-hover: #059669;
       --primary-accent-soft: rgba(16, 185, 129, 0.08);
-      --primary-accent-border: rgba(16, 185, 129, 0.2);
-      --code-bg: #f1f5f9;
+      --primary-accent-border: rgba(16, 185, 129, 0.22);
+      --code-bg: #f8fafc;
       --code-border: #e2e8f0;
       --code-text: #0284c7;
       --table-header-bg: #f8fafc;
@@ -1785,12 +1788,14 @@ HTML_PAGE = """<!DOCTYPE html>
       --terminal-bg: #0f172a;
       --terminal-header-bg: #1e293b;
       --terminal-text: #e2e8f0;
-      --scrollbar-thumb: rgba(0, 0, 0, 0.15);
-      --navbar-bg: rgba(255, 255, 255, 0.9);
+      --scrollbar-thumb: rgba(0, 0, 0, 0.14);
+      --sidebar-active-bg: rgba(16, 185, 129, 0.1);
+      --sidebar-active-color: #059669;
+      --card-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.06);
     }
 
     * {
-      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
       box-sizing: border-box;
     }
     html, body {
@@ -1798,174 +1803,269 @@ HTML_PAGE = """<!DOCTYPE html>
       padding: 0;
       min-height: 100%;
       background-color: var(--bg-root) !important;
-      background-image: var(--bg-gradient) !important;
-      background-attachment: fixed !important;
+      color: var(--text-primary) !important;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      color: var(--text-primary) !important;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
-    /* Sleek Custom Scrollbars */
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb);
-      border-radius: 6px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-accent);
-    }
-    .code-text {
-      direction: ltr !important;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
-      display: inline-block;
-      font-size: 11.5px;
-      background: var(--code-bg) !important;
-      border: 1px solid var(--code-border) !important;
-      padding: 2px 7px !important;
-      border-radius: 5px !important;
-      color: var(--code-text) !important;
-    }
 
-    /* Top Navigation Bar */
-    .top-navbar {
-      height: 52px;
-      padding: 0 24px;
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 6px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
+
+    /* Hawal Shell Structure */
+    .hawal-shell {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--navbar-bg) !important;
-      backdrop-filter: blur(14px) !important;
-      -webkit-backdrop-filter: blur(14px) !important;
-      border-bottom: 1px solid var(--border-subtle) !important;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .nav-tabs {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      background: var(--surface-subtle);
-      padding: 3px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-    }
-    .nav-tab-item {
-      padding: 5px 12px;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      user-select: none;
-    }
-    .nav-tab-item:hover {
-      color: var(--text-primary);
-      background: var(--surface-hover);
-    }
-    .nav-tab-item.active {
-      color: var(--text-primary);
-      background: var(--surface-card);
-      border: 1px solid var(--border-subtle);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    .app-main-container {
-      max-width: 1360px;
-      margin: 0 auto;
-      padding: 20px 20px 48px;
+      min-height: 100vh;
       width: 100%;
+      background: var(--bg-root);
+      direction: rtl;
     }
 
-    /* Card Overrides */
-    .ant-card {
-      background: var(--surface-card) !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-      color: var(--text-primary) !important;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
-    }
-    .ant-card:hover {
-      border-color: var(--border-hover) !important;
-    }
-    .ant-card-head {
-      border-bottom: 1px solid var(--border-subtle) !important;
-      padding: 0 16px !important;
-      min-height: 44px !important;
-      color: var(--text-primary) !important;
-    }
-    .ant-card-head-title {
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      color: var(--text-primary) !important;
-    }
-    .ant-card-body {
-      padding: 16px !important;
-    }
-
-    /* Hero KPI Cards */
-    .hero-kpi-card {
-      background: var(--surface-card) !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
-      padding: 16px 18px !important;
+    /* Slim Sidebar */
+    .hawal-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--bg-sidebar);
+      border-left: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 100%;
-      min-height: 128px;
-      transition: all 0.15s ease !important;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+      transition: all 0.2s ease;
     }
-    .hero-kpi-card:hover {
-      border-color: var(--border-hover) !important;
-      transform: translateY(-1px);
+
+    .hawal-brand {
+      padding: 20px 18px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
     }
-    .hero-header {
+    .hawal-logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(56, 189, 248, 0.2) 100%);
+      border: 1px solid var(--primary-accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .hawal-logo-title {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .hawal-logo-sub {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-family: monospace;
+      letter-spacing: 0.5px;
+    }
+
+    /* Nav Links */
+    .hawal-nav {
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .hawal-nav-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .hero-title {
-      font-size: 12.5px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
       font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .hawal-nav-item:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+    .hawal-nav-item.active {
+      background: var(--sidebar-active-bg);
+      color: var(--sidebar-active-color);
+      font-weight: 600;
+      border: 1px solid var(--primary-accent-border);
+    }
+    .hawal-nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hawal-nav-badge {
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 10px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .hawal-nav-item.active .hawal-nav-badge {
+      background: var(--primary-accent-soft);
+      border-color: var(--primary-accent-border);
+      color: var(--primary-accent);
+    }
+
+    /* Sidebar Footer */
+    .hawal-sidebar-footer {
+      padding: 14px 14px 18px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hawal-footer-info {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    /* Main Area */
+    .hawal-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-root);
+    }
+    .hawal-topbar {
+      height: 56px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-card);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+    .hawal-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary-accent);
+      background: var(--primary-accent-soft);
+      border: 1px solid var(--primary-accent-border);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .hawal-body {
+      padding: 20px 24px 48px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Hawal KPI Metric Cards with Sparklines */
+    .hawal-metric-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      padding: 18px 20px 20px !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 148px;
+      box-shadow: var(--card-shadow) !important;
+      transition: all 0.2s ease !important;
+    }
+    .hawal-metric-card:hover {
+      border-color: var(--border-hover) !important;
+      transform: translateY(-2px);
+    }
+    .hawal-metric-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .hawal-metric-title {
+      font-size: 13px;
+      font-weight: 600;
       color: var(--text-secondary);
     }
-    .hero-val {
-      font-size: 28px;
-      font-weight: 700;
+    .hawal-metric-val {
+      font-size: 29px;
+      font-weight: 800;
       font-variant-numeric: tabular-nums;
       letter-spacing: -0.5px;
       line-height: 1.1;
-      color: var(--text-primary);
-      margin-bottom: 8px;
+      margin: 10px 0 6px;
+      position: relative;
+      z-index: 2;
     }
-    .hero-sub {
+    .hawal-metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      padding-top: 8px;
-      border-top: 1px solid var(--border-subtle);
+      position: relative;
+      z-index: 2;
+    }
+    .hawal-card-wave {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      pointer-events: none;
+      opacity: 0.95;
+      z-index: 1;
+    }
+
+    /* Traffic Area Chart Card */
+    .hawal-traffic-chart-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      padding: 18px 20px !important;
+      box-shadow: var(--card-shadow) !important;
+    }
+
+    /* Radar Pulse */
+    @keyframes radar-pulse {
+      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .status-radar {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: radar-pulse 2s infinite ease-in-out;
+      vertical-align: middle;
     }
 
     /* Badges */
@@ -1975,7 +2075,7 @@ HTML_PAGE = """<!DOCTYPE html>
       border: 1px solid var(--primary-accent-border) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 1px 7px !important;
+      padding: 2px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
@@ -1987,51 +2087,125 @@ HTML_PAGE = """<!DOCTYPE html>
       border: 1px solid var(--border-subtle) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 1px 7px !important;
+      padding: 2px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
       gap: 5px !important;
     }
     .badge-amber {
-      background: rgba(245, 158, 11, 0.1) !important;
+      background: rgba(245, 158, 11, 0.12) !important;
       color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.25) !important;
+      border: 1px solid rgba(245, 158, 11, 0.28) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 1px 7px !important;
+      padding: 2px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
       gap: 5px !important;
     }
     .badge-rose {
-      background: rgba(239, 68, 68, 0.1) !important;
+      background: rgba(239, 68, 68, 0.12) !important;
       color: #ef4444 !important;
-      border: 1px solid rgba(239, 68, 68, 0.25) !important;
+      border: 1px solid rgba(239, 68, 68, 0.28) !important;
       border-radius: 6px !important;
       font-size: 11px !important;
-      padding: 1px 7px !important;
+      padding: 2px 7px !important;
       font-weight: 500 !important;
       display: inline-flex !important;
       align-items: center !important;
       gap: 5px !important;
     }
 
-    /* Radar Pulsing Indicator */
-    @keyframes radar-pulse {
-      0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
-      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
-      100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-    }
-    .status-radar {
+    .code-text {
+      direction: ltr !important;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
       display: inline-block;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #10b981;
-      animation: radar-pulse 2s infinite ease-in-out;
-      vertical-align: middle;
+      font-size: 11.5px;
+      background: var(--code-bg) !important;
+      border: 1px solid var(--code-border) !important;
+      padding: 2px 7px !important;
+      border-radius: 5px !important;
+      color: var(--code-text) !important;
+    }
+
+    /* Table & Cards Override */
+    .ant-card {
+      background: var(--surface-card) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      box-shadow: var(--card-shadow) !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-card-head {
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding: 0 18px !important;
+      min-height: 46px !important;
+    }
+    .ant-card-head-title {
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-card-body {
+      padding: 16px 18px !important;
+    }
+
+    .ant-table-wrapper .ant-table {
+      background: transparent !important;
+      color: var(--text-primary) !important;
+    }
+    .ant-table-wrapper .ant-table-thead > tr > th {
+      background: var(--table-header-bg) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      color: var(--text-secondary) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      padding: 10px 12px !important;
+      white-space: nowrap !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr > td {
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding: 10px 12px !important;
+      font-size: 13px !important;
+      color: var(--text-primary) !important;
+      white-space: nowrap !important;
+    }
+    .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+      background: var(--table-row-hover) !important;
+    }
+
+    /* Terminal Box */
+    .terminal-box {
+      background: var(--terminal-bg) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: var(--card-shadow) !important;
+    }
+    .terminal-header {
+      background: var(--terminal-header-bg) !important;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .terminal-dots { display: flex; gap: 6px; }
+    .terminal-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .terminal-content {
+      padding: 14px 16px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+      font-size: 12px;
+      line-height: 1.8;
+      direction: rtl;
+      color: var(--terminal-text);
     }
 
     /* Buttons */
@@ -2041,7 +2215,6 @@ HTML_PAGE = """<!DOCTYPE html>
       font-weight: 500 !important;
       height: 32px !important;
       padding: 0 12px !important;
-      transition: all 0.15s ease !important;
       box-shadow: none !important;
     }
     .ant-btn-default {
@@ -2065,83 +2238,6 @@ HTML_PAGE = """<!DOCTYPE html>
       color: #ffffff !important;
     }
 
-    /* Tables */
-    .ant-table-wrapper .ant-table {
-      background: transparent !important;
-      color: var(--text-primary) !important;
-    }
-    .ant-table-wrapper .ant-table-thead > tr > th {
-      background: var(--table-header-bg) !important;
-      border-bottom: 1px solid var(--border-subtle) !important;
-      color: var(--text-secondary) !important;
-      font-size: 11.5px !important;
-      font-weight: 500 !important;
-      padding: 9px 12px !important;
-    }
-    .ant-table-wrapper .ant-table-tbody > tr > td {
-      border-bottom: 1px solid var(--border-subtle) !important;
-      padding: 9px 12px !important;
-      font-size: 13px !important;
-      color: var(--text-primary) !important;
-    }
-    .ant-table-wrapper .ant-table-tbody > tr:hover > td {
-      background: var(--table-row-hover) !important;
-    }
-
-    /* Rank Badges */
-    .rank-circle {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .rank-1 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .rank-2 { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); }
-    .rank-3 { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
-    .rank-other { background: var(--surface-subtle); color: var(--text-muted); border: 1px solid var(--border-subtle); }
-
-    /* Terminal Preview Box */
-    .terminal-box {
-      background: var(--terminal-bg) !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: 10px !important;
-      overflow: hidden;
-    }
-    .terminal-header {
-      background: var(--terminal-header-bg) !important;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .terminal-dots {
-      display: flex;
-      gap: 6px;
-    }
-    .terminal-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-    }
-    .dot-red { background: #ff5f56; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #27c93f; }
-    .terminal-content {
-      padding: 12px 14px;
-      max-height: 220px;
-      overflow-y: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
-      font-size: 11.5px;
-      line-height: 1.8;
-      direction: rtl;
-      color: var(--terminal-text);
-    }
-
     /* Modals & Inputs */
     .ant-modal-content {
       background: var(--surface-card) !important;
@@ -2159,14 +2255,9 @@ HTML_PAGE = """<!DOCTYPE html>
     .ant-modal-title {
       color: var(--text-primary) !important;
       font-size: 15px !important;
-      font-weight: 600 !important;
+      font-weight: 700 !important;
     }
-    .ant-modal-close {
-      color: var(--text-muted) !important;
-    }
-    .ant-modal-close:hover {
-      color: var(--text-primary) !important;
-    }
+    .ant-modal-close { color: var(--text-muted) !important; }
     .ant-input, .ant-input-number, .ant-select-selector {
       background: var(--surface-subtle) !important;
       border: 1px solid var(--border-subtle) !important;
@@ -2181,12 +2272,20 @@ HTML_PAGE = """<!DOCTYPE html>
       color: var(--text-secondary) !important;
       font-size: 12.5px !important;
     }
-    .ant-progress-inner {
-      background-color: var(--surface-subtle) !important;
-      border-radius: 4px !important;
-    }
-    .ant-progress-bg {
-      border-radius: 4px !important;
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .hawal-shell { flex-direction: column; }
+      .hawal-sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        border-left: none;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .hawal-nav { flex-direction: row; flex-wrap: wrap; }
+      .hawal-topbar { padding: 0 14px; }
+      .hawal-body { padding: 14px; }
     }
   </style>
 
@@ -2194,12 +2293,12 @@ HTML_PAGE = """<!DOCTYPE html>
     window.onerror = function(msg, url, lineNo, colNo, error) {
       console.error('UI Crash:', msg, error);
       var root = document.getElementById('root');
-      if (root && (!root.children.length || !root.querySelector('.ant-layout'))) {
-        root.innerHTML = '<div style="direction:rtl;padding:50px;text-align:center;font-family:sans-serif;color:#ff4d4f;background:#141414;height:100vh;">' +
+      if (root && (!root.children.length || !root.querySelector('.hawal-shell'))) {
+        root.innerHTML = '<div style="direction:rtl;padding:50px;text-align:center;font-family:sans-serif;color:#ff4d4f;background:#0b0f19;height:100vh;">' +
           '<h2 style="color:#ff4d4f;">خطا در بارگذاری سامانه خوشه</h2>' +
-          '<p style="color:#d9d9d9;font-family:monospace;background:#222;padding:12px 20px;border-radius:6px;display:inline-block;direction:ltr;border:1px solid #333;">' +
+          '<p style="color:#cbd5e1;font-family:monospace;background:#131a2b;padding:12px 20px;border-radius:6px;display:inline-block;direction:ltr;border:1px solid #1e293b;">' +
           msg + (lineNo ? ' (سطر: ' + lineNo + ')' : '') + '</p>' +
-          '<br><br><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:6px;background:#1677ff;color:#fff;cursor:pointer;font-weight:bold;">بارگذاری مجدد</button>' +
+          '<br><br><button onclick="location.reload()" style="padding:10px 24px;border:none;border-radius:6px;background:#10b981;color:#fff;cursor:pointer;font-weight:bold;">بارگذاری مجدد</button>' +
           '</div>';
       }
       return false;
@@ -2208,11 +2307,11 @@ HTML_PAGE = """<!DOCTYPE html>
 </head>
 <body>
   <div id="root">
-    <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#141414;color:#fff;direction:rtl;font-family:sans-serif;">
+    <div style="display:flex;height:100vh;align-items:center;justify-content:center;background:#0b0f19;color:#fff;direction:rtl;font-family:sans-serif;">
       <div style="text-align:center;">
-        <div style="font-size:36px;margin-bottom:16px;">🌾</div>
-        <div style="font-size:18px;font-weight:600;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.45);">در حال بارگذاری محیط کاربری Ant Design...</div>
+        <div style="font-size:40px;margin-bottom:16px;">🌾</div>
+        <div style="font-size:19px;font-weight:700;margin-bottom:8px;">سامانه خوشه (Khoosheh)</div>
+        <div style="font-size:13px;color:#94a3b8;">در حال آماده‌سازی داشبورد مهندسی...</div>
       </div>
     </div>
   </div>
@@ -2224,8 +2323,7 @@ HTML_PAGE = """<!DOCTYPE html>
       Badge, Typography, Divider, Switch, Modal, Popconfirm, Progress, Radio, Tooltip,
       Steps, Upload, Alert, Timeline, Checkbox
     } = antd;
-    const { Header, Sider, Content, Footer } = Layout;
-    const { Title, Text, Paragraph } = Typography;
+    const { Text, Paragraph } = Typography;
 
     // Icons with safe fallbacks
     const icons = window.icons || {};
@@ -2263,10 +2361,144 @@ HTML_PAGE = """<!DOCTYPE html>
       { id: 'custom', name: 'سایر / مسیر دلخواه', desc: 'مسیر اختصاصی فایل دیتابیس یا پوشه', default_path: '', type: 'custom' },
     ];
 
+    // Hawal Bottom Wave Sparkline Component
+    const HawalWave = ({ color = '#38bdf8', id = 'w1' }) => (
+      <div className="hawal-card-wave">
+        <svg viewBox="0 0 300 52" preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
+          <defs>
+            <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity="0.32" />
+              <stop offset="100%" stopColor={color} stopOpacity="0.0" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M0,35 Q35,8 75,28 T150,20 T225,10 T300,26 L300,52 L0,52 Z"
+            fill={`url(#${id})`}
+          />
+          <path
+            d="M0,35 Q35,8 75,28 T150,20 T225,10 T300,26"
+            fill="none"
+            stroke={color}
+            strokeWidth="2.3"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+    );
+
+    // Hawal Visual Speed & Bandwidth Live Chart
+    const HawalTrafficChart = ({ data, themeMode }) => {
+      const isDark = themeMode === 'dark';
+      const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+      return (
+        <div className="hawal-traffic-chart-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                پایش لحظه‌ای جریان ترافیک و پهنای باند (Live Bandwidth Flow)
+              </span>
+              <span className="badge-emerald">
+                <span className="status-radar"></span> زنده
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 12 }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#10b981', fontWeight: 600 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }}></span>
+                دریافت (Download)
+              </span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#38bdf8', fontWeight: 600 }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#38bdf8' }}></span>
+                ارسال (Upload)
+              </span>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: 165, position: 'relative' }}>
+            <svg viewBox="0 0 600 165" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+              <defs>
+                <linearGradient id="chartDownGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.30" />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                </linearGradient>
+                <linearGradient id="chartUpGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+
+              {/* Grid lines */}
+              <line x1="0" y1="35" x2="600" y2="35" stroke={gridColor} strokeDasharray="3 3" />
+              <line x1="0" y1="75" x2="600" y2="75" stroke={gridColor} strokeDasharray="3 3" />
+              <line x1="0" y1="115" x2="600" y2="115" stroke={gridColor} strokeDasharray="3 3" />
+              <line x1="0" y1="160" x2="600" y2="160" stroke={gridColor} />
+
+              {/* Download Curve & Area */}
+              <path
+                d="M0,140 C60,120 110,50 170,70 C230,90 290,30 360,45 C430,60 500,15 600,35 L600,160 L0,160 Z"
+                fill="url(#chartDownGrad)"
+              />
+              <path
+                d="M0,140 C60,120 110,50 170,70 C230,90 290,30 360,45 C430,60 500,15 600,35"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+              />
+
+              {/* Upload Curve & Area */}
+              <path
+                d="M0,152 C60,140 120,95 180,105 C240,115 300,80 380,95 C460,110 520,60 600,75 L600,160 L0,160 Z"
+                fill="url(#chartUpGrad)"
+              />
+              <path
+                d="M0,152 C60,140 120,95 180,105 C240,115 300,80 380,95 C460,110 520,60 600,75"
+                fill="none"
+                stroke="#38bdf8"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+
+              {/* Peak glowing dots */}
+              <circle cx="500" cy="15" r="4" fill="#10b981" stroke="#fff" strokeWidth="1.5" />
+              <circle cx="520" cy="60" r="4" fill="#38bdf8" stroke="#fff" strokeWidth="1.5" />
+            </svg>
+          </div>
+
+          {/* Metric summary strip */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 12, marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border-subtle)' }}>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>دریافت (Download ۲۴h)</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#10b981', fontVariantNumeric: 'tabular-nums' }}>
+                {data?.metrics?.down_24h_gb ?? 0} GB
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>ارسال (Upload ۲۴h)</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#38bdf8', fontVariantNumeric: 'tabular-nums' }}>
+                {data?.metrics?.up_24h_gb ?? 0} GB
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>کل ترافیک مصرفی</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#f59e0b', fontVariantNumeric: 'tabular-nums' }}>
+                {data?.metrics?.traffic_24h_gb ?? 0} GB
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>سامانه پایش</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>
+                {data?.metrics?.panel_type || '3X-UI / Pasargard'}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     const KhooshehApp = ({ themeMode, toggleTheme }) => {
       const { message, notification } = App.useApp();
       const [currentTab, setCurrentTab] = React.useState('overview');
-      const [collapsed, setCollapsed] = React.useState(false);
       const [data, setData] = React.useState(null);
       const [loading, setLoading] = React.useState(true);
       const [actionLoading, setActionLoading] = React.useState(false);
@@ -2280,14 +2512,14 @@ HTML_PAGE = """<!DOCTYPE html>
 
       // Restore Wizard State
       const [restoreStep, setRestoreStep] = React.useState(0);
-      const [restoreSourceType, setRestoreSourceType] = React.useState('existing'); // 'existing' | 'upload'
+      const [restoreSourceType, setRestoreSourceType] = React.useState('existing');
       const [selectedBackupFile, setSelectedBackupFile] = React.useState('');
       const [restorePassword, setRestorePassword] = React.useState('');
       const [uploadedFilename, setUploadedFilename] = React.useState('');
       const [inspectLoading, setInspectLoading] = React.useState(false);
       const [inspectResult, setInspectResult] = React.useState(null);
       const [selectedPanelsToRestore, setSelectedPanelsToRestore] = React.useState(['3x-ui']);
-      const [targetServerMode, setTargetServerMode] = React.useState('existing'); // 'existing' | 'fresh'
+      const [targetServerMode, setTargetServerMode] = React.useState('existing');
       const [installPanelOnFresh, setInstallPanelOnFresh] = React.useState(true);
       const [executeLoading, setExecuteLoading] = React.useState(false);
       const [restoreLogs, setRestoreLogs] = React.useState([]);
@@ -2439,7 +2671,6 @@ HTML_PAGE = """<!DOCTYPE html>
           const json = await res.json();
           if (json.ok) {
             setInspectResult(json);
-            // Auto detect panels
             const panelsFound = [];
             if (json.analysis['pasarguard']?.found) panelsFound.push('pasarguard');
             if (json.analysis['3x-ui']?.found) panelsFound.push('3x-ui');
@@ -2447,7 +2678,6 @@ HTML_PAGE = """<!DOCTYPE html>
             if (json.analysis['network']?.found) panelsFound.push('network');
             setSelectedPanelsToRestore(panelsFound.length > 0 ? panelsFound : ['3x-ui']);
             
-            // Auto choose target mode based on server state
             if (!json.target_server_state.x_ui_db_exists) {
               setTargetServerMode('fresh');
             } else {
@@ -2656,7 +2886,7 @@ HTML_PAGE = """<!DOCTYPE html>
         message.success('دستور یک‌خطی نصب در حافظه کپی شد: ' + cmd);
       };
 
-      // Table Columns with Standard Design Tokens
+      // 3X-UI Engineered Table Columns (Strict widths, no collision)
       const backupColumns = [
         {
           title: 'نام فایل آرشیو',
@@ -2681,22 +2911,26 @@ HTML_PAGE = """<!DOCTYPE html>
           dataIndex: 'size_mb',
           key: 'size_mb',
           width: 100,
-          render: (val) => <Text strong style={{ fontVariantNumeric: 'tabular-nums' }}>{val} MB</Text>
+          render: (val) => <Text strong style={{ fontVariantNumeric: 'tabular-nums', color: '#10b981' }}>{val} MB</Text>
         },
         {
           title: 'هش SHA-256',
           dataIndex: 'sha256',
           key: 'sha256',
-          ellipsis: true,
-          render: (text) => <Text copyable code className="code-text" style={{ fontSize: 11 }}>{text}</Text>
+          width: 170,
+          render: (text) => (
+            <Text copyable code className="code-text" style={{ fontSize: 11 }}>
+              {text ? `${text.substring(0, 14)}...` : '--'}
+            </Text>
+          )
         },
         {
           title: 'عملیات',
           key: 'action',
-          width: 160,
+          width: 170,
           align: 'center',
           render: (_, record) => (
-            <Space size={8}>
+            <Space size={6}>
               <Button
                 type="primary"
                 ghost
@@ -2740,7 +2974,7 @@ HTML_PAGE = """<!DOCTYPE html>
           title: 'وضعیت',
           dataIndex: 'status',
           key: 'status',
-          width: 110,
+          width: 120,
           render: (s) => (s === 'active' || s === 'custom') ? <span className="badge-emerald">🟢 متصل</span> : <span className="badge-slate">آماده</span>
         },
         {
@@ -2868,183 +3102,277 @@ HTML_PAGE = """<!DOCTYPE html>
       const hostIp = stats.public_ip || window.location.hostname;
 
       return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-          {/* MODERN TOP NAVIGATION BAR (TASTE-SKILL / VERCEL STYLE) */}
-          <header className="top-navbar">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+        <div className="hawal-shell">
+          {/* SLIM HAWAL SIDEBAR */}
+          <aside className="hawal-sidebar">
+            <div>
               {/* BRAND / LOGO */}
-              <div className="nav-brand" onClick={() => setCurrentTab('overview')}>
-                <span style={{ fontSize: 22, lineHeight: 1 }}>🌾</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: '-0.3px', color: '#fff' }}>
-                    خوشه
-                  </span>
-                  <span className="badge-slate" style={{ fontSize: 11, padding: '1px 6px' }}>
-                    v{data?.version || '2.4'}
-                  </span>
-                  <span className="badge-emerald" style={{ padding: '2px 8px' }}>
-                    <span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>
-                    پایدار
-                  </span>
+              <div className="hawal-brand" onClick={() => setCurrentTab('overview')}>
+                <div className="hawal-logo-icon">🌾</div>
+                <div>
+                  <div className="hawal-logo-title">خـوشـــه</div>
+                  <div className="hawal-logo-sub">KHOOSHEH v{data?.version || '2.5'}</div>
                 </div>
               </div>
 
-              {/* HORIZONTAL TAB NAVIGATION */}
-              <nav className="nav-tabs">
+              {/* NAVIGATION MENU */}
+              <nav className="hawal-nav">
                 {[
-                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد' },
+                  { key: 'overview', icon: <DashboardOutlined />, label: 'داشبورد مدیریتی' },
+                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیوهای پشتیبان', badge: data?.backups?.length },
                   { key: 'restore', icon: <SyncOutlined />, label: 'بازیابی هوشمند' },
-                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پنل‌های متصل' },
-                  { key: 'servers', icon: <ClusterOutlined />, label: 'نودهای سرور' },
+                  { key: 'panels', icon: <AppstoreOutlined />, label: 'پایگاه‌های داده' },
+                  { key: 'servers', icon: <ClusterOutlined />, label: 'نودها و سرورها', badge: data?.live_nodes?.length },
                   { key: 'settings', icon: <SettingOutlined />, label: 'تنظیمات و ربات' },
-                  { key: 'backups', icon: <CloudDownloadOutlined />, label: 'آرشیو پشتیبان' },
                 ].map((item) => (
                   <div
                     key={item.key}
-                    className={`nav-tab-item ${currentTab === item.key ? 'active' : ''}`}
+                    className={`hawal-nav-item ${currentTab === item.key ? 'active' : ''}`}
                     onClick={() => setCurrentTab(item.key)}
                   >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
+                    <div className="hawal-nav-left">
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
+                    {item.badge !== undefined && item.badge > 0 && (
+                      <span className="hawal-nav-badge">{item.badge}</span>
+                    )}
                   </div>
                 ))}
               </nav>
             </div>
 
-            {/* QUICK ACTIONS & SYSTEM STATUS */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span className="badge-slate" style={{ fontSize: 11, fontFamily: 'monospace', direction: 'ltr' }}>
-                {data?.tehran_now?.shamsi || '--'}
-              </span>
-
-              <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
-                <Button
-                  size="small"
-                  icon={<SafetyCertificateOutlined />}
-                  href={`https://${hostIp}:2098/`}
-                  target="_blank"
-                  style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
-                >
-                  HTTPS SSL
-                </Button>
-              </Tooltip>
-
-              <Tooltip title="کپی دستور نصب یک‌خطی خوشه روی سرورهای دیگر">
-                <Button size="small" icon={<CopyOutlined />} onClick={handleCopyInstaller}>
-                  نصب سرور
-                </Button>
-              </Tooltip>
-
-              <Tooltip title={themeMode === 'dark' ? 'سوییچ به تم روشن' : 'سوییچ به تم تاریک'}>
-                <Switch
-                  checkedChildren="🌙"
-                  unCheckedChildren="☀️"
-                  checked={themeMode === 'dark'}
-                  onChange={toggleTheme}
-                  size="small"
-                />
-              </Tooltip>
-
-              <Button
-                size="small"
-                icon={<ReloadOutlined />}
-                onClick={() => fetchData()}
-                loading={loading}
-              >
-                بروزرسانی
-              </Button>
+            {/* SIDEBAR FOOTER */}
+            <div className="hawal-sidebar-footer">
+              <div className="hawal-footer-info">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>آی‌پی هاست:</span>
+                  <span
+                    className="code-text"
+                    style={{ cursor: 'pointer', fontSize: 11 }}
+                    title="کلیک برای کپی آی‌پی"
+                    onClick={() => {
+                      navigator.clipboard.writeText(hostIp);
+                      message.success('آدرس IP کپی شد');
+                    }}
+                  >
+                    {hostIp}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>حالت پوسته:</span>
+                  <Switch
+                    checkedChildren="🌙"
+                    unCheckedChildren="☀️"
+                    checked={themeMode === 'dark'}
+                    onChange={toggleTheme}
+                    size="small"
+                  />
+                </div>
+              </div>
 
               {authStatus.authenticated && !authStatus.setup_required && (
-                <Button size="small" danger onClick={handleLogout}>خروج</Button>
+                <Button danger block size="small" onClick={handleLogout}>
+                  خروج از سامانه
+                </Button>
               )}
             </div>
-          </header>
+          </aside>
 
-          {/* MAIN CENTERED CONTAINER (TASTE-SKILL STANDARD) */}
-          <main className="app-main-container">
+          {/* MAIN APPLICATION CONTAINER */}
+          <div className="hawal-main">
+            {/* TOP ACTION & SERVICE HEADER */}
+            <header className="hawal-topbar">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <span className="hawal-status-badge">
+                  <span className="status-radar"></span>
+                  خوشه در حال اجرا و پایش
+                </span>
+                <span className="badge-slate" style={{ fontSize: 11, fontFamily: 'monospace', direction: 'ltr' }}>
+                  {data?.tehran_now?.shamsi || '--'}
+                </span>
+              </div>
 
-              {/* 1. OVERVIEW */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Tooltip title="مشاهده پنل از طریق اتصال امن HTTPS SSL">
+                  <Button
+                    size="small"
+                    icon={<SafetyCertificateOutlined />}
+                    href={`https://${hostIp}:2098/`}
+                    target="_blank"
+                    style={{ borderColor: 'rgba(16, 185, 129, 0.3)', color: '#10b981', background: 'rgba(16, 185, 129, 0.06)' }}
+                  >
+                    SSL HTTPS
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="پشتیبان‌گیری اضطراری از تمام پنل‌ها هم‌اکنون">
+                  <Button
+                    type="primary"
+                    icon={<ThunderboltOutlined />}
+                    onClick={handleTriggerBackup}
+                    loading={actionLoading}
+                    style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none' }}
+                  >
+                    پشتیبان‌گیری فوری
+                  </Button>
+                </Tooltip>
+
+                <Tooltip title="بروزرسانی داده‌ها">
+                  <Button
+                    icon={<ReloadOutlined />}
+                    onClick={() => fetchData()}
+                    loading={loading}
+                  />
+                </Tooltip>
+              </div>
+            </header>
+
+            {/* TAB CONTENTS */}
+            <div className="hawal-body">
+
+              {/* 1. OVERVIEW (HAWAL v2 & 3X-UI HYBRID) */}
               {currentTab === 'overview' && (
-                <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                <Space direction="vertical" size={18} style={{ width: '100%' }}>
 
-                  {/* 4 COMPACT BENTO KPI CARDS */}
+                  {/* 4 HAWAL METRIC CARDS WITH BOTTOM SPARKLINE WAVES */}
                   <Row gutter={[14, 14]}>
+                    {/* CARD 1: CPU & RAM */}
                     <Col xs={24} sm={12} lg={6}>
-                      <div className="hero-kpi-card">
-                        <div className="hero-header">
-                          <span className="hero-title">چرخه پشتیبان‌گیری</span>
-                          {cfg.backup_password ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">بدون رمز</span>}
+                      <div className="hawal-metric-card">
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">بار پردازنده و هسته‌ها</span>
+                          <span className="badge-emerald"><span className="status-radar"></span>پایدار</span>
                         </div>
-                        <div className="hero-val" style={{ color: '#10b981' }}>
-                          {data?.bk_stats?.count_24h ?? 0}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نسخه ۲۴h</span>
-                        </div>
-                        <div className="hero-sub">
-                          <span>حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
-                          <span>•</span>
-                          <span>هر {cfg.interval_hours || 6} ساعت</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col xs={24} sm={12} lg={6}>
-                      <div className="hero-kpi-card">
-                        <div className="hero-header">
-                          <span className="hero-title">کاربران متصل</span>
-                          <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>لحظه‌ای</span>
-                        </div>
-                        <div className="hero-val" style={{ color: '#38bdf8' }}>
-                          {data?.metrics?.online_now ?? 0}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>کاربر فعال</span>
-                        </div>
-                        <div className="hero-sub">
-                          <span>کل: {data?.metrics?.users_count ?? '--'}</span>
-                          <span>•</span>
-                          <span>۲۴h اخیر: {data?.metrics?.online_24h ?? '--'}</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col xs={24} sm={12} lg={6}>
-                      <div className="hero-kpi-card">
-                        <div className="hero-header">
-                          <span className="hero-title">مصرف پهنای باند</span>
-                          <span className="badge-slate">۲۴ ساعت</span>
-                        </div>
-                        <div className="hero-val" style={{ color: '#f59e0b' }}>
-                          {data?.metrics?.traffic_24h_gb ?? 0}
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>GB</span>
-                        </div>
-                        <div className="hero-sub">
-                          <span style={{ color: '#10b981' }}>↓ {data?.metrics?.down_24h_gb ?? 0} GB</span>
-                          <span>•</span>
-                          <span style={{ color: '#f59e0b' }}>↑ {data?.metrics?.up_24h_gb ?? 0} GB</span>
-                        </div>
-                      </div>
-                    </Col>
-
-                    <Col xs={24} sm={12} lg={6}>
-                      <div className="hero-kpi-card">
-                        <div className="hero-header">
-                          <span className="hero-title">منابع هاست</span>
-                          <span className="badge-slate" style={{ direction: 'ltr' }}>{stats.public_ip || hostIp}</span>
-                        </div>
-                        <div className="hero-val" style={{ color: '#10b981' }}>
+                        <div className="hawal-metric-val" style={{ color: '#38bdf8' }}>
                           CPU {stats.cpu_pct || 15}%
-                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>{stats.uptime || 'پایدار'}</span>
                         </div>
-                        <div className="hero-sub">
+                        <div className="hawal-metric-sub">
                           <span>RAM: {stats.ram_str || '--'}</span>
                           <span>•</span>
                           <span>Disk: {stats.disk_str || '--'}</span>
                         </div>
+                        <HawalWave color="#38bdf8" id="wave-cpu" />
+                      </div>
+                    </Col>
+
+                    {/* CARD 2: 24h BANDWIDTH FLOW */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="hawal-metric-card">
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">مصرف ترافیک ۲۴ ساعت</span>
+                          <span className="badge-slate">۲۴h</span>
+                        </div>
+                        <div className="hawal-metric-val" style={{ color: '#a855f7' }}>
+                          {data?.metrics?.traffic_24h_gb ?? 0}
+                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>GB</span>
+                        </div>
+                        <div className="hawal-metric-sub">
+                          <span style={{ color: '#10b981' }}>↓ {data?.metrics?.down_24h_gb ?? 0} GB</span>
+                          <span>•</span>
+                          <span style={{ color: '#f59e0b' }}>↑ {data?.metrics?.up_24h_gb ?? 0} GB</span>
+                        </div>
+                        <HawalWave color="#a855f7" id="wave-traffic" />
+                      </div>
+                    </Col>
+
+                    {/* CARD 3: ACTIVE USERS */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="hawal-metric-card">
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">کاربران متصل و آنلاین</span>
+                          <span className="badge-emerald"><span className="status-radar"></span>زنده</span>
+                        </div>
+                        <div className="hawal-metric-val" style={{ color: '#10b981' }}>
+                          {data?.metrics?.online_now ?? 0}
+                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>کاربر فعال</span>
+                        </div>
+                        <div className="hawal-metric-sub">
+                          <span>کل: {data?.metrics?.users_count ?? '--'}</span>
+                          <span>•</span>
+                          <span>۲۴h اخیر: {data?.metrics?.online_24h ?? '--'}</span>
+                        </div>
+                        <HawalWave color="#10b981" id="wave-users" />
+                      </div>
+                    </Col>
+
+                    {/* CARD 4: BACKUP CYCLES */}
+                    <Col xs={24} sm={12} lg={6}>
+                      <div className="hawal-metric-card">
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">آرشیوهای حفاظت‌شده</span>
+                          {cfg.backup_password ? <span className="badge-amber">AES-256</span> : <span className="badge-slate">استاندارد</span>}
+                        </div>
+                        <div className="hawal-metric-val" style={{ color: '#f59e0b' }}>
+                          {data?.bk_stats?.count_24h ?? (data?.backups?.length || 0)}
+                          <span style={{ fontSize: 14, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نسخه ۲۴h</span>
+                        </div>
+                        <div className="hawal-metric-sub">
+                          <span>حجم: {data?.bk_stats?.latest_size_mb ?? 0} MB</span>
+                          <span>•</span>
+                          <span>هر {cfg.interval_hours || 6} ساعت</span>
+                        </div>
+                        <HawalWave color="#f59e0b" id="wave-backup" />
                       </div>
                     </Col>
                   </Row>
 
-                  {/* 2-COLUMN PRODUCTIVE WORKSPACE */}
+                  {/* ROW 2: VISUAL TRAFFIC AREA CHART + TERMINAL DIGEST */}
                   <Row gutter={[14, 14]}>
-                    {/* PRIMARY COLUMN: LATEST BACKUPS TABLE & AGENT INSTALLER */}
+                    {/* VISUAL TRAFFIC AREA CHART (60% WIDTH) */}
+                    <Col xs={24} lg={15}>
+                      <HawalTrafficChart data={data} themeMode={themeMode} />
+                    </Col>
+
+                    {/* DAILY HEALTH & MONITORING TERMINAL (40% WIDTH) */}
+                    <Col xs={24} lg={9}>
+                      <div className="terminal-box" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div className="terminal-header">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div className="terminal-dots">
+                              <span className="terminal-dot dot-red"></span>
+                              <span className="terminal-dot dot-yellow"></span>
+                              <span className="terminal-dot dot-green"></span>
+                            </div>
+                            <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>کارنامه سلامت و مانیتورینگ</span>
+                          </div>
+                          <Space size={6}>
+                            <Button
+                              size="small"
+                              icon={<CopyOutlined />}
+                              onClick={() => {
+                                if (data?.digest_text) {
+                                  const clean = data.digest_text.replace(/<[^>]+>/g, '');
+                                  navigator.clipboard.writeText(clean);
+                                  message.success('متن گزارش در حافظه کپی شد.');
+                                }
+                              }}
+                            >
+                              کپی
+                            </Button>
+                            <Button
+                              type="primary"
+                              size="small"
+                              icon={<SendOutlined />}
+                              onClick={handleSendDigest}
+                              loading={actionLoading}
+                            >
+                              تلگرام
+                            </Button>
+                          </Space>
+                        </div>
+                        <div
+                          className="terminal-content"
+                          style={{ flex: 1, minHeight: 185 }}
+                          dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش مانیتورینگ...' }}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
+
+                  {/* ROW 3: LATEST BACKUPS TABLE & TOP USERS */}
+                  <Row gutter={[14, 14]}>
+                    {/* BACKUPS TABLE (3X-UI STYLE) */}
                     <Col xs={24} lg={15}>
                       <Space direction="vertical" size={14} style={{ width: '100%' }}>
                         <Card
@@ -3059,14 +3387,17 @@ HTML_PAGE = """<!DOCTYPE html>
                                 onClick={handleTriggerBackup}
                                 loading={actionLoading}
                               >
-                                پشتیبان‌گیری فوری
+                                ایجاد آرشیو
                               </Button>
                               <Button
                                 size="small"
                                 icon={<SyncOutlined />}
-                                onClick={() => setCurrentTab('restore')}
+                                onClick={() => {
+                                  setCurrentTab('restore');
+                                  setRestoreStep(0);
+                                }}
                               >
-                                بازگردانی
+                                بازگردانی هوشمند
                               </Button>
                             </Space>
                           }
@@ -3077,16 +3408,17 @@ HTML_PAGE = """<!DOCTYPE html>
                             rowKey="filename"
                             pagination={false}
                             size="middle"
+                            scroll={{ x: 680 }}
                             locale={{ emptyText: 'هیچ آرشیوی هنوز ثبت نشده است.' }}
                           />
                         </Card>
 
                         {/* FAST AGENT INSTALLER CARD */}
-                        <Card bordered={false} style={{ padding: '4px 8px' }}>
+                        <Card bordered={false} style={{ padding: '6px 12px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                               <span style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-secondary)' }}>اتصال نود جدید:</span>
-                              <Text code className="code-text" style={{ padding: '3px 8px', fontSize: 12 }}>
+                              <Text code className="code-text" style={{ padding: '4px 10px', fontSize: 12 }}>
                                 curl -sSL http://{hostIp}:2099/install.sh | bash
                               </Text>
                             </div>
@@ -3096,92 +3428,48 @@ HTML_PAGE = """<!DOCTYPE html>
                       </Space>
                     </Col>
 
-                    {/* SECONDARY COLUMN: DIGEST & TOP USERS */}
+                    {/* TOP USERS LEADERBOARD */}
                     <Col xs={24} lg={9}>
-                      <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                        {/* DAILY DIGEST TERMINAL */}
-                        <div className="terminal-box">
-                          <div className="terminal-header">
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <div className="terminal-dots">
-                                <span className="terminal-dot dot-red"></span>
-                                <span className="terminal-dot dot-yellow"></span>
-                                <span className="terminal-dot dot-green"></span>
-                              </div>
-                              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>کارنامه سلامت و مانیتورینگ</span>
-                            </div>
-                            <Space size={6}>
-                              <Button
-                                size="small"
-                                icon={<CopyOutlined />}
-                                onClick={() => {
-                                  if (data?.digest_text) {
-                                    const clean = data.digest_text.replace(/<[^>]+>/g, '');
-                                    navigator.clipboard.writeText(clean);
-                                    message.success('متن گزارش در حافظه کپی شد.');
-                                  }
-                                }}
-                              >
-                                کپی
-                              </Button>
-                              <Button
-                                type="primary"
-                                size="small"
-                                icon={<SendOutlined />}
-                                onClick={handleSendDigest}
-                                loading={actionLoading}
-                              >
-                                تلگرام
-                              </Button>
-                            </Space>
-                          </div>
-                          <div
-                            className="terminal-content"
-                            dangerouslySetInnerHTML={{ __html: data?.digest_text || 'در حال آماده‌سازی گزارش...' }}
-                          />
-                        </div>
-
-                        {/* TOP USERS LEADERBOARD */}
-                        <Card
-                          title="کاربران پرمصرف ۲۴ ساعت"
-                          bordered={false}
-                          extra={<span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>}
-                        >
-                          <Table
-                            dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).slice(0, 5).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
-                            columns={[
-                              {
-                                title: '#',
-                                key: 'rank',
-                                width: 40,
-                                align: 'center',
-                                render: (_, __, idx) => {
-                                  const rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : 'rank-other';
-                                  return <span className={`rank-circle ${rankClass}`}>{idx + 1}</span>;
-                                }
-                              },
-                              {
-                                title: 'شناسه کاربری',
-                                dataIndex: 'email',
-                                key: 'email',
-                                render: (em) => <Text code className="code-text" strong>{em}</Text>
-                              },
-                              {
-                                title: 'ترافیک',
-                                dataIndex: 'traffic_gb',
-                                key: 'traffic_gb',
-                                width: 95,
-                                align: 'left',
-                                render: (t) => <span style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
+                      <Card
+                        title="کاربران پرمصرف ۲۴ ساعت"
+                        bordered={false}
+                        extra={<span className="badge-slate">{data?.metrics?.panel_type || 'پنل'}</span>}
+                      >
+                        <Table
+                          dataSource={((data?.metrics?.top_users_24h && data.metrics.top_users_24h.length > 0) ? data.metrics.top_users_24h : (data?.metrics?.top_users || [])).slice(0, 5).map(([em, gb], i) => ({ id: i, email: em, traffic_gb: gb }))}
+                          columns={[
+                            {
+                              title: '#',
+                              key: 'rank',
+                              width: 44,
+                              align: 'center',
+                              render: (_, __, idx) => {
+                                const colors = ['#f59e0b', '#94a3b8', '#d97706'];
+                                const c = idx < 3 ? colors[idx] : 'var(--text-muted)';
+                                return <span style={{ fontWeight: 700, color: c }}>{idx + 1}</span>;
                               }
-                            ]}
-                            rowKey="id"
-                            pagination={false}
-                            size="small"
-                            locale={{ emptyText: 'داده‌ای یافت نشد.' }}
-                          />
-                        </Card>
-                      </Space>
+                            },
+                            {
+                              title: 'شناسه کاربری',
+                              dataIndex: 'email',
+                              key: 'email',
+                              render: (em) => <Text code className="code-text" strong>{em}</Text>
+                            },
+                            {
+                              title: 'ترافیک',
+                              dataIndex: 'traffic_gb',
+                              key: 'traffic_gb',
+                              width: 95,
+                              align: 'left',
+                              render: (t) => <span style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: '#38bdf8' }}>{t} GB</span>
+                            }
+                          ]}
+                          rowKey="id"
+                          pagination={false}
+                          size="small"
+                          locale={{ emptyText: 'داده‌ای یافت نشد.' }}
+                        />
+                      </Card>
                     </Col>
                   </Row>
                 </Space>
@@ -3247,7 +3535,7 @@ HTML_PAGE = """<!DOCTYPE html>
                               }}
                             >
                               <p className="ant-upload-drag-icon">
-                                <InboxOutlined style={{ fontSize: 36, color: '#1677ff' }} />
+                                <InboxOutlined style={{ fontSize: 36, color: '#10b981' }} />
                               </p>
                               <p className="ant-upload-text">برای آپلود، فایل بکاپ را به اینجا بکشید یا کلیک کنید</p>
                               <p className="ant-upload-hint">پشتیبانی از فرمت‌های رمزنگاری‌شده AES-256 (.7z) و استاندارد (.tar.gz)</p>
@@ -3306,11 +3594,11 @@ HTML_PAGE = """<!DOCTYPE html>
                         {/* SYMMETRICAL INSPECTION METRIC CARDS */}
                         <Row gutter={[16, 16]}>
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
                               <Statistic
                                 title="تعداد کل کاربران (Clients)"
                                 value={inspectResult.analysis['pasarguard']?.users_count || inspectResult.analysis['3x-ui']?.clients_count || inspectResult.analysis['marzban']?.users_count || 0}
-                                valueStyle={{ color: '#52c41a', fontWeight: 'bold' }}
+                                valueStyle={{ color: '#10b981', fontWeight: 'bold' }}
                                 prefix={<UserOutlined />}
                                 suffix="کاربر"
                               />
@@ -3321,11 +3609,11 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
                               <Statistic
                                 title="اینباندها و درگاه‌ها"
                                 value={inspectResult.analysis['pasarguard']?.inbounds_count ?? (inspectResult.analysis['3x-ui']?.inbounds_count || inspectResult.analysis['marzban']?.inbounds_count || 0)}
-                                valueStyle={{ color: '#1677ff', fontWeight: 'bold' }}
+                                valueStyle={{ color: '#38bdf8', fontWeight: 'bold' }}
                                 prefix={<ClusterOutlined />}
                                 suffix="پورت"
                               />
@@ -3338,11 +3626,11 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
                               <Statistic
                                 title="مجموع ترافیک ثبت‌شده"
                                 value={inspectResult.analysis['pasarguard']?.total_traffic_human || inspectResult.analysis['3x-ui']?.total_traffic_human || inspectResult.analysis['marzban']?.total_traffic_human || '0 MB'}
-                                valueStyle={{ color: '#faad14', fontWeight: 'bold', fontFamily: 'monospace' }}
+                                valueStyle={{ color: '#f59e0b', fontWeight: 'bold', fontFamily: 'monospace' }}
                                 prefix={<CloudDownloadOutlined />}
                               />
                               <div style={{ marginTop: 8 }}>
@@ -3352,7 +3640,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           </Col>
 
                           <Col xs={24} sm={12} md={6}>
-                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#1f1f1f' : '#fafafa' }}>
+                            <Card bordered={false} style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
                               <Statistic
                                 title="هاست مبدا بکاپ"
                                 value={inspectResult.manifest?.hostname || 'Unknown'}
@@ -3426,8 +3714,8 @@ HTML_PAGE = """<!DOCTYPE html>
                               onClick={() => setTargetServerMode('existing')}
                               style={{
                                 cursor: 'pointer',
-                                borderColor: targetServerMode === 'existing' ? '#1677ff' : undefined,
-                                background: targetServerMode === 'existing' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
+                                borderColor: targetServerMode === 'existing' ? '#10b981' : undefined,
+                                background: targetServerMode === 'existing' ? (themeMode === 'dark' ? '#0f1f1d' : '#ecfdf5') : undefined
                               }}
                             >
                               <Radio value="existing">
@@ -3446,8 +3734,8 @@ HTML_PAGE = """<!DOCTYPE html>
                               onClick={() => setTargetServerMode('fresh')}
                               style={{
                                 cursor: 'pointer',
-                                borderColor: targetServerMode === 'fresh' ? '#1677ff' : undefined,
-                                background: targetServerMode === 'fresh' ? (themeMode === 'dark' ? '#111d2c' : '#e6f4ff') : undefined
+                                borderColor: targetServerMode === 'fresh' ? '#10b981' : undefined,
+                                background: targetServerMode === 'fresh' ? (themeMode === 'dark' ? '#0f1f1d' : '#ecfdf5') : undefined
                               }}
                             >
                               <Radio value="fresh">
@@ -3523,7 +3811,7 @@ HTML_PAGE = """<!DOCTYPE html>
                           />
                         )}
 
-                        <Card title="لاگ زنده رویدادهای سیستمی (System Events)" size="small" style={{ background: themeMode === 'dark' ? '#141414' : '#fafafa' }}>
+                        <Card title="لاگ زنده رویدادهای سیستمی (System Events)" size="small" style={{ background: themeMode === 'dark' ? '#101626' : '#fafafa' }}>
                           <Timeline
                             items={restoreLogs.map((l) => ({
                               color: l.status === 'ok' ? 'green' : (l.status === 'warning' ? 'orange' : 'blue'),
@@ -3587,54 +3875,51 @@ HTML_PAGE = """<!DOCTYPE html>
                 <Space direction="vertical" size={20} style={{ width: '100%' }}>
                   <Row gutter={[16, 16]}>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hero-kpi-card">
-                        <div>
-                          <div className="hero-header">
-                            <span className="hero-title">نودهای زیرساخت</span>
-                            <span className="badge-slate">ثبت‌شده</span>
-                          </div>
-                          <div className="hero-val" style={{ color: '#38bdf8' }}>
-                            {data?.live_nodes?.length || data?.servers?.length || 0}
-                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود</span>
-                          </div>
+                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">نودهای زیرساخت</span>
+                          <span className="badge-slate">ثبت‌شده</span>
                         </div>
-                        <div className="hero-sub">
-                          <span className="badge-slate">سامانه متصل: {data?.metrics?.panel_type || 'پاسارگارد'}</span>
+                        <div className="hawal-metric-val" style={{ color: '#38bdf8' }}>
+                          {data?.live_nodes?.length || data?.servers?.length || 0}
+                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نود</span>
                         </div>
+                        <div className="hawal-metric-sub">
+                          <span>سامانه متصل: {data?.metrics?.panel_type || 'پاسارگارد'}</span>
+                        </div>
+                        <HawalWave color="#38bdf8" id="wave-nodes" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hero-kpi-card">
-                        <div>
-                          <div className="hero-header">
-                            <span className="hero-title">وضعیت اتصال شبکه</span>
-                            <span className="badge-emerald"><span className="status-radar" style={{ margin: 0, marginLeft: 4 }}></span>پایدار</span>
-                          </div>
-                          <div className="hero-val" style={{ color: '#10b981' }}>
-                            {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
-                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>نود فعال</span>
-                          </div>
+                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">وضعیت اتصال شبکه</span>
+                          <span className="badge-emerald"><span className="status-radar"></span>پایدار</span>
                         </div>
-                        <div className="hero-sub">
-                          <span className="badge-emerald">اتصال سرورهای لبه آنلاین</span>
+                        <div className="hawal-metric-val" style={{ color: '#10b981' }}>
+                          {(data?.live_nodes || []).filter(n => n.status === 'online').length || 0}
+                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>نود فعال</span>
                         </div>
+                        <div className="hawal-metric-sub">
+                          <span>اتصال سرورهای لبه آنلاین</span>
+                        </div>
+                        <HawalWave color="#10b981" id="wave-online-nodes" />
                       </div>
                     </Col>
                     <Col xs={24} sm={12} md={8}>
-                      <div className="hero-kpi-card">
-                        <div>
-                          <div className="hero-header">
-                            <span className="hero-title">ترافیک عبوری نودها</span>
-                            <span className="badge-slate">مجموع</span>
-                          </div>
-                          <div className="hero-val" style={{ color: '#f59e0b' }}>
-                            {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
-                            <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'rgba(255,255,255,0.45)' }}>GB</span>
-                          </div>
+                      <div className="hawal-metric-card" style={{ minHeight: 120 }}>
+                        <div className="hawal-metric-header">
+                          <span className="hawal-metric-title">ترافیک عبوری نودها</span>
+                          <span className="badge-slate">مجموع</span>
                         </div>
-                        <div className="hero-sub">
-                          <span className="badge-amber">ترافیک کلیه نودهای فعال</span>
+                        <div className="hawal-metric-val" style={{ color: '#f59e0b' }}>
+                          {((data?.live_nodes || []).reduce((acc, cur) => acc + (cur.total_gb || 0), 0)).toFixed(2)}
+                          <span style={{ fontSize: 13, fontWeight: 500, marginRight: 6, color: 'var(--text-muted)' }}>GB</span>
                         </div>
+                        <div className="hawal-metric-sub">
+                          <span>ترافیک کلیه نودهای فعال</span>
+                        </div>
+                        <HawalWave color="#f59e0b" id="wave-traffic-nodes" />
                       </div>
                     </Col>
                   </Row>
@@ -3773,21 +4058,13 @@ HTML_PAGE = """<!DOCTYPE html>
                     loading={loading}
                     pagination={{ pageSize: 10 }}
                     size="middle"
+                    scroll={{ x: 680 }}
                   />
                 </Card>
               )}
 
-          </main>
-
-          <footer style={{
-            textAlign: 'center',
-            padding: '28px 0 24px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-            color: 'rgba(255, 255, 255, 0.35)',
-            fontSize: 12
-          }}>
-            سامانه «خوشه» — پلتفرم متمرکز پشتیبان‌گیری و بازگردانی هوشمند چندپنله
-          </footer>
+            </div>
+          </div>
 
           {/* MODAL: 1-CLICK PRESET PANEL CONNECTION */}
           <Modal
@@ -3953,15 +4230,15 @@ HTML_PAGE = """<!DOCTYPE html>
               colorSuccess: '#10b981',
               colorWarning: '#f59e0b',
               colorError: '#f43f5e',
-              colorBgBase: themeMode === 'dark' ? '#09090b' : '#f8fafc',
-              colorBgContainer: themeMode === 'dark' ? '#121316' : '#ffffff',
-              colorBgElevated: themeMode === 'dark' ? '#18191e' : '#f1f5f9',
-              colorBorder: themeMode === 'dark' ? '#27272a' : '#e2e8f0',
+              colorBgBase: themeMode === 'dark' ? '#0b0f19' : '#f1f5f9',
+              colorBgContainer: themeMode === 'dark' ? '#131a2b' : '#ffffff',
+              colorBgElevated: themeMode === 'dark' ? '#192238' : '#f8fafc',
+              colorBorder: themeMode === 'dark' ? '#1e293b' : '#e2e8f0',
               colorBorderSecondary: themeMode === 'dark' ? 'rgba(255, 255, 255, 0.04)' : '#f1f5f9',
-              colorText: themeMode === 'dark' ? '#f4f4f5' : '#0f172a',
-              colorTextSecondary: themeMode === 'dark' ? '#a1a1aa' : '#475569',
-              borderRadius: 6,
-              borderRadiusLG: 8,
+              colorText: themeMode === 'dark' ? '#f8fafc' : '#0f172a',
+              colorTextSecondary: themeMode === 'dark' ? '#94a3b8' : '#475569',
+              borderRadius: 8,
+              borderRadiusLG: 10,
               fontFamily: "'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
             }
           }}
